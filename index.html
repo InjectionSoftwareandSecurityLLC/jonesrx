@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Landing Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+20&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%; /* Ensure body takes full height */
+            margin: 0; /* Remove default margin */
+        }
+                
+        body {
+            background-color: black;
+            background-image: url('background.gif');
+            background-size: cover;
+            background-position: left; /* Shift background to the left */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px; /* Add spacing at the top */
+        }
+        .neon-sign-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 2px solid;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5); /* Slightly transparent background */
+            width: 350px; /* Increase width */
+            max-width: 800px; /* Set a max width */
+        }
+
+        .neon-sign-container:hover {
+        animation: sway 0.5s infinite alternate; /* Apply sway effect on hover */
+        }
+
+        @keyframes sway {
+            0% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+            100% { transform: rotate(-2deg); }
+        }
+        .neon-sign {
+            font-family: 'Jersey 20', cursive;
+            font-size: 5rem; /* Increase font size */
+            color: white; /* Default neon color */
+            text-shadow: 
+                0 0 5px cyan, 
+                0 0 10px cyan, 
+                0 0 20px cyan, 
+                0 0 30px cyan;
+            transform: rotate(-10deg);
+        }
+        .triangle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            animation: rotate 3s infinite linear;
+        }
+        .triangle.tl {
+            top: -20px; left: -20px;
+            border-width: 0 30px 30px 0;
+            border-color: transparent cyan transparent transparent; /* Default neon color */
+        }
+        .triangle.tr {
+            top: -20px; right: -20px;
+            border-width: 30px 0 0 30px;
+            border-color: transparent transparent transparent cyan; /* Default neon color */
+        }
+        .triangle.bl {
+            bottom: -20px; left: -20px;
+            border-width: 30px 30px 0 0;
+            border-color: cyan transparent transparent transparent; /* Default neon color */
+        }
+        .triangle.br {
+            bottom: -20px; right: -20px;
+            border-width: 0 0 30px 30px;
+            border-color: transparent transparent cyan transparent; /* Default neon color */
+        }
+        .inner-triangle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            opacity: 0.5; /* Make inner triangles semi-transparent */
+            animation: rotate 3s infinite linear;
+        }
+        .inner-triangle.tl {
+            top: -10px; left: -10px;
+            border-width: 0 20px 20px 0;
+            border-color: transparent cyan transparent transparent; /* Default neon color */
+        }
+        .inner-triangle.tr {
+            top: -10px; right: -10px;
+            border-width: 20px 0 0 20px;
+            border-color: transparent transparent transparent cyan; /* Default neon color */
+        }
+        .inner-triangle.bl {
+            bottom: -10px; left: -10px;
+            border-width: 20px 20px 0 0;
+            border-color: cyan transparent transparent transparent; /* Default neon color */
+        }
+        .inner-triangle.br {
+            bottom: -10px; right: -10px;
+            border-width: 0 0 20px 20px;
+            border-color: transparent transparent cyan transparent; /* Default neon color */
+        }
+        @keyframes rotate {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center vertically */
+            align-items: center; /* Center horizontally */
+            flex-grow: .75; /* Allow the main content to take up remaining space */
+            width: 100%;
+        }
+        .navbar {
+            display: flex;
+            flex-direction: row;
+            justify-content: center; /* Center navbar items */
+            align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .primary-button {
+            font-family: 'Jersey 20', cursive;
+            text-align: center;
+            padding: 20px 40px;
+            border: 2px solid;
+            background-color: transparent;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            margin: 10px;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.85); /* More opaque black */
+            font-size: 2rem;
+            min-width: 200px;
+            width: 150px;
+        }
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+            }
+            .primary-button {
+                width: 300px;
+            }
+            .neon-sign-container {
+                width: 75%; /* Increase width */
+            }
+        }
+        .flicker {
+            animation: flicker 1.5s infinite; /* Flicker effect */
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            20% { opacity: 0.8; }
+            40% { opacity: 0.5; }
+            60% { opacity: 0.6; }
+            80% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+        .primary-button:hover, .primary-button:focus {
+            filter: brightness(1.5);
+            animation: glow 0.8s infinite alternate;
+            text-decoration: none;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px, 0 0 10px; }
+            50% { box-shadow: 0 0 15px, 0 0 30px; }
+            100% { box-shadow: 0 0 10px, 0 0 20px; }
+        }
+        .dropdown-menu {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+        }
+        .dropdown-item {
+            font-family: 'Jersey 20', cursive;
+            color: white;
+            text-align: center;
+            padding: 15px 30px;
+            border: 2px solid;
+            margin: 5px 0;
+            transition: 0.3s;
+            display: block;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.85); /* More opaque black */
+        }
+        .dropdown-item:hover {
+            filter: brightness(1.5);
+            animation: glow 0.8s infinite alternate;
+            background-color: rgba(0, 0, 0, 0.85); /* More opaque black */
+        }
+        footer {
+            padding: 20px;
+            text-align: center;
+            margin-bottom: -50px;
+        }
+        .social-icon {
+            color: white;
+            font-size: 30px;
+            margin: 0 10px;
+            transition: 0.3s;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        .social-icon:hover {
+            filter: brightness(1.5);
+            animation: glow 0.8s infinite alternate;
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="neon-sign-container">
+        <div class="neon-sign" id="neonSign">Jones RX</div>
+        <div class="triangle tl" id="ttl"></div>
+        <div class="triangle tr" id="ttr"></div>
+        <div class="triangle bl" id="tbl"></div>
+        <div class="triangle br" id="tbr"></div>
+        <div class="inner-triangle tl" id="titl"></div>
+        <div class="inner-triangle tr" id="titr"></div>
+        <div class="inner-triangle bl" id="tibl"></div>
+        <div class="inner-triangle br" id="tibr"></div>
+    </div>
+
+    <div class="main-content">
+        <div id="navbar" class="navbar">
+            <div class="dropdown">
+                <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseMusic" aria-expanded="true" aria-controls="collapseMusic">
+                    Music
+                </a>
+                <div id="collapseMusic" class="collapse">
+                    <a class="dropdown-item" href="#">Test 1</a>
+                    <a class="dropdown-item" href="#">Test 2</a>
+                </div>
+            </div>
+            <a class="primary-button" href="#">Merch</a>
+            <a class="primary-button" href="#">Videos</a>
+            <a class="primary-button" href="#">Events</a>
+            <div class="dropdown">
+                <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseSocial" aria-expanded="false" aria-controls="collapseSocial">
+                    Social
+                </a>
+                <div id="collapseSocial" class="collapse">
+                    <a class="dropdown-item" href="#">Test 1</a>
+                    <a class="dropdown-item" href="#">Test 2</a>
+                </div>
+    
+            </div>
+            <a class="primary-button" href="#">About</a>
+        </div>
+    </div>
+
+    <footer>
+        <a class="social-icon" href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a class="social-icon" href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a class="social-icon" href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a class="social-icon" href="https://www.twitch.tv" target="_blank"><i class="fab fa-twitch"></i></a>
+        <a class="social-icon" href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+    </footer>
+
+    <script>
+        const colors = ['red', 'yellow', 'cyan', 'green', 'purple', 'pink'];
+        const usedColors = new Set();
+
+        function getUniqueRandomColor() {
+            if (usedColors.size === colors.length) return null; // All colors used
+            let color;
+            do {
+                color = colors[Math.floor(Math.random() * colors.length)];
+            } while (usedColors.has(color));
+            usedColors.add(color);
+            return color;
+        }
+
+
+        document.querySelectorAll('.primary-button').forEach((button) => {
+            const color = getUniqueRandomColor();
+            if (color) {
+                button.style.borderColor = color;
+                button.style.color = color;
+                button.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+            }
+        });
+
+        document.querySelectorAll('.dropdown-item').forEach((button) => {
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            button.style.borderColor = color;
+            button.style.color = color;
+            button.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+        });
+
+        function changeSignColor() {
+            const neonSign = document.getElementById('neonSign');
+            const ttl = document.getElementById('ttl');
+            const ttr = document.getElementById('ttr');
+            const tbl = document.getElementById('tbl');
+            const tbr = document.getElementById('tbr');
+            const titl = document.getElementById('titl');
+            const titr = document.getElementById('titr');
+            const tibl = document.getElementById('tibl');
+            const tibr = document.getElementById('tibr');
+
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            if (color) {
+                //neonSign.style.color = color;
+                neonSign.style.textShadow = `0 0 5px ${color}, 0 0 10px ${color}, 0 0 20px ${color}, 0 0 30px ${color}`;
+
+                ttl.style.borderColor = `transparent transparent ${color} transparent`;
+                ttr.style.borderColor = `transparent transparent transparent ${color}`;
+                tbl.style.borderColor = `${color} transparent transparent transparent`;
+                tbr.style.borderColor = `transparent transparent ${color} transparent`;
+                titl.style.borderColor = `transparent transparent ${color} transparent`;
+                titr.style.borderColor = `transparent transparent transparent ${color}`;
+                tibl.style.borderColor = `${color} transparent transparent transparent`;
+                tibr.style.borderColor = `transparent transparent ${color} transparent`;
+            }
+        }
+        document.querySelectorAll('.primary-button').forEach((button) => {
+            // Randomly toggle flicker class
+            setInterval(() => {
+                if (Math.random() < 0.5) { // 50% chance to add flicker
+                    button.classList.toggle('flicker');
+                }
+            }, 10000); // Check every 2 seconds
+        });
+                
+        setInterval(() => {
+            changeSignColor();
+        }, 2000);
+        
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
