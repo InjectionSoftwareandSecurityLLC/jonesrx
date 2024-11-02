@@ -242,20 +242,22 @@
                     Music
                 </a>
                 <div id="collapseMusic" class="collapse">
-                    <a class="dropdown-item" href="#">Test 1</a>
-                    <a class="dropdown-item" href="#">Test 2</a>
+                    <a class="dropdown-item" id="ddSpotify" href="https://open.spotify.com/artist/159bHbMtw2LRCSPg5gWmh6?si=8kAYsNVWTce81hIURvSpPg"><i class="fab fa-spotify"></i> Spotify</a>
+                    <a class="dropdown-item" id="ddAppleMusic" href="https://music.apple.com/us/artist/jones-rx/1776303110"><i class="fab fa-apple"></i> Apple Music</a>
                 </div>
             </div>
-            <a class="primary-button" href="#">Merch</a>
-            <a class="primary-button" href="#">Videos</a>
+            <a class="primary-button" href="https://sweltersounds.com/collections/jones">Merch</a>
+            <a class="primary-button" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae">Videos</a>
             <a class="primary-button" href="#">Events</a>
             <div class="dropdown">
                 <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseSocial" aria-expanded="false" aria-controls="collapseSocial">
                     Social
                 </a>
                 <div id="collapseSocial" class="collapse">
-                    <a class="dropdown-item" href="#">Test 1</a>
-                    <a class="dropdown-item" href="#">Test 2</a>
+                    <a class="dropdown-item" id="ddTiktok" href="https://www.tiktok.com/@jonesrx" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>
+                    <a class="dropdown-item" id="ddInsta" href="https://www.instagram.com/itsjonesrx/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a class="dropdown-item" id="ddYouTube" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae" target="_blank"><i class="fab fa-youtube"></i>YouTube</a>
+                    <a class="dropdown-item" id="ddFacebook" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i>Facebook</a>
                 </div>
     
             </div>
@@ -264,11 +266,11 @@
     </div>
 
     <footer>
-        <a class="social-icon" href="https://www.youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a class="social-icon" href="https://www.tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
-        <a class="social-icon" href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a class="social-icon" href="https://www.twitch.tv" target="_blank"><i class="fab fa-twitch"></i></a>
-        <a class="social-icon" href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a class="social-icon" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a class="social-icon" href="https://www.tiktok.com/@jonesrx" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a class="social-icon" href="https://www.instagram.com/itsjonesrx/" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a class="social-icon" href="https://www.twitch.tv/3ndg4me_" target="_blank"><i class="fab fa-twitch"></i></a>
+        <a class="social-icon" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i></a>
     </footer>
 
     <script>
@@ -295,12 +297,47 @@
             }
         });
 
-        document.querySelectorAll('.dropdown-item').forEach((button) => {
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            button.style.borderColor = color;
-            button.style.color = color;
-            button.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-        });
+            //Assign drop down button colors
+            const ddSpotify = document.getElementById('ddSpotify');
+            const ddAppleMusic = document.getElementById('ddAppleMusic');
+            const ddTikTok = document.getElementById('ddTiktok');
+            const ddInsta = document.getElementById('ddInsta');
+            const ddYouTube = document.getElementById('ddYouTube');
+            const ddFacebook = document.getElementById('ddFacebook');
+
+            var color = "green";
+            ddSpotify.style.borderColor = color;
+            ddSpotify.style.color = color;
+            ddSpotify.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+            var color = "pink";
+            ddAppleMusic.style.borderColor = color;
+            ddAppleMusic.style.color = color;
+            ddAppleMusic.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+            var color = "white";
+            ddTikTok.style.borderColor = color;
+            ddTikTok.style.color = color;
+            ddTikTok.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+            var color = "yellow";
+            ddInsta.style.borderColor = color;
+            ddInsta.style.color = color;
+            ddInsta.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+            var color = "red";
+            ddYouTube.style.borderColor = color;
+            ddYouTube.style.color = color;
+            ddYouTube.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+
+            var color = "blue";
+            ddFacebook.style.borderColor = color;
+            ddFacebook.style.color = color;
+            ddFacebook.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+
+
+
 
         function changeSignColor() {
             const neonSign = document.getElementById('neonSign');
