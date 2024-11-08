@@ -221,6 +221,47 @@
             color: black;
         }
 
+        /* Style for the TV turn-off overlay */
+        #tvOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(
+            180deg, /* Horizontal gradient */
+            white,
+            black,
+            cyan,
+            white,
+            purple,
+            black,
+            pink
+        );
+        display: none;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0.5;
+        transform-origin: center center;
+        }
+
+        /* Turn-off animation */
+        @keyframes tvTurnOff {
+        0% {
+            opacity: 0.5;
+            filter: brightness(100%);
+        }
+        50% {
+            opacity: 0.2;
+            filter: brightness(200%);
+        }
+        100% {
+            opacity: 0;
+        }
+        }
+
+
+
     </style>
 </head>
 <body>
@@ -250,7 +291,7 @@
             </div>
             <a class="primary-button" href="https://sweltersounds.com/collections/jones">Merch</a>
             <a class="primary-button" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae">Videos</a>
-            <a class="primary-button" href="events.html">Events</a>
+            <a class="primary-button" id="events-button" href="events.html">Events</a>
             <div class="dropdown">
                 <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseSocial" aria-expanded="false" aria-controls="collapseSocial">
                     Social
@@ -263,10 +304,11 @@
                 </div>
     
             </div>
-            <a class="primary-button" href="about.html">About</a>
+            <a class="primary-button" id="about-button" href="about.html">About</a>
         </div>
     </div>
 
+    <div id="tvOverlay"></div>
 
     <footer>
         <a class="social-icon" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae" target="_blank"><i class="fab fa-youtube"></i></a>
@@ -380,6 +422,36 @@
         setInterval(() => {
             changeSignColor();
         }, 2000);
+
+
+        document.getElementById("about-button").addEventListener("click", function(event) {
+            event.preventDefault();
+            
+            // Show overlay and start TV turn-off animation
+            const overlay = document.getElementById("tvOverlay");
+            overlay.style.display = "block";
+            overlay.style.animation = "tvTurnOff 1s ease-in-out forwards";
+
+            // Delay navigation until animation completes
+            setTimeout(() => {
+                window.location.href = "about.html";  // Update this with your desired URL
+            }, 1000); // Match this duration with the animation length
+        });
+
+        document.getElementById("events-button").addEventListener("click", function(event) {
+            event.preventDefault();
+            
+            // Show overlay and start TV turn-off animation
+            const overlay = document.getElementById("tvOverlay");
+            overlay.style.display = "block";
+            overlay.style.animation = "tvTurnOff 1s ease-in-out forwards";
+
+            // Delay navigation until animation completes
+            setTimeout(() => {
+                window.location.href = "events.html";  // Update this with your desired URL
+            }, 1000); // Match this duration with the animation length
+        });
+
         
     </script>
 
