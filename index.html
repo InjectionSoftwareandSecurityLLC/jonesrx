@@ -16,7 +16,7 @@
         body {
             background-color: black;
             background-image: url('https://raw.githubusercontent.com/InjectionSoftwareandSecurityLLC/jonesrx/refs/heads/main/img/background.gif');
-            background-size: cover;
+            background-size: 105%;
             background-position: left; /* Shift background to the left */
             display: flex;
             flex-direction: column;
@@ -149,6 +149,28 @@
             min-width: 200px;
             width: 150px;
         }
+        .primary-presave-button {
+            font-family: 'Jersey 20', cursive;
+            text-align: center;
+            padding: 20px 40px;
+            border: 2px solid;
+            background-color: transparent;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            margin: 10px;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.85); /* More opaque black */
+            font-size: 2rem;
+            min-width: 200px;
+            width: 350px;
+        }
+
+        .pre-save-content{
+            margin-top: 5%;
+        }
+        
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -156,6 +178,9 @@
             }
             .primary-button {
                 width: 300px;
+            }
+            .pre-save-content {
+                text-align: center;
             }
         }
         .flicker {
@@ -211,7 +236,6 @@
             font-size: 30px;
             margin: 0 10px;
             transition: 0.3s;
-            display: inline-block;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         .social-icon:hover {
@@ -276,6 +300,15 @@
         <div class="inner-triangle tr" id="titr"></div>
         <div class="inner-triangle bl" id="tibl"></div>
         <div class="inner-triangle br" id="tibr"></div>
+    </div>
+
+    <div class="container pre-save-content">
+        <div class="row justify-content-md-center">
+            <div class="col-md-auto">
+                <a class="primary-presave-button" id="presave-button" href="https://distrokid.com/hyperfollow/jonesrx/give-up--go-home">Pre-Save <br/> Give Up/Go Home <br/> <img class="img-fluid" src="img/giveup_gohome.jpg" />
+                </a>
+            </div>
+        </div>
     </div>
 
     <div class="main-content">
