@@ -12,7 +12,12 @@
             height: 100%; /* Ensure body takes full height */
             margin: 0; /* Remove default margin */
         }
-                
+
+        @font-face {
+            font-family: "Neon";
+            src: url('https://raw.githubusercontent.com/InjectionSoftwareandSecurityLLC/jonesrx/refs/heads/main/fonts/neon.ttf') format("truetype");
+        }
+
         body {
             background-color: black;
             background-image: url('https://raw.githubusercontent.com/InjectionSoftwareandSecurityLLC/jonesrx/refs/heads/main/img/background.gif');
@@ -22,7 +27,7 @@
             flex-direction: column;
             align-items: center;
             padding-top: 20px; /* Add spacing at the top */
-            font-family: 'Jersey 20', cursive;
+            font-family: 'Neon', cursive;
         }
         .neon-sign-container {
             position: relative;
@@ -47,7 +52,7 @@
             100% { transform: rotate(-2deg); }
         }
         .neon-sign {
-            font-family: 'Jersey 20', cursive;
+            font-family: 'Neon', cursive;
             font-size: 5rem; /* Increase font size */
             color: white; /* Default neon color */
             text-shadow: 
@@ -133,7 +138,7 @@
             flex-wrap: wrap;
         }
         .primary-button {
-            font-family: 'Jersey 20', cursive;
+            font-family: 'Neon', cursive;
             text-align: center;
             padding: 20px 40px;
             border: 2px solid;
@@ -185,7 +190,7 @@
             box-shadow: none;
         }
         .dropdown-item {
-            font-family: 'Jersey 20', cursive;
+            font-family: 'Neon', cursive;
             color: white;
             text-align: center;
             padding: 15px 30px;
@@ -283,7 +288,7 @@
 <body>
 
     <div class="neon-sign-container">
-        <div class="neon-sign" id="neonSign">Jones RX</div>
+        <div class="neon-sign" id="neonSign" text-align="center">Jones<br/>&nbsp;&nbsp;&nbsp;RX</div>
         <div class="triangle tl" id="ttl"></div>
         <div class="triangle tr" id="ttr"></div>
         <div class="triangle bl" id="tbl"></div>
