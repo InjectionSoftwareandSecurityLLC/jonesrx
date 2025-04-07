@@ -172,10 +172,6 @@
             min-width: 200px;
             width: 350px;
         }
-
-        .pre-save-content{
-            margin-top: 5%;
-        }
         
         @media (max-width: 768px) {
             .navbar {
@@ -290,11 +286,54 @@
         }
         }
 
+        #neonOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOutOverlay 1.5s ease-out 1.5s forwards;
+        }
 
+        .overlay-text {
+            font-family: 'Neon', cursive;
+            font-size: 7rem;
+            color: white;
+            text-align: center;
+            text-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 40px cyan;
+            animation: flickerIntro 1s infinite;
+            transition: text-shadow 0.3s ease;
+        }
+
+        @keyframes flickerIntro {
+            0% { opacity: 1; }
+            20% { opacity: 0.8; }
+            40% { opacity: 0.5; }
+            60% { opacity: 0.6; }
+            80% { opacity: 0.9; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeOutOverlay {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
 
     </style>
 </head>
 <body>
+
+    <!-- Overlay Neon Intro -->
+    <div id="neonOverlay">
+        <div class="overlay-text" id="overlayText">Jones RX</div>
+    </div>
 
     <div class="neon-sign-container">
         <div class="neon-sign" id="neonSign" text-align="center">Jones<br/>&nbsp;RX</div>
@@ -491,7 +530,24 @@
             }, 1000); // Match this duration with the animation length
         });
 
-        
+        const overlayText = document.getElementById('overlayText');
+        const overlayObj = document.getElementById('neonOverlay');
+        const overlayColors = ['cyan', 'magenta', 'yellow', 'lime', 'hotpink', 'orange'];
+
+        // Pick one random color on load
+        const randomColor = overlayColors[Math.floor(Math.random() * overlayColors.length)];
+        overlayText.style.textShadow = `
+            0 0 10px ${randomColor},
+            0 0 20px ${randomColor},
+            0 0 40px ${randomColor},
+            0 0 60px ${randomColor}`;
+
+        // Remove overlay after full animation
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                overlayObj.style.display = 'none';
+            }, 3000); // 1.5s delay + 1.5s fade
+        });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
