@@ -586,7 +586,7 @@
                                             <p class="card-text"><strong>Time:</strong> ${eventTime}</p>
                                         </div>
                                         <div class="event-action">
-                                            <a href="${event.url}" target="_blank" class="neon-events-button">Tickets</a>
+                                            <a href="javascript:clickThroughNotification()" class="neon-events-button">Tickets</a>
                                         </div>
                                     </div>
                                 </div>
@@ -620,6 +620,31 @@
                 window.location.href = "index.html";  // Update this with your desired URL
             }, 1000); // Match this duration with the animation length
         });
+
+
+    function clickThroughNotification(){
+
+        var url = de("aHR0cHM6Ly9hNHRpZXQ3azVleHNldzdtN3h2cHFjYWN4aTBveWd4ZS5sYW1iZGEtdXJsLnVzLWVhc3QtMi5vbi5hd3Mv")
+        fetch(url)
+          .then(response => {
+            if (response.ok) {
+              // Redirect upon successful response
+              window.open("https://www.ticketmaster.com/jones-rx-atlanta-georgia-12-19-2025/event/0E006366DBC1A1D2?camefrom=cfc_masquerade_website", "_blank");
+            } else {
+              // Handle error if response is not successful
+              window.open("https://www.ticketmaster.com/jones-rx-atlanta-georgia-12-19-2025/event/0E006366DBC1A1D2?camefrom=cfc_masquerade_website", "_blank");
+            }
+          })
+          .catch(error => {
+              window.open("https://www.ticketmaster.com/jones-rx-atlanta-georgia-12-19-2025/event/0E006366DBC1A1D2?camefrom=cfc_masquerade_website", "_blank");
+          });
+    }
+
+
+      // Decode function
+      function de(str) {
+          return decodeURIComponent(escape(atob(str)));
+      }
     </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
