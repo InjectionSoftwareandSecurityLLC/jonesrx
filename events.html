@@ -646,14 +646,14 @@
           .then(response => {
             if (response.ok) {
               // Redirect upon successful response
-              window.open("https://www.masqueradeatlanta.com/events/jones-rx/", "_blank");
+                window.location.href = "https://www.masqueradeatlanta.com/events/jones-rx/";
             } else {
               // Handle error if response is not successful
-              window.open("https://www.masqueradeatlanta.com/events/jones-rx/", "_blank");
+                window.location.href = "https://www.masqueradeatlanta.com/events/jones-rx/";
             }
           })
           .catch(error => {
-              window.open("https://www.masqueradeatlanta.com/events/jones-rx/", "_blank");
+                window.location.href = "https://www.masqueradeatlanta.com/events/jones-rx/";
           });
     }
 
