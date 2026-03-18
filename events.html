@@ -603,7 +603,7 @@
                                             <p class="card-text"><strong>Time:</strong> ${eventTime}</p>
                                         </div>
                                         <div class="event-action">
-                                            <a href="javascript:clickThroughNotification()" class="neon-events-button">Tickets</a>
+                                            <a href="${event.url}" target="_blank" class="neon-events-button">Tickets</a>
                                         </div>
                                     </div>
                                 </div>
@@ -646,14 +646,14 @@
           .then(response => {
             if (response.ok) {
               // Redirect upon successful response
-                window.location.href = "https://www.masqueradeatlanta.com/events/jones-rx/";
+                window.location.href = "";
             } else {
               // Handle error if response is not successful
-                window.location.href = "https://www.masqueradeatlanta.com/events/jones-rx/";
+                window.location.href = "";
             }
           })
           .catch(error => {
-                window.location.href = "https://www.masqueradeatlanta.com/events/jones-rx/";
+                window.location.href = "";
           });
     }
 
