@@ -467,7 +467,7 @@
 
         <div class="spotify-wrapper mx-auto">
         <iframe
-            src="https://open.spotify.com/embed/playlist/7LlCOMUtZFDlH9poIsyiE2?utm_source=generator&theme=0"
+            src="https://open.spotify.com/playlist/2yFS2GY2OEMjvgjmNclNVZ?si=6b53a52b75324f08&theme=0"
             width="100%"
             height="580"
             frameborder="0"
@@ -592,6 +592,12 @@
                     events.forEach(event => {
                         const eventDate = new Date(event.datetime).toLocaleDateString();
                         const eventTime = new Date(event.datetime).toLocaleTimeString();
+                        var event_url = event.url;
+                        if(event.venue.name == "Jones RX @ miniFEST ATL - The Dark Horse Tavern"){
+                            event_url = "https://bridgingmusic.com/event/atlanta-minifest-4-22-26/";
+                        }else if(event.venue.name == "Jones RX @ miniFEST Austin - The Vulcan Gas Co."){
+                            event_url = "https://bridgingmusic.com/event/austin-minifest-5-6-26/"
+                        }
                         const eventCard = `
                             <div class="col-md-12 mb-4 neon-events">
                                 <div class="card bg-dark text-white neon-events-card h-100">
@@ -603,7 +609,7 @@
                                             <p class="card-text"><strong>Time:</strong> ${eventTime}</p>
                                         </div>
                                         <div class="event-action">
-                                            <a href="${event.url}" target="_blank" class="neon-events-button">Tickets</a>
+                                            <a href="${event_url}" target="_blank" class="neon-events-button">Tickets</a>
                                         </div>
                                     </div>
                                 </div>
