@@ -1,0 +1,66 @@
+/* ── Pre-save Button ── */
+.primary-presave-button {
+    font-family: 'Neon', cursive;
+    text-align: center;
+    padding: 20px 40px;
+    border: 2px solid;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+    margin: 10px;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    font-size: 2rem;
+    min-width: 200px;
+    width: 350px;
+}
+
+/* ── Neon Overlay Intro ── */
+#neonOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeOutOverlay 1.5s ease-out 1.5s forwards;
+}
+
+.overlay-text {
+    font-family: 'Neon', cursive;
+    font-size: 7rem;
+    color: white;
+    text-align: center;
+    text-shadow: 0 0 10px cyan, 0 0 20px cyan, 0 0 40px cyan;
+    animation: flickerIntro 1s infinite;
+    transition: text-shadow 0.3s ease;
+}
+
+@keyframes flickerIntro {
+    0% { opacity: 1; }
+    20% { opacity: 0.8; }
+    40% { opacity: 0.5; }
+    60% { opacity: 0.6; }
+    80% { opacity: 0.9; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeOutOverlay {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .pre-save-content {
+        text-align: center;
+        padding: 0px;
+    }
+}

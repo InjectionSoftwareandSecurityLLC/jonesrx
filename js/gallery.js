@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var GALLERY_DIR = 'img/promo/';
+    var GALLERY_DIR = '/img/promo/';
     var EXTENSIONS = ['jpg', 'png'];
     var MAX_PROBE  = 50; // probe promo1 through promo50
 

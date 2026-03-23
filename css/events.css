@@ -1,0 +1,145 @@
+/* ── Neon Warn / Err Signs ── */
+.neon-warn {
+    font-family: 'Neon', cursive;
+    font-size: 5rem;
+    color: white;
+    text-shadow:
+        0 0 5px yellow,
+        0 0 10px yellow,
+        0 0 20px yellow,
+        0 0 30px yellow;
+    transform: rotate(-10deg);
+}
+
+.neon-err {
+    font-family: 'Neon', cursive;
+    font-size: 5rem;
+    color: white;
+    text-shadow:
+        0 0 5px red,
+        0 0 10px red,
+        0 0 20px red,
+        0 0 30px red;
+    transform: rotate(-10deg);
+}
+
+/* ── Events Container ── */
+.neon-events {
+    font-family: 'Neon', cursive;
+    text-align: center;
+    border: 2px solid;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    font-size: 2rem;
+    min-width: 200px;
+    width: 150px;
+}
+
+.neon-events-card {
+    background-color: transparent !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 280px;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.event-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 160px;
+    overflow: hidden;
+    margin-right: 20px;
+}
+
+.event-details h4, .event-details h5, .event-details p {
+    margin: 5px 0;
+    font-size: 1.2rem;
+}
+
+.card-body img {
+    max-width: 120px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.event-action {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-body .event-action a {
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.card-body .event-action .neon-events-button {
+    margin-top: 10px;
+}
+
+/* ── Events Button ── */
+.neon-events-button {
+    font-family: 'Neon', cursive;
+    text-align: center;
+    padding: 20px 40px;
+    border: 2px solid;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    font-size: 2rem;
+    min-width: 200px;
+    width: 150px;
+}
+
+.neon-events-button:hover, .neon-events-button:focus {
+    filter: brightness(1.5);
+    animation: glow 0.8s infinite alternate;
+    text-decoration: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .neon-events-card {
+        flex-direction: column;
+        height: auto;
+        align-items: center;
+        width: 100%;
+    }
+
+    .neon-events {
+        width: 100%;
+    }
+
+    .card-body {
+        flex-direction: column;
+    }
+
+    .event-details {
+        max-height: none;
+    }
+
+    .neon-events-button {
+        width: 300px;
+    }
+}
