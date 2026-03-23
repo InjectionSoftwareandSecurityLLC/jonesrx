@@ -1,25 +1,88 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const thumbnails = document.querySelectorAll('.gallery-thumb');
-    const preview = document.getElementById('galleryPreview');
-    const previewImg = document.getElementById('galleryPreviewImg');
-    const prevBtn = document.getElementById('galleryPrev');
-    const nextBtn = document.getElementById('galleryNext');
-    const lightbox = document.getElementById('galleryLightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const lightboxClose = document.getElementById('lightboxClose');
-    const lightboxPrev = document.getElementById('lightboxPrev');
-    const lightboxNext = document.getElementById('lightboxNext');
-    const lightboxCounter = document.getElementById('lightboxCounter');
+    var GALLERY_DIR = 'img/promo/';
+    var EXTENSIONS = ['jpg', 'png'];
+    var MAX_PROBE  = 50; // probe promo1 through promo50
+
+    var thumbsContainer = document.getElementById('galleryThumbs');
+    var preview         = document.getElementById('galleryPreview');
+    var previewImg      = document.getElementById('galleryPreviewImg');
+    var prevBtn         = document.getElementById('galleryPrev');
+    var nextBtn         = document.getElementById('galleryNext');
+    var lightbox        = document.getElementById('galleryLightbox');
+    var lightboxImg     = document.getElementById('lightboxImg');
+    var lightboxClose   = document.getElementById('lightboxClose');
+    var lightboxPrev    = document.getElementById('lightboxPrev');
+    var lightboxNext    = document.getElementById('lightboxNext');
+    var lightboxCounter = document.getElementById('lightboxCounter');
 
     var currentIndex = 0;
-    var images = [];
+    var images     = [];
+    var thumbnails = [];
 
-    // Build images array from thumbnails
-    thumbnails.forEach(function (thumb, i) {
-        images.push(thumb.src);
-    });
+    // ── Auto-discover images by probing promo1..MAX_PROBE with each extension ──
+    function probeImage(src) {
+        return new Promise(function (resolve) {
+            var img = new Image();
+            img.onload  = function () { resolve(src); };
+            img.onerror = function () { resolve(null); };
+            img.src = src;
+        });
+    }
 
+    function discoverImages() {
+        var probes = [];
+        for (var n = 1; n <= MAX_PROBE; n++) {
+            for (var e = 0; e < EXTENSIONS.length; e++) {
+                probes.push({ num: n, src: GALLERY_DIR + 'promo' + n + '.' + EXTENSIONS[e] });
+            }
+        }
+
+        var promises = probes.map(function (p) {
+            return probeImage(p.src).then(function (result) {
+                return result ? { num: p.num, src: p.src } : null;
+            });
+        });
+
+        return Promise.all(promises).then(function (results) {
+            // Keep only found images, one per number (first extension wins)
+            var seen = {};
+            var found = [];
+            results.forEach(function (r) {
+                if (r && !seen[r.num]) {
+                    seen[r.num] = true;
+                    found.push(r);
+                }
+            });
+            // Sort descending by number
+            found.sort(function (a, b) { return b.num - a.num; });
+            return found.map(function (r) { return r.src; });
+        });
+    }
+
+    // ── Build gallery once images are discovered ──
+    function buildGallery(srcs) {
+        images = srcs;
+
+        srcs.forEach(function (src, i) {
+            var img = document.createElement('img');
+            img.className = 'gallery-thumb';
+            img.src = src;
+            img.alt = 'Photo ' + (i + 1);
+            thumbsContainer.appendChild(img);
+            thumbnails.push(img);
+        });
+
+        // Attach thumbnail click handlers
+        thumbnails.forEach(function (thumb, i) {
+            thumb.addEventListener('click', function () { setActive(i); });
+        });
+
+        if (images.length) setActive(0);
+    }
+
+    // ── Gallery controls ──
     function setActive(index) {
+        if (images.length === 0) return;
         if (index < 0) index = images.length - 1;
         if (index >= images.length) index = 0;
         currentIndex = index;
@@ -33,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Scroll active thumbnail into view
         var activeThumb = thumbnails[currentIndex];
         if (activeThumb) {
             activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -59,13 +121,6 @@ document.addEventListener('DOMContentLoaded', function () {
         lightbox.classList.remove('open');
         document.body.style.overflow = '';
     }
-
-    // Thumbnail click
-    thumbnails.forEach(function (thumb, i) {
-        thumb.addEventListener('click', function () {
-            setActive(i);
-        });
-    });
 
     // Preview navigation
     prevBtn.addEventListener('click', function (e) {
@@ -104,17 +159,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Click backdrop to close
     lightbox.addEventListener('click', function (e) {
-        if (e.target === lightbox) {
-            closeLightbox();
-        }
+        if (e.target === lightbox) closeLightbox();
     });
 
     // Keyboard navigation
     document.addEventListener('keydown', function (e) {
         var isLightboxOpen = lightbox.classList.contains('open');
-        if (e.key === 'Escape' && isLightboxOpen) {
-            closeLightbox();
-        }
+        if (e.key === 'Escape' && isLightboxOpen) closeLightbox();
         if (e.key === 'ArrowLeft') {
             setActive(currentIndex - 1);
             if (isLightboxOpen) lightboxImg.src = images[currentIndex];
@@ -127,25 +178,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Touch/swipe support for lightbox
     var touchStartX = 0;
-    var touchEndX = 0;
-
     lightbox.addEventListener('touchstart', function (e) {
         touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
 
     lightbox.addEventListener('touchend', function (e) {
-        touchEndX = e.changedTouches[0].screenX;
-        var diff = touchStartX - touchEndX;
+        var diff = touchStartX - e.changedTouches[0].screenX;
         if (Math.abs(diff) > 50) {
-            if (diff > 0) {
-                setActive(currentIndex + 1);
-            } else {
-                setActive(currentIndex - 1);
-            }
+            setActive(currentIndex + (diff > 0 ? 1 : -1));
             lightboxImg.src = images[currentIndex];
         }
     }, { passive: true });
 
-    // Initialize first image
-    setActive(0);
+    // ── Kick off discovery ──
+    discoverImages().then(buildGallery);
 });
