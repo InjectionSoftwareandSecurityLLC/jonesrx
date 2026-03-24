@@ -8,6 +8,7 @@ styleDropdown('ddFacebook', 'blue');
 
 setupTvTransition('about-button', '/about');
 setupTvTransition('events-button', '/events');
+setupTvTransition('videos-button', '/videos');
 
 // Neon overlay intro
 const overlayText = document.getElementById('overlayText');

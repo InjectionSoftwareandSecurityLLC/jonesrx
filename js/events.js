@@ -5,6 +5,7 @@ styleDropdown('ddYouTube', 'red');
 styleDropdown('ddFacebook', 'blue');
 
 setupTvTransition('home-button', '/');
+setupTvTransition('videos-button', '/videos');
 
 // Bandsintown API Call
 async function fetchEvents() {
