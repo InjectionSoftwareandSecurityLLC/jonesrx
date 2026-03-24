@@ -1,0 +1,460 @@
+/* ── Game Overlay ── */
+#gameOverlay {
+    display: none;
+    width: 94%;
+    max-width: calc(85vh * 0.96);
+    height: auto;
+    aspect-ratio: 24 / 25;
+    max-height: 85vh;
+    box-sizing: border-box;
+    z-index: 99999;
+    background: #000;
+    flex-direction: column;
+    overflow: hidden;
+    border: 3px solid cyan;
+    box-shadow:
+        0 0 15px cyan,
+        0 0 40px rgba(0, 255, 255, 0.3),
+        inset 0 0 30px rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+}
+
+#gameOverlay.active {
+    display: flex;
+}
+
+/* Dim the page behind the game */
+#gameBackdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 99998;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameBackdrop.active {
+    display: flex;
+}
+
+/* ── HUD (top bar) ── */
+.game-hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background: rgba(0, 0, 0, 0.85);
+    border-bottom: 2px solid cyan;
+    box-shadow: 0 2px 15px rgba(0, 255, 255, 0.4);
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.game-score-label,
+.game-high-label {
+    font-family: 'Neon', cursive;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.game-score-value {
+    font-family: 'Neon', cursive;
+    font-size: 2rem;
+    color: cyan;
+    text-shadow:
+        0 0 5px cyan,
+        0 0 15px cyan,
+        0 0 30px rgba(0, 255, 255, 0.5);
+    margin: 0;
+    line-height: 1;
+}
+
+.game-high-value {
+    font-family: 'Neon', cursive;
+    font-size: 2rem;
+    color: magenta;
+    text-shadow:
+        0 0 5px magenta,
+        0 0 15px magenta,
+        0 0 30px rgba(255, 0, 255, 0.5);
+    margin: 0;
+    line-height: 1;
+}
+
+.game-score-box,
+.game-high-box {
+    text-align: center;
+}
+
+.game-exit-btn {
+    font-family: 'Neon', cursive;
+    font-size: 1rem;
+    color: red;
+    background: none;
+    border: 2px solid red;
+    padding: 4px 14px;
+    cursor: pointer;
+    text-shadow: 0 0 5px red;
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+    transition: background 0.3s, box-shadow 0.3s;
+    letter-spacing: 1px;
+}
+
+.game-exit-btn:hover {
+    background: rgba(255, 0, 0, 0.15);
+    box-shadow: 0 0 15px red;
+}
+
+/* ── Game Area ── */
+.game-area {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background-color: #000;
+    background-image: url('../assets/sprites/bg_anim.gif');
+    background-size: 100% 100%;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+}
+
+/* ── Ground line ── */
+.game-ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: cyan;
+    box-shadow: 0 0 8px cyan, 0 -2px 15px rgba(0, 255, 255, 0.3);
+    z-index: 1;
+}
+
+/* ── Character ── */
+.game-character {
+    position: absolute;
+    bottom: 4px;
+    left: 10%;
+    width: 80px;
+    height: 80px;
+    z-index: 3;
+    transition: none;
+}
+
+.game-character img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: auto;
+}
+
+.game-character.jumping {
+    animation: charJump 0.5s ease-out forwards;
+}
+
+@keyframes charJump {
+    0%   { transform: translateY(0); }
+    40%  { transform: translateY(-160px); }
+    50%  { transform: translateY(-165px); }
+    100% { transform: translateY(0); }
+}
+
+/* ── Obstacle ── */
+.game-obstacle {
+    position: absolute;
+    bottom: 4px;
+    width: 50px;
+    height: 60px;
+    z-index: 2;
+}
+
+.game-obstacle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ── Start Screen ── */
+.game-start-screen,
+.game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10;
+    gap: 20px;
+}
+
+.game-start-title {
+    font-family: 'Neon', cursive;
+    font-size: 3rem;
+    color: white;
+    text-shadow:
+        0 0 5px cyan,
+        0 0 15px cyan,
+        0 0 30px magenta,
+        0 0 50px magenta;
+    text-align: center;
+    animation: loaderFlicker 2s ease-in-out infinite;
+}
+
+.game-start-prompt,
+.game-over-prompt {
+    font-family: 'Neon', cursive;
+    font-size: 1.2rem;
+    color: cyan;
+    text-shadow: 0 0 8px cyan;
+    animation: promptPulse 1.5s ease-in-out infinite;
+    text-align: center;
+}
+
+@keyframes promptPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.game-over-title {
+    font-family: 'Neon', cursive;
+    font-size: 3.5rem;
+    color: red;
+    text-shadow:
+        0 0 5px red,
+        0 0 15px red,
+        0 0 30px rgba(255, 0, 0, 0.6);
+    text-align: center;
+}
+
+.game-over-score {
+    font-family: 'Neon', cursive;
+    font-size: 1.8rem;
+    color: white;
+    text-shadow: 0 0 10px cyan;
+    text-align: center;
+}
+
+.game-over-high {
+    font-family: 'Neon', cursive;
+    font-size: 1.2rem;
+    color: magenta;
+    text-shadow: 0 0 8px magenta;
+    text-align: center;
+}
+
+/* Score pop animation on point */
+.game-score-value.pop {
+    animation: scorePop 0.3s ease-out;
+}
+
+@keyframes scorePop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.4); text-shadow: 0 0 10px cyan, 0 0 25px cyan, 0 0 50px white; }
+    100% { transform: scale(1); }
+}
+
+/* ── Mobile tap zone ── */
+.game-tap-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    #gameOverlay {
+        width: 96%;
+        max-width: calc(90vh * 0.96);
+        max-height: 90vh;
+    }
+
+    .game-hud {
+        padding: 8px 14px;
+    }
+
+    .game-score-value,
+    .game-high-value {
+        font-size: 1.5rem;
+    }
+
+    .game-score-label,
+    .game-high-label {
+        font-size: 0.65rem;
+    }
+
+    .game-exit-btn {
+        font-size: 0.8rem;
+        padding: 3px 10px;
+    }
+
+    .game-character {
+        width: 60px;
+        height: 60px;
+        left: 8%;
+    }
+
+    .game-obstacle {
+        width: 40px;
+        height: 48px;
+    }
+
+    @keyframes charJump {
+        0%   { transform: translateY(0); }
+        40%  { transform: translateY(-120px); }
+        50%  { transform: translateY(-125px); }
+        100% { transform: translateY(0); }
+    }
+
+    .game-start-title {
+        font-size: 2rem;
+    }
+
+    .game-over-title {
+        font-size: 2.5rem;
+    }
+
+    .game-start-prompt,
+    .game-over-prompt {
+        font-size: 1rem;
+    }
+
+    .game-over-score {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #gameOverlay {
+        width: 96%;
+        max-width: calc(92vh * 0.96);
+        max-height: 92vh;
+        border-width: 2px;
+    }
+
+    .game-hud {
+        padding: 6px 10px;
+    }
+
+    .game-character {
+        width: 44px;
+        height: 44px;
+        left: 6%;
+    }
+
+    .game-obstacle {
+        width: 30px;
+        height: 36px;
+    }
+
+    @keyframes charJump {
+        0%   { transform: translateY(0); }
+        40%  { transform: translateY(-85px); }
+        50%  { transform: translateY(-90px); }
+        100% { transform: translateY(0); }
+    }
+
+    .game-score-value,
+    .game-high-value {
+        font-size: 1rem;
+    }
+
+    .game-score-label,
+    .game-high-label {
+        font-size: 0.55rem;
+    }
+
+    .game-exit-btn {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+    }
+
+    .game-start-title {
+        font-size: 1.5rem;
+    }
+
+    .game-over-title {
+        font-size: 1.8rem;
+    }
+
+    .game-start-prompt,
+    .game-over-prompt {
+        font-size: 0.85rem;
+    }
+
+    .game-over-score {
+        font-size: 1.1rem;
+    }
+
+    .game-over-high {
+        font-size: 0.9rem;
+    }
+}
+
+/* Landscape phones — shorter viewport, wider game */
+@media (max-height: 500px) {
+    #gameOverlay {
+        width: 60%;
+        max-width: calc(94vh * 0.96);
+        max-height: 94vh;
+    }
+
+    .game-hud {
+        padding: 4px 10px;
+    }
+
+    .game-score-value,
+    .game-high-value {
+        font-size: 1rem;
+    }
+
+    .game-score-label,
+    .game-high-label {
+        font-size: 0.5rem;
+    }
+
+    .game-character {
+        width: 40px;
+        height: 40px;
+    }
+
+    .game-obstacle {
+        width: 28px;
+        height: 34px;
+    }
+
+    @keyframes charJump {
+        0%   { transform: translateY(0); }
+        40%  { transform: translateY(-70px); }
+        50%  { transform: translateY(-75px); }
+        100% { transform: translateY(0); }
+    }
+
+    .game-start-title {
+        font-size: 1.3rem;
+    }
+
+    .game-over-title {
+        font-size: 1.5rem;
+    }
+
+    .game-start-prompt,
+    .game-over-prompt {
+        font-size: 0.8rem;
+    }
+}
