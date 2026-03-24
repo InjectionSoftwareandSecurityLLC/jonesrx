@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Jersey+20&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/videos.css">
+    <link rel="stylesheet" href="css/common.css?v=2">
+    <link rel="stylesheet" href="css/videos.css?v=2">
 </head>
 <body>
 
@@ -27,13 +27,22 @@
     <div class="main-content">
         <div id="navbar" class="navbar">
             <div class="dropdown">
-                <a class="primary-button" id="home-button" href="/">
+                <a class="primary-button" id="home-button" href="/index.html">
                     Home
                 </a>
             </div>
+            <div class="dropdown">
+                <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseMusic" aria-expanded="true" aria-controls="collapseMusic">
+                    Music
+                </a>
+                <div id="collapseMusic" class="collapse">
+                    <a class="dropdown-item" id="ddSpotify" href="https://open.spotify.com/artist/159bHbMtw2LRCSPg5gWmh6?si=8kAYsNVWTce81hIURvSpPg"><i class="fab fa-spotify"></i> Spotify</a>
+                    <a class="dropdown-item" id="ddAppleMusic" href="https://music.apple.com/us/artist/jones-rx/1776303110"><i class="fab fa-apple"></i> Apple Music</a>
+                </div>
+            </div>
             <a class="primary-button" href="https://sweltersounds.com/collections/jones">Merch</a>
-            <a class="primary-button" id="videos-button" href="/videos">Videos</a>
-            <a class="primary-button" id="events-button" href="/events">Events</a>
+            <a class="primary-button" id="videos-button" href="/videos.html">Videos</a>
+            <a class="primary-button" id="events-button" href="/events.html">Events</a>
             <div class="dropdown">
                 <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseSocial" aria-expanded="false" aria-controls="collapseSocial">
                     Social
@@ -41,11 +50,12 @@
                 <div id="collapseSocial" class="collapse">
                     <a class="dropdown-item" id="ddTiktok" href="https://www.tiktok.com/@jonesrx" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>
                     <a class="dropdown-item" id="ddInsta" href="https://www.instagram.com/itsjonesrx/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a class="dropdown-item" id="ddYouTube" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
-                    <a class="dropdown-item" id="ddFacebook" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+                    <a class="dropdown-item" id="ddYouTube" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae" target="_blank"><i class="fab fa-youtube"></i>YouTube</a>
+                    <a class="dropdown-item" id="ddFacebook" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i>Facebook</a>
                 </div>
+    
             </div>
-            <a class="primary-button" id="about-button" href="/about">About</a>
+            <a class="primary-button" id="about-button" href="/about.html">About</a>
         </div>
 
         <div class="videos-section">
@@ -62,8 +72,8 @@
         <a class="social-icon" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i></a>
     </footer>
 
-    <script src="js/common.js"></script>
-    <script src="js/videos.js"></script>
+    <script src="js/common.js?v=2"></script>
+    <script src="js/videos.js?v=2"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

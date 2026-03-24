@@ -6,9 +6,9 @@ styleDropdown('ddInsta', 'yellow');
 styleDropdown('ddYouTube', 'red');
 styleDropdown('ddFacebook', 'blue');
 
-setupTvTransition('about-button', '/about');
-setupTvTransition('events-button', '/events');
-setupTvTransition('videos-button', '/videos');
+setupTvTransition('about-button', '/about.html');
+setupTvTransition('events-button', '/events.html');
+setupTvTransition('videos-button', '/videos.html');
 
 // Neon overlay intro
 const overlayText = document.getElementById('overlayText');

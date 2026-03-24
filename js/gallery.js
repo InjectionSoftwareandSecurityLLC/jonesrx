@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     var GALLERY_DIR = 'img/promo/';
     var EXTENSIONS = ['jpg', 'png'];
-    var MAX_PROBE  = 50; // probe promo1 through promo50
+    var MAX_PROBE  = 26; // probe promo1 through promo26
 
     var thumbsContainer = document.getElementById('galleryThumbs');
     var preview         = document.getElementById('galleryPreview');

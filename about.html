@@ -27,13 +27,22 @@
     <div class="main-content">
         <div id="navbar" class="navbar">
             <div class="dropdown">
-                <a class="primary-button" id="home-button" href="/">
+                <a class="primary-button" id="home-button" href="/index.html">
                     Home
                 </a>
             </div>
+            <div class="dropdown">
+                <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseMusic" aria-expanded="true" aria-controls="collapseMusic">
+                    Music
+                </a>
+                <div id="collapseMusic" class="collapse">
+                    <a class="dropdown-item" id="ddSpotify" href="https://open.spotify.com/artist/159bHbMtw2LRCSPg5gWmh6?si=8kAYsNVWTce81hIURvSpPg"><i class="fab fa-spotify"></i> Spotify</a>
+                    <a class="dropdown-item" id="ddAppleMusic" href="https://music.apple.com/us/artist/jones-rx/1776303110"><i class="fab fa-apple"></i> Apple Music</a>
+                </div>
+            </div>
             <a class="primary-button" href="https://sweltersounds.com/collections/jones">Merch</a>
-            <a class="primary-button" id="videos-button" href="/videos">Videos</a>
-            <a class="primary-button" id="events-button" href="/events">Events</a>
+            <a class="primary-button" id="videos-button" href="/videos.html">Videos</a>
+            <a class="primary-button" id="events-button" href="/events.html">Events</a>
             <div class="dropdown">
                 <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseSocial" aria-expanded="false" aria-controls="collapseSocial">
                     Social
@@ -46,7 +55,7 @@
                 </div>
     
             </div>
-            <a class="primary-button" id="about-button" href="/about">About</a>
+            <a class="primary-button" id="about-button" href="/about.html">About</a>
         </div>
     </div>
 
@@ -113,8 +122,8 @@
         <a class="social-icon" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i></a>
     </footer>
 
-    <script src="js/common.js"></script>
-    <script src="js/about.js"></script>
+    <script src="js/common.js?v=2"></script>
+    <script src="js/about.js?v=2"></script>
 
     <script src="js/gallery.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

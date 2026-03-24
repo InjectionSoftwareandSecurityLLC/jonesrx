@@ -10,14 +10,16 @@ const PLAYLIST_IDS = [
 ];
 
 // ── Nav styling ──
+styleDropdown('ddSpotify', 'green');
+styleDropdown('ddAppleMusic', 'pink');
 styleDropdown('ddTiktok', 'white');
 styleDropdown('ddInsta', 'yellow');
 styleDropdown('ddYouTube', 'red');
 styleDropdown('ddFacebook', 'blue');
 
-setupTvTransition('home-button', '/');
-setupTvTransition('about-button', '/about');
-setupTvTransition('events-button', '/events');
+setupTvTransition('home-button', '/index.html');
+setupTvTransition('about-button', '/about.html');
+setupTvTransition('events-button', '/events.html');
 
 // ── State ──
 let allVideos = [];
@@ -73,7 +75,7 @@ async function fetchVideoDetails(videoIds) {
 async function loadVideos() {
     const section = document.querySelector('.videos-section');
     section.innerHTML = `
-        <div class="videos-loader">
+        <div class="neon-loader">
             <div class="loader-eq">
                 <div class="loader-eq-bar"></div>
                 <div class="loader-eq-bar"></div>

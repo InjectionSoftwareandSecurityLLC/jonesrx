@@ -1,23 +1,42 @@
 // Events page: dropdown colors, nav transitions, Bandsintown API
+styleDropdown('ddSpotify', 'green');
+styleDropdown('ddAppleMusic', 'pink');
 styleDropdown('ddTiktok', 'white');
 styleDropdown('ddInsta', 'yellow');
 styleDropdown('ddYouTube', 'red');
 styleDropdown('ddFacebook', 'blue');
 
-setupTvTransition('home-button', '/');
-setupTvTransition('videos-button', '/videos');
+setupTvTransition('home-button', '/index.html');
+setupTvTransition('videos-button', '/videos.html');
 
 // Bandsintown API Call
 async function fetchEvents() {
     const artistName = "Jones RX";
     const apiUrl = `https://rest.bandsintown.com/artists/${encodeURIComponent(artistName)}/events?app_id=26113258b4b0ab3265bf61cdb27edeab`;
 
+    const eventsContainer = document.getElementById('events');
+    eventsContainer.innerHTML = `
+        <div class="neon-loader">
+            <div class="loader-eq">
+                <div class="loader-eq-bar"></div>
+                <div class="loader-eq-bar"></div>
+                <div class="loader-eq-bar"></div>
+                <div class="loader-eq-bar"></div>
+                <div class="loader-eq-bar"></div>
+                <div class="loader-eq-bar"></div>
+                <div class="loader-eq-bar"></div>
+            </div>
+            <div class="loader-bar-track"><div class="loader-bar-fill"></div></div>
+            <span class="loader-text">LOADING</span>
+        </div>
+    `;
+
     try {
         const response = await fetch(apiUrl);
         const events = await response.json();
 
         if (events.length > 0) {
-            const eventsContainer = document.getElementById('events');
+            eventsContainer.innerHTML = '';
             events.forEach(event => {
                 const eventDate = new Date(event.datetime).toLocaleDateString();
                 const eventTime = new Date(event.datetime).toLocaleTimeString();

@@ -1,14 +1,14 @@
-const colors = ['red', 'yellow', 'cyan', 'green', 'purple', 'pink'];
-const usedColors = new Set();
+const colors = ['red', 'yellow', 'cyan', 'green', 'purple', 'pink', 'orange', 'magenta'];
+// Shuffle colors once so each button gets a unique random color
+for (let i = colors.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [colors[i], colors[j]] = [colors[j], colors[i]];
+}
+let colorIndex = 0;
 
 function getUniqueRandomColor() {
-    if (usedColors.size === colors.length) return null;
-    let color;
-    do {
-        color = colors[Math.floor(Math.random() * colors.length)];
-    } while (usedColors.has(color));
-    usedColors.add(color);
-    return color;
+    if (colorIndex >= colors.length) return null;
+    return colors[colorIndex++];
 }
 
 document.querySelectorAll('.primary-button').forEach((button) => {
