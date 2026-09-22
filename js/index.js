@@ -1,6 +1,7 @@
 // Index page: dropdown colors, nav transitions, neon overlay intro
 styleDropdown('ddSpotify', 'green');
 styleDropdown('ddAppleMusic', 'pink');
+styleDropdown('ddSoundCloud', 'orange');
 styleDropdown('ddTiktok', 'white');
 styleDropdown('ddInsta', 'yellow');
 styleDropdown('ddYouTube', 'red');

@@ -1,6 +1,7 @@
 // About page: dropdown colors, nav transitions
 styleDropdown('ddSpotify', 'green');
 styleDropdown('ddAppleMusic', 'pink');
+styleDropdown('ddSoundCloud', 'orange');
 styleDropdown('ddTiktok', 'white');
 styleDropdown('ddInsta', 'yellow');
 styleDropdown('ddYouTube', 'red');
