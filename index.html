@@ -1,89 +1,430 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="default">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jones RX</title>
-    <link href="https://fonts.googleapis.com/css2?family=Jersey+20&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jones RX // ALTER</title>
+    <meta name="description" content="Jones RX — ALTER. Altering states of consciousness. A cyberpunk altar.">
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/os.css?v=1">
+    <link rel="stylesheet" href="css/about.css?v=2">
+    <link rel="stylesheet" href="css/events.css?v=4">
+    <link rel="stylesheet" href="css/videos.css?v=3">
 </head>
 <body>
 
-    <!-- Overlay Neon Intro -->
-    <div id="neonOverlay">
-        <div class="overlay-text" id="overlayText">Jones RX</div>
+    <!-- ══════════════════ BOOT SEQUENCE ══════════════════ -->
+    <div id="boot" class="boot">
+        <pre class="boot-log" id="bootLog"></pre>
+        <div class="boot-skip">[ click to enter ]</div>
     </div>
 
-    <div class="neon-sign-container">
-        <div class="neon-sign" id="neonSign" text-align="center">Jones<br/>&nbsp;RX</div>
-        <div class="triangle tl" id="ttl"></div>
-        <div class="triangle tr" id="ttr"></div>
-        <div class="triangle bl" id="tbl"></div>
-        <div class="triangle br" id="tbr"></div>
-        <div class="inner-triangle tl" id="titl"></div>
-        <div class="inner-triangle tr" id="titr"></div>
-        <div class="inner-triangle bl" id="tibl"></div>
-        <div class="inner-triangle br" id="tibr"></div>
-    </div>
+    <!-- ══════════════════ DESKTOP ══════════════════ -->
+    <div id="desktop" class="desktop">
+        <div class="desktop-grid" aria-hidden="true"></div>
+        <div class="desktop-vignette" aria-hidden="true"></div>
+        <div class="scanlines" aria-hidden="true"></div>
 
-    <div class="container pre-save-content">
-        <div class="row justify-content-md-center">
-            <div class="col-md-auto">
-                <a class="primary-presave-button" id="presave-button" target="_blank" href="https://distrokid.com/hyperfollow/jonesrx/luv-u">Lastest Release:<br/>Luv U<img class="img-fluid" src="img/luv_u_album_art.png" />
-                </a>
-            </div>
+        <!-- archangel sigils hidden at the four cardinal edges; light up when invoked -->
+        <div class="desktop-sigils">
+            <img class="dsig" data-angel="uriel"   src="img/angels/uriel.png"   alt="">
+            <img class="dsig" data-angel="raphael" src="img/angels/raphael.png" alt="">
+            <img class="dsig" data-angel="michael" src="img/angels/michael.png" alt="">
+            <img class="dsig" data-angel="gabriel" src="img/angels/gabriel.png" alt="">
         </div>
-    </div>
 
-    <div class="main-content">
-        <div id="navbar" class="navbar">
-            <div class="dropdown">
-                <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseMusic" aria-expanded="true" aria-controls="collapseMusic">
-                    Music
-                </a>
-                <div id="collapseMusic" class="collapse">
-                    <a class="dropdown-item" id="ddSpotify" href="https://open.spotify.com/artist/159bHbMtw2LRCSPg5gWmh6?si=8kAYsNVWTce81hIURvSpPg"><i class="fab fa-spotify"></i> Spotify</a>
-                    <a class="dropdown-item" id="ddAppleMusic" href="https://music.apple.com/us/artist/jones-rx/1776303110"><i class="fab fa-apple"></i> Apple Music</a>
-                    <a class="dropdown-item" id="ddSoundCloud" href="https://soundcloud.com/jonesrx"><i class="fab fa-soundcloud"></i> SoundCloud</a>
-                    <a class="dropdown-item" id="ddBandcamp" href="https://jonesrx.bandcamp.com/"><i class="fab fa-bandcamp"></i> Bandcamp</a>
+        <!-- ─────────── TOP PANEL (XFCE-style) ─────────── -->
+        <div class="panel" id="panel">
+            <button class="panel-menu" id="panelMenu" aria-haspopup="true" aria-expanded="false">
+                <span class="panel-glyph">&#9671;</span> ALTER_OS
+            </button>
+            <div class="panel-title" id="panelTitle">jones@alter:~</div>
+            <div class="panel-spacer"></div>
+            <div class="panel-sigils" id="panelSigils" title="Archangel seals">
+                <span class="psig" data-angel="raphael" title="Raphael — locked">&#9678;</span>
+                <span class="psig" data-angel="michael" title="Michael — locked">&#9678;</span>
+                <span class="psig" data-angel="gabriel" title="Gabriel — locked">&#9678;</span>
+                <span class="psig" data-angel="uriel" title="Uriel — locked">&#9678;</span>
+                <span class="psig psig-white" data-angel="white" title="White — locked">&#9728;</span>
+            </div>
+            <button class="panel-btn" id="themeReset" title="Reset theme">&#9100;</button>
+            <div class="panel-clock" id="panelClock">--:--</div>
+        </div>
+
+        <!-- ─────────── START / APP MENU ─────────── -->
+        <nav class="startmenu" id="startMenu" aria-hidden="true">
+            <div class="startmenu-head">APPLICATIONS</div>
+            <div class="startmenu-list" id="startMenuList"></div>
+            <div class="startmenu-foot">
+                <span>jonesrx.live</span>
+                <span id="startMenuSys">ALTER_OS v1.0</span>
+            </div>
+        </nav>
+
+        <!-- ─────────── THE ALTAR (centerpiece) ─────────── -->
+        <div class="altar-stage" id="altarStage">
+
+            <!-- shared gold gradient defs -->
+            <svg class="altar-defs" width="0" height="0" aria-hidden="true">
+                <defs>
+                    <linearGradient id="goldA" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#4a3108"/>
+                        <stop offset="0.22" stop-color="#d9ad46"/>
+                        <stop offset="0.5" stop-color="#fff4cf"/>
+                        <stop offset="0.74" stop-color="#c7922c"/>
+                        <stop offset="1" stop-color="#5a3c0e"/>
+                    </linearGradient>
+                    <linearGradient id="goldB" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#fff4cf"/>
+                        <stop offset="0.5" stop-color="#d4a53a"/>
+                        <stop offset="1" stop-color="#7a5214"/>
+                    </linearGradient>
+                    <!-- brighter gold that never fades to dark, for small motifs -->
+                    <linearGradient id="goldBright" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#fff6d8"/>
+                        <stop offset="0.5" stop-color="#eecb73"/>
+                        <stop offset="1" stop-color="#d2a23d"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+
+            <div class="altar" id="altar" data-open="false" role="button" tabindex="0" aria-label="The Altar — click to open">
+
+                <!-- Framed album art — rests atop when closed, floats when open -->
+                <div class="altar-art-wrap">
+                    <div class="altar-art-lev">
+                    <div class="altar-art-glow"></div>
+                    <img class="altar-art" src="img/alter_album_art.png" alt="ALTER album art">
+                    <svg class="altar-frame" viewBox="0 0 300 300" aria-hidden="true">
+                        <!-- outer molding -->
+                        <rect x="10" y="14" width="280" height="276" rx="3" fill="none" stroke="url(#goldA)" stroke-width="13"/>
+                        <rect x="20" y="24" width="260" height="256" fill="none" stroke="#241803" stroke-width="2"/>
+                        <rect x="26" y="30" width="248" height="244" fill="none" stroke="url(#goldB)" stroke-width="3.5"/>
+                        <rect x="34" y="38" width="232" height="228" fill="none" stroke="url(#goldA)" stroke-width="1.5" opacity="0.7"/>
+                        <!-- 4-pointed star crests, top & bottom center -->
+                        <path d="M150 -3 L156 7 L167 13 L156 19 L150 29 L144 19 L133 13 L144 7 Z" fill="url(#goldA)" stroke="#241803" stroke-width="1"/>
+                        <path d="M150 275 L156 285 L167 291 L156 297 L150 307 L144 297 L133 291 L144 285 Z" fill="url(#goldA)" stroke="#241803" stroke-width="1"/>
+                        <!-- corner hexagram variants, centered on each outer corner;
+                             dark underlay + bright gold gives a visible edge on any background -->
+                        <g fill="none" stroke-linejoin="round">
+                            <g stroke="#241803" stroke-width="4.2">
+                                <path d="M14 9 L6 21 L22 21 Z"/><path d="M14 15 L6 27 L22 27 Z"/>
+                                <path d="M286 9 L278 22 L294 22 Z"/><path d="M286 27 L278 14 L294 14 Z"/>
+                                <path d="M14 273 L6 282 L22 282 Z"/><path d="M14 291 L6 282 L22 282 Z"/>
+                                <path d="M278 273 L294 273 L286 282 Z"/><path d="M278 291 L294 291 L286 282 Z"/>
+                            </g>
+                            <g stroke="url(#goldBright)" stroke-width="1.9">
+                                <!-- TL: two upward triangles stacked vertically, overlapping -->
+                                <path d="M14 9 L6 21 L22 21 Z"/><path d="M14 15 L6 27 L22 27 Z"/>
+                                <!-- TR: star of david (interlocking equilateral triangles) -->
+                                <path d="M286 9 L278 22 L294 22 Z"/><path d="M286 27 L278 14 L294 14 Z"/>
+                                <!-- BL: two triangles forming a diamond -->
+                                <path d="M14 273 L6 282 L22 282 Z"/><path d="M14 291 L6 282 L22 282 Z"/>
+                                <!-- BR: two triangles forming an hourglass -->
+                                <path d="M278 273 L294 273 L286 282 Z"/><path d="M278 291 L294 291 L286 282 Z"/>
+                            </g>
+                        </g>
+                    </svg>
+                    </div>
+                </div>
+
+                <!-- The chest — the lid lifts like a real chest -->
+                <div class="altar-box">
+                    <div class="chest">
+                        <!-- one continuous box: well window + lock live inside it -->
+                        <div class="chest-body">
+                            <!-- recessed well window in the upper body -->
+                            <div class="chest-mouth">
+                                <div class="mouth-wall mw-top"></div>
+                                <div class="mouth-wall mw-bottom"></div>
+                                <div class="mouth-wall mw-left"></div>
+                                <div class="mouth-wall mw-right"></div>
+                                <div class="mouth-back">
+                                    <div class="void-static"></div>
+                                    <div class="void-scan"></div>
+                                </div>
+                                <div class="void-label" id="altarContent">nemo</div>
+                            </div>
+                        </div>
+                        <!-- hinge line at the back, shown when open -->
+                        <div class="chest-hinge"></div>
+                        <!-- the lid: full-width slab, hinged at the back -->
+                        <div class="chest-lid">
+                            <div class="chest-lid-face"></div>
+                            <div class="chest-lid-inner"></div>
+                        </div>
+                        <!-- chains binding the box; fall when unlocked -->
+                        <div class="altar-chains">
+                            <div class="chain chain-1"></div>
+                            <div class="chain chain-2"></div>
+                        </div>
+                        <!-- ornate gothic padlock, holds the chains -->
+                        <svg class="altar-lock" id="altarLock" viewBox="0 0 140 180" aria-hidden="true">
+                            <g class="lock-shackle">
+                                <path d="M42 80 L42 58 A28 28 0 0 1 98 58 L98 80" fill="none" stroke="url(#goldA)" stroke-width="12" stroke-linecap="round"/>
+                                <path d="M42 80 L42 58 A28 28 0 0 1 98 58 L98 80" fill="none" stroke="url(#goldB)" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
+                            </g>
+                            <g class="lock-body">
+                                <path d="M32 78 Q32 70 40 70 L100 70 Q108 70 108 78 L108 130 Q108 152 70 170 Q32 152 32 130 Z" fill="url(#goldA)" stroke="#241803" stroke-width="2"/>
+                                <path d="M40 80 L100 80 L100 128 Q100 145 70 160 Q40 145 40 128 Z" fill="none" stroke="url(#goldB)" stroke-width="2" opacity="0.8"/>
+                                <circle cx="70" cy="106" r="8" fill="#1a1204"/>
+                                <rect x="66" y="106" width="8" height="30" rx="1" fill="#1a1204"/>
+                                <rect x="58" y="118" width="24" height="7" rx="1" fill="#1a1204"/>
+                                <path d="M70 84 q11 9 0 18 q-11 -9 0 -18" fill="none" stroke="#241803" stroke-width="1.3"/>
+                                <circle cx="44" cy="82" r="2.4" fill="#1a1204"/><circle cx="96" cy="82" r="2.4" fill="#1a1204"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="altar-shadow"></div>
                 </div>
             </div>
-            <a class="primary-button" href="https://sweltersounds.com/collections/jones">Merch</a>
-            <a class="primary-button" id="videos-button" href="/videos.html">Videos</a>
-            <a class="primary-button" id="events-button" href="/events.html">Events</a>
-            <div class="dropdown">
-                <a class="primary-button" href="#" data-toggle="collapse" data-target="#collapseSocial" aria-expanded="false" aria-controls="collapseSocial">
-                    Social
-                </a>
-                <div id="collapseSocial" class="collapse">
-                    <a class="dropdown-item" id="ddTiktok" href="https://www.tiktok.com/@jonesrx" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>
-                    <a class="dropdown-item" id="ddInsta" href="https://www.instagram.com/itsjonesrx/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a class="dropdown-item" id="ddYouTube" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae" target="_blank"><i class="fab fa-youtube"></i>YouTube</a>
-                    <a class="dropdown-item" id="ddFacebook" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i>Facebook</a>
-                </div>
-    
-            </div>
-            <a class="primary-button" id="about-button" href="/about.html">About</a>
         </div>
+
+        <!-- ─────────── WINDOWS ─────────── -->
+        <main id="windows">
+
+            <!-- TRACKS -->
+            <section class="win" id="win-tracks" data-app="tracks" aria-label="Tracks">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close title="close"></button><button class="win-dot min" data-win-min title="minimize"></button><button class="win-dot max" data-win-max title="maximize"></button></div>
+                    <span class="win-title"><i class="fas fa-compact-disc"></i> tracks</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <a class="presave-card" target="_blank" rel="noopener" href="https://distrokid.com/hyperfollow/jonesrx/luv-u">
+                            <img src="img/luv_u_album_art.png" alt="Luv U album art">
+                            <div class="presave-meta">
+                                <span class="presave-label">LATEST RELEASE</span>
+                                <span class="presave-title">Luv U</span>
+                                <span class="presave-cta">Stream / Pre-save &rsaquo;</span>
+                            </div>
+                        </a>
+
+                        <h3 class="app-h">Listen Everywhere</h3>
+                        <div class="link-grid">
+                            <a class="neon-link" href="https://open.spotify.com/artist/159bHbMtw2LRCSPg5gWmh6?si=8kAYsNVWTce81hIURvSpPg" target="_blank" rel="noopener"><i class="fab fa-spotify"></i> Spotify</a>
+                            <a class="neon-link" href="https://music.apple.com/us/artist/jones-rx/1776303110" target="_blank" rel="noopener"><i class="fab fa-apple"></i> Apple Music</a>
+                            <a class="neon-link" href="https://soundcloud.com/jonesrx" target="_blank" rel="noopener"><i class="fab fa-soundcloud"></i> SoundCloud</a>
+                            <a class="neon-link" href="https://jonesrx.bandcamp.com/" target="_blank" rel="noopener"><i class="fab fa-bandcamp"></i> Bandcamp</a>
+                        </div>
+
+                        <div class="demo-vault" id="demoVault" data-unlocked="0">
+                            <h3 class="app-h">// ALTER — Early Access Vault</h3>
+                            <p class="vault-locked-msg" id="vaultMsg">Sealed. Invoke the archangels to unlock early demos.</p>
+                            <div class="demo-list" id="demoList"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABOUT -->
+            <section class="win" id="win-about" data-app="about" aria-label="About">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-user-astronaut"></i> about</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <div class="neon-about-container">
+                            <p class="about-data">
+                                Deeply rooted in the ATL and Columbus, GA music scenes with connections in Austin, TX, Jones RX thrives on an independent DIY spirit, releasing music through Swelter Sounds.
+                                <br/><br/>
+                                Jones RX made their debut in 2023 with the Starstruck EP, marking an entrance into the alternative and hyper pop scene that's hard to ignore.
+                                Their latest album, Lost CTRL, has already gained a dedicated following, with standout tracks like New Low (feat. SteelPraud) and Upside Down.
+                                <br/><br/>
+                                With tracks produced by the likes of RJ Pasin, Cian Treacy, and other prominent musicians in the hyperpop scene, Jones crafted Lost CTRL to blend personal insight with high-energy, genre-bending sound.
+                                <br/><br/>
+                                A fan of whiskey, huskies, and all things cyberpunk &#8212; Jones channels a unique blend of futuristic and nostalgic elements into their artistry. Jones RX is a fresh force in the music world, and this is only the beginning.
+                            </p>
+                        </div>
+                        <div class="spotify-wrapper mx-auto mt-4">
+                            <iframe loading="lazy" src="https://open.spotify.com/embed/playlist/6mgGdY8m91dXARU7Vt9QBh?utm_source=generator&theme=0" width="100%" height="420" frameborder="0" allow="encrypted-media"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GALLERY -->
+            <section class="win" id="win-gallery" data-app="gallery" aria-label="Gallery">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-images"></i> gallery</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <div class="gallery-section">
+                            <div class="gallery-preview" id="galleryPreview">
+                                <img id="galleryPreviewImg" src="" alt="Gallery Preview">
+                                <button class="gallery-nav prev" id="galleryPrev" aria-label="Previous">&#10094;</button>
+                                <button class="gallery-nav next" id="galleryNext" aria-label="Next">&#10095;</button>
+                            </div>
+                            <div class="gallery-thumbs" id="galleryThumbs"></div>
+                        </div>
+                    </div>
+                    <!-- Fullscreen lightbox (overlays entire screen) -->
+                    <div class="gallery-lightbox" id="galleryLightbox">
+                        <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+                        <button class="lightbox-nav prev" id="lightboxPrev" aria-label="Previous">&#10094;</button>
+                        <img id="lightboxImg" src="" alt="Fullscreen Preview">
+                        <button class="lightbox-nav next" id="lightboxNext" aria-label="Next">&#10095;</button>
+                        <span class="lightbox-counter" id="lightboxCounter"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EVENTS -->
+            <section class="win" id="win-events" data-app="events" aria-label="Events">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-calendar-alt"></i> events</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <div class="booking-cta">
+                            <a class="neon-link booking" id="bookingBtn" href="mailto:sweltersounds@gmail.com"><i class="fas fa-envelope"></i> Booking</a>
+                        </div>
+                        <div id="events-container" class="container mt-3">
+                            <div class="d-flex flex-wrap justify-content-center" id="events"></div>
+                        </div>
+                        <div class="spotify-wrapper mx-auto mt-3">
+                            <iframe loading="lazy" src="https://open.spotify.com/embed/playlist/2yFS2GY2OEMjvgjmNclNVZ?utm_source=generator&theme=0" width="100%" height="420" frameborder="0" allow="encrypted-media"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIDEOS -->
+            <section class="win" id="win-videos" data-app="videos" aria-label="Videos">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-play-circle"></i> videos</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <div class="videos-section"><!-- populated by videos.js --></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SOCIAL -->
+            <section class="win" id="win-social" data-app="social" aria-label="Social">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-share-alt"></i> social</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <h3 class="app-h">Connect</h3>
+                        <div class="link-grid">
+                            <a class="neon-link" href="https://www.tiktok.com/@jonesrx" target="_blank" rel="noopener"><i class="fab fa-tiktok"></i> TikTok</a>
+                            <a class="neon-link" href="https://www.instagram.com/itsjonesrx/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i> Instagram</a>
+                            <a class="neon-link" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> YouTube</a>
+                            <a class="neon-link" href="https://www.twitch.tv/3ndg4me_" target="_blank" rel="noopener"><i class="fab fa-twitch"></i> Twitch</a>
+                            <a class="neon-link" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank" rel="noopener"><i class="fab fa-facebook"></i> Facebook</a>
+                            <a class="neon-link" href="https://sweltersounds.com/collections/jones" target="_blank" rel="noopener"><i class="fas fa-tshirt"></i> Merch</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TERMINAL -->
+            <section class="win win-terminal" id="win-terminal" data-app="terminal" aria-label="Terminal">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-terminal"></i> jones@alter: ~</span>
+                </header>
+                <div class="win-body">
+                    <div class="term" id="term">
+                        <div class="term-output" id="termOutput"></div>
+                        <div class="term-inputline">
+                            <span class="term-prompt" id="termPrompt">jones@alter:~$</span>
+                            <input class="term-input" id="termInput" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TEMPLES (hacking hub) -->
+            <section class="win" id="win-temples" data-app="temples" aria-label="Temples">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-crosshairs"></i> temples // targets</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <h3 class="app-h">// Sealed Temples</h3>
+                        <p class="temple-intro">Four temples sit dark on the network, one per archangel. Breach them <b>in order</b> (raphael &rarr; michael &rarr; gabriel &rarr; uriel) &mdash; each host hides the key to the next. <span class="dim">Open the <b>terminal</b> and run <code>scan</code>, or use the <b>exploit console</b>.</span></p>
+                        <div class="temple-grid" id="templeGrid"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EXPLOIT CONSOLE (altersploit) -->
+            <section class="win" id="win-exploit" data-app="exploit" aria-label="Exploit Console">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-bug"></i> altersploit</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad exploit-ui" id="exploitUI"></div>
+                </div>
+            </section>
+
+            <!-- SESSIONS / C2 (lupo) -->
+            <section class="win" id="win-sessions" data-app="sessions" aria-label="Sessions">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-network-wired"></i> lupo // c2</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad sessions-ui" id="sessionsUI"></div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ─────────── DOCK ─────────── -->
+        <div class="dock" id="dock" data-orient="horizontal"></div>
+
+        <!-- ─────────── MOBILE HOME (iPhone) ─────────── -->
+        <div class="phone-home" id="phoneHome">
+            <div class="phone-status" id="phoneStatus">
+                <span class="phs-time" id="phoneClock">--:--</span>
+                <span class="phs-right"><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+            </div>
+            <div class="phone-lock" id="phoneLock">
+                <div class="phone-lock-sigils" id="phoneLockSigils"></div>
+            </div>
+            <div class="phone-grid" id="phoneGrid"></div>
+            <div class="phone-dock" id="phoneDock"></div>
+        </div>
+
+        <!-- iOS home indicator — tap to close the current app / return home -->
+        <div class="home-indicator" id="homeIndicator" role="button" aria-label="Home"></div>
+
     </div>
 
-    <div id="tvOverlay"></div>
-
-    <footer>
-        <a class="social-icon" href="https://www.youtube.com/watch?v=mBXv6Kj1UDI&list=PLw2HSJl4mHlk1gQijIKTdcAAMECp8pNae" target="_blank"><i class="fab fa-youtube"></i></a>
-        <a class="social-icon" href="https://www.tiktok.com/@jonesrx" target="_blank"><i class="fab fa-tiktok"></i></a>
-        <a class="social-icon" href="https://www.instagram.com/itsjonesrx/" target="_blank"><i class="fab fa-instagram"></i></a>
-        <a class="social-icon" href="https://www.twitch.tv/3ndg4me_" target="_blank"><i class="fab fa-twitch"></i></a>
-        <a class="social-icon" href="https://www.facebook.com/people/Jones-RX/100072044476434/?mibextid=LQQJ4d" target="_blank"><i class="fab fa-facebook"></i></a>
-    </footer>
-
-    <script src="js/common.js?v=2"></script>
-    <script src="js/index.js?v=2"></script>
-    <script src="js/game.js"></script>
+    <script src="js/os.js?v=1"></script>
+    <script>
+    /* core modules are shipped encoded; decoded + injected at runtime */
+    (function () {
+        var _0x7b = function (z) {
+            z = ('' + z).toUpperCase().replace(/[^A-Z2-7]/g, '');
+            var T = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567', b = 0, v = 0, o = [], i, c;
+            for (i = 0; i < z.length; i++) { c = T.indexOf(z[i]); if (c < 0) continue; v = (v << 5) | c; b += 5; if (b >= 8) { b -= 8; o.push((v >>> b) & 255); } }
+            var s = ''; for (i = 0; i < o.length; i++) s += String.fromCharCode(o[i]);
+            try { return decodeURIComponent(escape(s)); } catch (e) { return s; }
+        };
+        function _inj(t) { var e = document.createElement('script'); e.textContent = _0x7b(_0x7b(t)); document.head.appendChild(e); }
+        function _get(u) { return fetch(u).then(function (r) { return r.text(); }); }
+        _get('js/glyph0.dat?v=9').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=9'); }).then(function (t) { _inj(t); });
+    })();
+    </script>
+    <script src="js/gallery.js"></script>
+    <script src="js/events.js?v=3"></script>
+    <script src="js/videos.js?v=4"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
