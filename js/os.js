@@ -29,6 +29,7 @@
         { id: 'temples',  name: 'Temples',  icon: 'fa-crosshairs' },
         { id: 'exploit',  name: 'Exploit',  icon: 'fa-bug' },
         { id: 'sessions', name: 'Sessions', icon: 'fa-network-wired' },
+        { id: 'settings', name: 'Settings', icon: 'fa-sliders-h' },
         { id: 'merch',    name: 'Merch',    icon: 'fa-tshirt', url: 'https://sweltersounds.com/collections/jones' }
     ];
     const PHONE_DOCK = ['tracks', 'videos', 'terminal', 'social'];
@@ -174,6 +175,7 @@
         setDockActive();
         if (id === 'terminal') { const inp = $('#termInput'); if (inp) setTimeout(() => inp.focus(), 60); }
         if ((id === 'exploit' || id === 'sessions') && window.ALTERGAME) window.ALTERGAME.render();
+        if (id === 'settings') refreshSettings();
     }
     function closeApp(id) {
         const win = winEl(id);
@@ -583,7 +585,68 @@
         refreshSigils();
         refreshTemples();
         refreshVault();
+        refreshSettings();
         return fresh;
+    }
+
+    /* ============================================================
+       SETTINGS
+       ============================================================ */
+    const GAME_KEYS = [LS.unlocked, LS.theme, 'alter_game'];
+
+    function refreshSettings() {
+        const stats = $('#setStats');
+        if (!stats) return;
+        const names = Object.keys(ANGELS);
+        const seals = names.filter(a => unlocked.has(a)).length;
+        const demos = DEMOS.filter(d => unlocked.has(d.angel)).length;
+        const sessions = (window.ALTERGAME ? window.ALTERGAME.sessions().length : 0);
+        stats.innerHTML = `
+            <div class="set-stat"><span class="set-k">seals broken</span><span class="set-v">${seals} / ${names.length}</span></div>
+            <div class="set-stat"><span class="set-k">demos unlocked</span><span class="set-v">${demos} / ${DEMOS.length}</span></div>
+            <div class="set-stat"><span class="set-k">open sessions</span><span class="set-v">${sessions}</span></div>
+            <div class="set-stat"><span class="set-k">sigils</span><span class="set-v">${
+                names.map(a => `<i class="set-sig ${unlocked.has(a) ? 'on c-' + a : ''}">\u25CE</i>`).join('')
+            }</span></div>`;
+    }
+
+    // two-step confirmation so progress can't be wiped by a stray click
+    function initSettings() {
+        const zone = $('#setDanger');
+        if (!zone) return;
+        const idle = zone.innerHTML;
+
+        const render = (html) => { zone.innerHTML = html; wire(); };
+        const toIdle = () => render(idle);
+
+        function wire() {
+            $('#resetStep1', zone)?.addEventListener('click', () => render(`
+                <div class="set-confirm">
+                    <p class="set-warn"><i class="fas fa-triangle-exclamation"></i> Are you sure? All four temples will reseal and every unlocked demo will be locked again.</p>
+                    <div class="set-row">
+                        <button class="set-btn danger" id="resetStep2">Yes, continue</button>
+                        <button class="set-btn" id="resetCancel">Cancel</button>
+                    </div>
+                </div>`));
+
+            $('#resetStep2', zone)?.addEventListener('click', () => render(`
+                <div class="set-confirm final">
+                    <p class="set-warn"><i class="fas fa-skull"></i> Final confirmation &mdash; this is permanent and cannot be undone.</p>
+                    <div class="set-row">
+                        <button class="set-btn danger" id="resetFinal">Wipe my progress</button>
+                        <button class="set-btn" id="resetCancel">Cancel</button>
+                    </div>
+                </div>`));
+
+            $('#resetFinal', zone)?.addEventListener('click', () => {
+                GAME_KEYS.forEach(k => { try { localStorage.removeItem(k); } catch (e) {} });
+                render(`<p class="set-done"><i class="fas fa-check"></i> Progress wiped. Reloading&hellip;</p>`);
+                setTimeout(() => location.reload(), 900);
+            });
+
+            $('#resetCancel', zone)?.addEventListener('click', toIdle);
+        }
+        wire();
     }
 
     /* ============================================================
@@ -644,6 +707,7 @@
         refreshSigils(); refreshTemples(); refreshVault();
         initDesktopSigils();
         initPanelSigils();
+        initSettings();
         $('#homeIndicator')?.addEventListener('click', goHome);
 
         $('#themeReset')?.addEventListener('click', resetTheme);

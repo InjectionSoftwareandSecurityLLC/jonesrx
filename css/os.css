@@ -526,6 +526,37 @@ html[data-theme="white"] .chest-body {
 .demo-load:hover { background: var(--neon); color: #000; box-shadow: 0 0 14px rgba(var(--neon-rgb), .5); }
 .demo-load[disabled] { opacity: .6; cursor: default; }
 
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+.set-stats { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.set-stat {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 9px 12px; font-size: 13px;
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1);
+}
+.set-k { color: rgba(255,255,255,.6); letter-spacing: 1px; }
+.set-v { color: var(--neon); letter-spacing: 1px; }
+.set-sig { font-style: normal; color: rgba(255,255,255,.22); margin-left: 4px; }
+.set-sig.on { text-shadow: 0 0 8px currentColor; }
+.set-note { font-size: 12.5px; color: rgba(255,255,255,.55); line-height: 1.6; margin: 0 0 12px; }
+.set-note b { color: #ff5f57; }
+.set-danger { border: 1px solid rgba(255,95,87,.4); background: rgba(255,95,87,.05); padding: 14px; }
+.set-btn {
+    cursor: pointer; font-family: var(--mono); font-size: 12.5px;
+    letter-spacing: 1.5px; text-transform: uppercase; padding: 9px 16px;
+    background: none; border: 1px solid rgba(255,255,255,.3); color: rgba(255,255,255,.75);
+    transition: var(--t);
+}
+.set-btn:hover { border-color: var(--neon); color: var(--neon); }
+.set-btn.danger { border-color: #ff5f57; color: #ff5f57; }
+.set-btn.danger:hover { background: #ff5f57; color: #000; box-shadow: 0 0 16px rgba(255,95,87,.5); }
+.set-confirm { display: flex; flex-direction: column; gap: 12px; }
+.set-warn { margin: 0; font-size: 13px; color: #ffb3ae; line-height: 1.55; }
+.set-confirm.final .set-warn { color: #ff5f57; }
+.set-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.set-done { margin: 0; font-size: 13px; color: #28c840; letter-spacing: 1px; }
+
 /* temples */
 .temple-intro { color: rgba(255,255,255,.65); font-size: 13px; line-height: 1.6; }
 .temple-intro code { color: var(--neon); background: rgba(var(--neon-rgb), .1); padding: 1px 6px; }

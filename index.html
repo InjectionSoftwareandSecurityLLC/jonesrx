@@ -383,6 +383,30 @@
                 </div>
             </section>
 
+            <!-- SETTINGS -->
+            <section class="win" id="win-settings" data-app="settings" aria-label="Settings">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-sliders-h"></i> settings</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <h3 class="app-h">// Progress</h3>
+                        <div class="set-stats" id="setStats"></div>
+
+                        <h3 class="app-h">// Danger Zone</h3>
+                        <p class="set-note">
+                            Wipes your seals, open sessions, unlocked demos and theme &mdash;
+                            resealing all four temples so you can run the ritual again.
+                            <b>This cannot be undone.</b>
+                        </p>
+                        <div class="set-danger" id="setDanger">
+                            <button class="set-btn danger" id="resetStep1"><i class="fas fa-triangle-exclamation"></i> Reset Progress</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <!-- ─────────── DOCK ─────────── -->
@@ -406,7 +430,7 @@
 
     </div>
 
-    <script src="js/os.js?v=1"></script>
+    <script src="js/os.js?v=2"></script>
     <script>
     /* core modules are shipped encoded; decoded + injected at runtime */
     (function () {
@@ -419,7 +443,7 @@
         };
         function _inj(t) { var e = document.createElement('script'); e.textContent = _0x7b(_0x7b(t)); document.head.appendChild(e); }
         function _get(u) { return fetch(u).then(function (r) { return r.text(); }); }
-        _get('js/glyph0.dat?v=9').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=9'); }).then(function (t) { _inj(t); });
+        _get('js/glyph0.dat?v=12').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=12'); }).then(function (t) { _inj(t); });
     })();
     </script>
     <script src="js/gallery.js"></script>
