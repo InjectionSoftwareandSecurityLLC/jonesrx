@@ -943,9 +943,15 @@ html.audio-live .xport input[type="range"]::-moz-range-thumb { animation: rgbThu
 .c2-th { color: #fff; }
 .c2-rows { display: flex; flex-direction: column; gap: 3px; }
 .c2-row {
+    display: flex; align-items: baseline;
     text-align: left; cursor: pointer; font-family: var(--mono); font-size: 12.5px; white-space: pre;
     padding: 5px 8px; background: rgba(255,255,255,.02); border: 1px solid transparent; color: var(--ink); transition: var(--t);
 }
+/* widths mirror the pad() columns in the header rule above */
+.c2-c { flex: none; overflow: hidden; text-overflow: ellipsis; }
+.c2-sid { width: 4ch; } .c2-host { width: 16ch; } .c2-arch { width: 12ch; }
+.c2-proto { width: 10ch; } .c2-check { width: 15ch; }
+.c2-owned { margin-left: 1ch; }
 .c2-row:hover { border-color: rgba(var(--neon-rgb), .5); background: rgba(var(--neon-rgb), .06); }
 .c2-row .c-ok { color: #28c840; }
 .c2-tip { font-size: 11px; }
@@ -1182,4 +1188,26 @@ body.is-mobile .win-body { padding-bottom: calc(34px + env(safe-area-inset-botto
     .link-grid { grid-template-columns: 1fr; }
     .presave-card { flex-direction: column; text-align: center; }
     .phone-grid { grid-template-columns: repeat(3, 1fr); }
+
+    /* track rows: name gets its own line so the transport has full width,
+       and the volume slider yields to the phone's hardware keys */
+    .demo-item { flex-wrap: wrap; gap: 8px; }
+    .demo-item .demo-name { min-width: 0; width: 100%; }
+    .xport { flex-basis: 100%; gap: 7px; flex-wrap: wrap; }
+    .xp-vol { display: none; }
+    .xp-seek { min-width: 40px; flex: 1 1 90px; }
+    .xp-time { font-size: 9px; letter-spacing: 0; min-width: 0; overflow: hidden; }
+
+    /* sessions: drop the ASCII header and reflow each row into a card */
+    .sessions-ui .c2-table { display: none; }
+    .c2-row { flex-wrap: wrap; column-gap: 8px; row-gap: 2px; font-size: 12px; white-space: normal; }
+    .c2-arch, .c2-proto { display: none; }
+    .c2-sid { width: 2.5ch; }
+    .c2-host { width: auto; }
+    .c2-status { margin-left: auto; }
+    .c2-owned { margin-left: 0; }
+    .c2-check { width: 100%; font-size: 10.5px; color: rgba(255,255,255,.45); }
+
+    .ex-mod-desc, .ex-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ex-target, .ex-mod { min-width: 0; }
 }
