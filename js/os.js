@@ -35,22 +35,22 @@
     const PHONE_DOCK = ['tracks', 'videos', 'terminal', 'social'];
 
     // Raphael unlocks 1, Michael 2, Gabriel 3, Uriel 3 (9 total)
-    // tracks are stored base64-encoded (.b64) and decoded to a Blob at play time
+    // tracks ship as opaque .dat (base64 text) and are decoded to a Blob at play time
     const DEMOS = [
-        { name: 'ALTER — Demo 1', file: 'assets/tracks/demo-01.b64', angel: 'raphael' },
-        { name: 'ALTER — Demo 2', file: 'assets/tracks/demo-02.b64', angel: 'michael' },
-        { name: 'ALTER — Demo 3', file: 'assets/tracks/demo-03.b64', angel: 'michael' },
-        { name: 'ALTER — Demo 4', file: 'assets/tracks/demo-04.b64', angel: 'gabriel' },
-        { name: 'ALTER — Demo 5', file: 'assets/tracks/demo-05.b64', angel: 'gabriel' },
-        { name: 'ALTER — Demo 6', file: 'assets/tracks/demo-06.b64', angel: 'gabriel' },
-        { name: 'ALTER — Demo 7', file: 'assets/tracks/demo-07.b64', angel: 'uriel' },
-        { name: 'ALTER — Demo 8', file: 'assets/tracks/demo-08.b64', angel: 'uriel' },
-        { name: 'ALTER — Demo 9', file: 'assets/tracks/demo-09.b64', angel: 'uriel' }
+        { name: 'ALTER — Demo 1', file: 'assets/tracks/demo-01.dat', angel: 'raphael' },
+        { name: 'ALTER — Demo 2', file: 'assets/tracks/demo-02.dat', angel: 'michael' },
+        { name: 'ALTER — Demo 3', file: 'assets/tracks/demo-03.dat', angel: 'michael' },
+        { name: 'ALTER — Demo 4', file: 'assets/tracks/demo-04.dat', angel: 'gabriel' },
+        { name: 'ALTER — Demo 5', file: 'assets/tracks/demo-05.dat', angel: 'gabriel' },
+        { name: 'ALTER — Demo 6', file: 'assets/tracks/demo-06.dat', angel: 'gabriel' },
+        { name: 'ALTER — Demo 7', file: 'assets/tracks/demo-07.dat', angel: 'uriel' },
+        { name: 'ALTER — Demo 8', file: 'assets/tracks/demo-08.dat', angel: 'uriel' },
+        { name: 'ALTER — Demo 9', file: 'assets/tracks/demo-09.dat', angel: 'uriel' }
     ];
 
     const LS = { unlocked: 'alter_unlocked', theme: 'alter_theme' };
 
-    // set a URL here to make the chest's "nemo" a clickable portal while the white theme is active
+    // set a URL here to make the cube's "nemo" a clickable portal while the white theme is active
     const NEMO_PORTAL = 'https://on.soundcloud.com/XLSQVcOR2MY7O37FdG';
 
     /* ---- state ---- */
@@ -199,6 +199,62 @@
             $('[data-win-max]', win)?.addEventListener('click', e => { e.stopPropagation(); toggleMax(id); });
 
             makeDraggable(win, bar);
+            makeResizable(win);
+        });
+    }
+
+    // 8-way resize grips; sizes are written inline so they survive re-renders
+    function makeResizable(win) {
+        const MIN_W = 300, MIN_H = 180;
+        let dir = null, sx, sy, sw, sh, sl, st;
+        const start = (e) => {
+            if (document.body.classList.contains('is-mobile')) return;
+            if (win.classList.contains('max')) return;
+            dir = e.currentTarget.dataset.dir;
+            const p = point(e);
+            const r = win.getBoundingClientRect();
+            sx = p.x; sy = p.y; sw = r.width; sh = r.height; sl = r.left; st = r.top;
+            win.dataset.resized = '1';
+            focusWin(win);
+            document.addEventListener('mousemove', move);
+            document.addEventListener('mouseup', end);
+            document.addEventListener('touchmove', move, { passive: false });
+            document.addEventListener('touchend', end);
+            e.preventDefault(); e.stopPropagation();
+        };
+        const move = (e) => {
+            if (!dir) return;
+            const p = point(e);
+            const dx = p.x - sx, dy = p.y - sy;
+            let w = sw, h = sh, l = sl, t = st;
+            if (dir.includes('e')) w = sw + dx;
+            if (dir.includes('s')) h = sh + dy;
+            if (dir.includes('w')) { w = sw - dx; l = sl + dx; }
+            if (dir.includes('n')) { h = sh - dy; t = st + dy; }
+            if (w < MIN_W) { if (dir.includes('w')) l = sl + (sw - MIN_W); w = MIN_W; }
+            if (h < MIN_H) { if (dir.includes('n')) t = st + (sh - MIN_H); h = MIN_H; }
+            if (t < 36) { h += t - 36; t = 36; }     // keep the title bar under the panel
+            if (l < 0) { w += l; l = 0; }            // and never off the left edge
+            win.style.width = w + 'px';
+            win.style.height = h + 'px';
+            win.style.left = l + 'px';
+            win.style.top = t + 'px';
+            if (e.cancelable) e.preventDefault();
+        };
+        const end = () => {
+            dir = null;
+            document.removeEventListener('mousemove', move);
+            document.removeEventListener('mouseup', end);
+            document.removeEventListener('touchmove', move);
+            document.removeEventListener('touchend', end);
+        };
+        ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'].forEach(d => {
+            const g = document.createElement('div');
+            g.className = 'win-grip g-' + d;
+            g.dataset.dir = d;
+            g.addEventListener('mousedown', start);
+            g.addEventListener('touchstart', start, { passive: false });
+            win.appendChild(g);
         });
     }
 
@@ -360,16 +416,18 @@
         handle.addEventListener('mousedown', down);
         handle.addEventListener('touchstart', down, { passive: false });
     }
+    // sessionStorage, not localStorage: the dock stays put while this tab lives,
+    // but every fresh session opens centered at the bottom again
     function saveDock(dock) {
         try {
-            localStorage.setItem('alter_dock', JSON.stringify({
+            sessionStorage.setItem('alter_dock', JSON.stringify({
                 left: dock.style.left, top: dock.style.top, orient: dock.dataset.orient
             }));
         } catch (e) {}
     }
     function restoreDock(dock) {
         try {
-            const d = JSON.parse(localStorage.getItem('alter_dock') || 'null');
+            const d = JSON.parse(sessionStorage.getItem('alter_dock') || 'null');
             if (d && d.left) {
                 dock.style.transform = 'none';
                 dock.style.left = d.left; dock.style.top = d.top; dock.style.bottom = 'auto';
@@ -422,6 +480,7 @@
         });
         revealNemo();
     }
+
 
     /* ============================================================
        THEME / ARCHANGELS

@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/os.css?v=1">
+    <link rel="stylesheet" href="css/os.css?v=10">
     <link rel="stylesheet" href="css/about.css?v=2">
     <link rel="stylesheet" href="css/events.css?v=4">
     <link rel="stylesheet" href="css/videos.css?v=3">
@@ -66,23 +66,23 @@
         <!-- ─────────── THE ALTAR (centerpiece) ─────────── -->
         <div class="altar-stage" id="altarStage">
 
-            <!-- shared gold gradient defs -->
+            <!-- shared frame gradient defs (tinted by the system theme) -->
             <svg class="altar-defs" width="0" height="0" aria-hidden="true">
                 <defs>
-                    <linearGradient id="goldA" x1="0" y1="0" x2="1" y2="1">
+                    <linearGradient id="frameA" x1="0" y1="0" x2="1" y2="1">
                         <stop offset="0" stop-color="#4a3108"/>
                         <stop offset="0.22" stop-color="#d9ad46"/>
                         <stop offset="0.5" stop-color="#fff4cf"/>
                         <stop offset="0.74" stop-color="#c7922c"/>
                         <stop offset="1" stop-color="#5a3c0e"/>
                     </linearGradient>
-                    <linearGradient id="goldB" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id="frameB" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0" stop-color="#fff4cf"/>
                         <stop offset="0.5" stop-color="#d4a53a"/>
                         <stop offset="1" stop-color="#7a5214"/>
                     </linearGradient>
-                    <!-- brighter gold that never fades to dark, for small motifs -->
-                    <linearGradient id="goldBright" x1="0" y1="0" x2="0" y2="1">
+                    <!-- brighter tint that never fades to dark, for small motifs -->
+                    <linearGradient id="frameBright" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0" stop-color="#fff6d8"/>
                         <stop offset="0.5" stop-color="#eecb73"/>
                         <stop offset="1" stop-color="#d2a23d"/>
@@ -99,23 +99,23 @@
                     <img class="altar-art" src="img/alter_album_art.png" alt="ALTER album art">
                     <svg class="altar-frame" viewBox="0 0 300 300" aria-hidden="true">
                         <!-- outer molding -->
-                        <rect x="10" y="14" width="280" height="276" rx="3" fill="none" stroke="url(#goldA)" stroke-width="13"/>
-                        <rect x="20" y="24" width="260" height="256" fill="none" stroke="#241803" stroke-width="2"/>
-                        <rect x="26" y="30" width="248" height="244" fill="none" stroke="url(#goldB)" stroke-width="3.5"/>
-                        <rect x="34" y="38" width="232" height="228" fill="none" stroke="url(#goldA)" stroke-width="1.5" opacity="0.7"/>
+                        <rect x="10" y="14" width="280" height="276" rx="3" fill="none" stroke="url(#frameA)" stroke-width="13"/>
+                        <rect x="20" y="24" width="260" height="256" fill="none" class="fr-dark" stroke-width="2"/>
+                        <rect x="26" y="30" width="248" height="244" fill="none" stroke="url(#frameB)" stroke-width="3.5"/>
+                        <rect x="34" y="38" width="232" height="228" fill="none" stroke="url(#frameA)" stroke-width="1.5" opacity="0.7"/>
                         <!-- 4-pointed star crests, top & bottom center -->
-                        <path d="M150 -3 L156 7 L167 13 L156 19 L150 29 L144 19 L133 13 L144 7 Z" fill="url(#goldA)" stroke="#241803" stroke-width="1"/>
-                        <path d="M150 275 L156 285 L167 291 L156 297 L150 307 L144 297 L133 291 L144 285 Z" fill="url(#goldA)" stroke="#241803" stroke-width="1"/>
+                        <path d="M150 -3 L156 7 L167 13 L156 19 L150 29 L144 19 L133 13 L144 7 Z" fill="url(#frameA)" class="fr-dark" stroke-width="1"/>
+                        <path d="M150 275 L156 285 L167 291 L156 297 L150 307 L144 297 L133 291 L144 285 Z" fill="url(#frameA)" class="fr-dark" stroke-width="1"/>
                         <!-- corner hexagram variants, centered on each outer corner;
-                             dark underlay + bright gold gives a visible edge on any background -->
+                             dark underlay + bright tint gives a visible edge on any background -->
                         <g fill="none" stroke-linejoin="round">
-                            <g stroke="#241803" stroke-width="4.2">
+                            <g class="fr-dark" stroke-width="4.2">
                                 <path d="M14 9 L6 21 L22 21 Z"/><path d="M14 15 L6 27 L22 27 Z"/>
                                 <path d="M286 9 L278 22 L294 22 Z"/><path d="M286 27 L278 14 L294 14 Z"/>
                                 <path d="M14 273 L6 282 L22 282 Z"/><path d="M14 291 L6 282 L22 282 Z"/>
                                 <path d="M278 273 L294 273 L286 282 Z"/><path d="M278 291 L294 291 L286 282 Z"/>
                             </g>
-                            <g stroke="url(#goldBright)" stroke-width="1.9">
+                            <g stroke="url(#frameBright)" stroke-width="1.9">
                                 <!-- TL: two upward triangles stacked vertically, overlapping -->
                                 <path d="M14 9 L6 21 L22 21 Z"/><path d="M14 15 L6 27 L22 27 Z"/>
                                 <!-- TR: star of david (interlocking equilateral triangles) -->
@@ -130,52 +130,18 @@
                     </div>
                 </div>
 
-                <!-- The chest — the lid lifts like a real chest -->
+                <!-- The void cube — lid lifts with the frame, body tilts open -->
                 <div class="altar-box">
-                    <div class="chest">
-                        <!-- one continuous box: well window + lock live inside it -->
-                        <div class="chest-body">
-                            <!-- recessed well window in the upper body -->
-                            <div class="chest-mouth">
-                                <div class="mouth-wall mw-top"></div>
-                                <div class="mouth-wall mw-bottom"></div>
-                                <div class="mouth-wall mw-left"></div>
-                                <div class="mouth-wall mw-right"></div>
-                                <div class="mouth-back">
-                                    <div class="void-static"></div>
-                                    <div class="void-scan"></div>
-                                </div>
-                                <div class="void-label" id="altarContent">nemo</div>
-                            </div>
+                    <div class="cube">
+                        <div class="cf cf-back"><i class="swirl"></i></div>
+                        <div class="cf cf-left"><i class="swirl"></i></div>
+                        <div class="cf cf-right"><i class="swirl"></i></div>
+                        <div class="cf cf-front"><i class="swirl"></i></div>
+                        <div class="cf cf-floor">
+                            <i class="swirl"></i>
+                            <div class="floor-plate"><div class="void-label" id="altarContent">nemo</div></div>
                         </div>
-                        <!-- hinge line at the back, shown when open -->
-                        <div class="chest-hinge"></div>
-                        <!-- the lid: full-width slab, hinged at the back -->
-                        <div class="chest-lid">
-                            <div class="chest-lid-face"></div>
-                            <div class="chest-lid-inner"></div>
-                        </div>
-                        <!-- chains binding the box; fall when unlocked -->
-                        <div class="altar-chains">
-                            <div class="chain chain-1"></div>
-                            <div class="chain chain-2"></div>
-                        </div>
-                        <!-- ornate gothic padlock, holds the chains -->
-                        <svg class="altar-lock" id="altarLock" viewBox="0 0 140 180" aria-hidden="true">
-                            <g class="lock-shackle">
-                                <path d="M42 80 L42 58 A28 28 0 0 1 98 58 L98 80" fill="none" stroke="url(#goldA)" stroke-width="12" stroke-linecap="round"/>
-                                <path d="M42 80 L42 58 A28 28 0 0 1 98 58 L98 80" fill="none" stroke="url(#goldB)" stroke-width="4" stroke-linecap="round" opacity="0.8"/>
-                            </g>
-                            <g class="lock-body">
-                                <path d="M32 78 Q32 70 40 70 L100 70 Q108 70 108 78 L108 130 Q108 152 70 170 Q32 152 32 130 Z" fill="url(#goldA)" stroke="#241803" stroke-width="2"/>
-                                <path d="M40 80 L100 80 L100 128 Q100 145 70 160 Q40 145 40 128 Z" fill="none" stroke="url(#goldB)" stroke-width="2" opacity="0.8"/>
-                                <circle cx="70" cy="106" r="8" fill="#1a1204"/>
-                                <rect x="66" y="106" width="8" height="30" rx="1" fill="#1a1204"/>
-                                <rect x="58" y="118" width="24" height="7" rx="1" fill="#1a1204"/>
-                                <path d="M70 84 q11 9 0 18 q-11 -9 0 -18" fill="none" stroke="#241803" stroke-width="1.3"/>
-                                <circle cx="44" cy="82" r="2.4" fill="#1a1204"/><circle cx="96" cy="82" r="2.4" fill="#1a1204"/>
-                            </g>
-                        </svg>
+                        <div class="cf cf-lid"><i class="swirl"></i></div>
                     </div>
                     <div class="altar-shadow"></div>
                 </div>
@@ -430,7 +396,7 @@
 
     </div>
 
-    <script src="js/os.js?v=2"></script>
+    <script src="js/os.js?v=8"></script>
     <script>
     /* core modules are shipped encoded; decoded + injected at runtime */
     (function () {
