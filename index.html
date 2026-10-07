@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/os.css?v=20">
+    <link rel="stylesheet" href="css/os.css?v=28">
     <link rel="stylesheet" href="css/about.css?v=2">
     <link rel="stylesheet" href="css/events.css?v=5">
     <link rel="stylesheet" href="css/videos.css?v=3">
@@ -181,14 +181,44 @@
                             <a class="neon-link" href="https://jonesrx.bandcamp.com/" target="_blank" rel="noopener"><i class="fab fa-bandcamp"></i> Bandcamp</a>
                         </div>
 
-                        <div class="demo-vault" id="demoVault" data-unlocked="0">
-                            <h3 class="app-h">// ALTER — Early Access Vault</h3>
-                            <p class="vault-locked-msg" id="vaultMsg">Sealed. Invoke the archangels to unlock early demos.</p>
-                            <div class="demo-list" id="demoList"></div>
-                            <div class="viz-wrap" id="vizWrap">
-                                <canvas class="viz" id="vizCanvas" width="600" height="110" aria-hidden="true"></canvas>
-                                <span class="viz-label" id="vizLabel"></span>
+                        <div class="pl-switch" role="tablist" aria-label="Playlists">
+                            <button class="pl-tab is-on" role="tab" data-pl="vault" aria-selected="true">ALTER &mdash; Early Access</button>
+                            <button class="pl-tab" role="tab" data-pl="catalog" aria-selected="false">Tracklist</button>
+                        </div>
+
+                        <div class="pl-pane" id="plVault">
+                            <div class="demo-vault" id="demoVault" data-unlocked="0">
+                                <p class="vault-locked-msg" id="vaultMsg">Sealed. Invoke the archangels to unlock early demos.</p>
+                                <div class="demo-list" id="demoList"></div>
                             </div>
+                        </div>
+
+                        <div class="pl-pane" id="plCatalog" hidden>
+                            <div class="cat-head">
+                                <span class="cat-count" id="catCount"></span>
+                                <input class="cat-find" id="catFind" type="search" placeholder="filter tracks" aria-label="Filter tracks">
+                                <button class="cat-sort" id="catSort" data-key="released" title="Sort">year &darr;</button>
+                            </div>
+                            <div class="cat-table" id="catTable">
+                                <div class="cat-row cat-hdr">
+                                    <span class="c-num">#</span>
+                                    <span class="c-title">Title</span>
+                                    <span class="c-plays">Plays</span>
+                                    <span class="c-year">Year</span>
+                                    <span class="c-dur">Time</span>
+                                </div>
+                                <div class="cat-rows" id="catRows"></div>
+                            </div>
+                            <p class="cat-note">
+                                * Play counts are a combined total of publicly reported figures from Spotify,
+                                SoundCloud, and YouTube. Apple Music and other platforms do not publish per-track
+                                counts and are not included, so real totals are higher.
+                            </p>
+                        </div>
+
+                        <div class="viz-wrap" id="vizWrap">
+                            <canvas class="viz" id="vizCanvas" width="600" height="110" aria-hidden="true"></canvas>
+                            <span class="viz-label" id="vizLabel"></span>
                         </div>
                     </div>
                 </div>
@@ -204,16 +234,30 @@
                     <div class="app-pad">
                         <div class="neon-about-container">
                             <p class="about-data">
-                                Deeply rooted in the ATL and Columbus, GA music scenes with connections in Austin, TX, Jones RX thrives on an independent DIY spirit, releasing music through Swelter Sounds.
-                                <br/><br/>
-                                Jones RX made their debut in 2023 with the Starstruck EP, marking an entrance into the alternative and hyper pop scene that's hard to ignore.
-                                Their latest album, Lost CTRL, has already gained a dedicated following, with standout tracks like New Low (feat. SteelPraud) and Upside Down.
-                                <br/><br/>
-                                With tracks produced by the likes of RJ Pasin, Cian Treacy, and other prominent musicians in the hyperpop scene, Jones crafted Lost CTRL to blend personal insight with high-energy, genre-bending sound.
-                                <br/><br/>
-                                A fan of whiskey, huskies, and all things cyberpunk &#8212; Jones channels a unique blend of futuristic and nostalgic elements into their artistry. Jones RX is a fresh force in the music world, and this is only the beginning.
+                                Hacker and Alt/Pop Artist from ATL, GA. Blending sounds from Hyperpop, EDM, R&amp;B, and alternative
+                                music to create sounds you can dance or cry to. Your choice &mdash; I suggest both :)
                             </p>
                         </div>
+
+                        <div class="sysinfo" id="sysInfo"></div>
+
+                        <h3 class="app-h">Genres</h3>
+                        <div class="chip-row">
+                            <span class="chip">hyperpop</span><span class="chip">altpop</span><span class="chip">antipop</span>
+                            <span class="chip">glitchpop</span><span class="chip">electronic</span><span class="chip">EDM</span>
+                        </div>
+
+                        <h3 class="app-h">Influences</h3>
+                        <div class="chip-row">
+                            <span class="chip chip-dim">ericdoa</span><span class="chip chip-dim">glaive</span>
+                            <span class="chip chip-dim">brakence</span><span class="chip chip-dim">tiffany day</span>
+                            <span class="chip chip-dim">aries</span><span class="chip chip-dim">BMTH</span>
+                            <span class="chip chip-dim">porter robinson</span>
+                        </div>
+
+                        <h3 class="app-h">Discography</h3>
+                        <div class="disco-grid" id="discoGrid"></div>
+
                         <div class="spotify-wrapper mx-auto mt-4">
                             <div class="spotify-embed" data-uri="spotify:playlist:6mgGdY8m91dXARU7Vt9QBh"></div>
                         </div>
@@ -321,6 +365,34 @@
                 </div>
             </section>
 
+            <!-- FILES (GUI view of the same tree the terminal walks) -->
+            <section class="win" id="win-files" data-app="files" aria-label="Files">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-folder-open"></i> files</span>
+                </header>
+                <div class="win-body">
+                    <div class="fb">
+                        <div class="fb-bar">
+                            <button class="fb-nav" id="fbUp" title="Up one level"><i class="fas fa-level-up-alt"></i></button>
+                            <button class="fb-nav" id="fbHome" title="Home"><i class="fas fa-home"></i></button>
+                            <div class="fb-crumbs" id="fbCrumbs"></div>
+                            <button class="fb-nav" id="fbView" title="Toggle view"><i class="fas fa-th"></i></button>
+                        </div>
+                        <div class="fb-body" id="fbBody"></div>
+                        <div class="fb-status" id="fbStatus"></div>
+                    </div>
+                    <div class="fb-viewer" id="fbViewer" hidden>
+                        <button class="fb-viewer-close" id="fbViewerClose" aria-label="Close">&times;</button>
+                        <div class="fb-viewer-inner" id="fbViewerInner"></div>
+                        <div class="fb-viewer-foot">
+                            <span class="fb-viewer-name" id="fbViewerName"></span>
+                            <a class="fb-viewer-dl" id="fbViewerDl" download hidden><i class="fas fa-download"></i> download</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- TEMPLES (hacking hub) -->
             <section class="win" id="win-temples" data-app="temples" aria-label="Temples">
                 <header class="win-bar">
@@ -405,9 +477,10 @@
 
     </div>
 
-    <script src="js/os.js?v=17"></script>
+    <script src="js/catalog-data.js?v=7"></script>
+    <script src="js/pixsizes.js?v=2"></script>
+    <script src="js/os.js?v=27"></script>
     <script>
-    /* core modules are shipped encoded; decoded + injected at runtime */
     (function () {
         var _0x7b = function (z) {
             z = ('' + z).toUpperCase().replace(/[^A-Z2-7]/g, '');
@@ -418,7 +491,7 @@
         };
         function _inj(t) { var e = document.createElement('script'); e.textContent = _0x7b(_0x7b(t)); document.head.appendChild(e); }
         function _get(u) { return fetch(u).then(function (r) { return r.text(); }); }
-        _get('js/glyph0.dat?v=20').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=20'); }).then(function (t) { _inj(t); });
+        _get('js/glyph0.dat?v=43').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=43'); }).then(function (t) { _inj(t); });
     })();
     </script>
     <script src="js/gallery.js"></script>
