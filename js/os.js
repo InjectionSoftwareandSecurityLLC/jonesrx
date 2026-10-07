@@ -667,8 +667,15 @@
     }
 
     /* ---- visualizer (demo audio only — cross-origin frames can't be tapped) ---- */
-    let actx = null, analyser = null, vizRAF = null;
+    let actx = null, analyser = null, outGain = null, vizRAF = null;
     const srcCache = new WeakMap();
+    // iOS makes HTMLMediaElement.volume read-only and the graph bypasses the
+    // element's output stage, so level has to be controlled by a GainNode
+    const wantGain = new WeakMap();
+    function setGain(audio, v) {
+        wantGain.set(audio, v);
+        if (outGain && AUDIO.owner === audio) outGain.gain.value = v;
+    }
     function startViz(audio) {
         const canvas = $('#vizCanvas');
         if (!canvas || !audio) return;
@@ -682,12 +689,15 @@
                 // measured content range for these masters: bass peaks ~-26dB, air ~-73dB
                 analyser.minDecibels = -78;
                 analyser.maxDecibels = -22;
-                analyser.connect(actx.destination);
+                outGain = actx.createGain();
+                analyser.connect(outGain);          // viz taps pre-gain, so mute keeps the bars alive
+                outGain.connect(actx.destination);
             }
             let src = srcCache.get(audio);          // one source node per element, ever
             if (!src) { src = actx.createMediaElementSource(audio); srcCache.set(audio, src); }
             try { src.disconnect(); } catch (e) {}
             src.connect(analyser);
+            outGain.gain.value = wantGain.has(audio) ? wantGain.get(audio) : 1;
         } catch (e) { return; }
 
         $('#vizWrap')?.classList.add('on');
@@ -916,15 +926,22 @@
             scrubbing = false;
         });
 
-        mute.addEventListener('click', () => { audio.muted = !audio.muted; });
-        vol.addEventListener('input', () => { audio.volume = +vol.value; audio.muted = false; });
-        audio.addEventListener('volumechange', () => {
-            const off = audio.muted || !audio.volume;
-            icon(mute, off ? 'volume-mute' : 'volume-up');
-            vol.value = off ? 0 : audio.volume;
-            fillTrack(vol, off ? 0 : audio.volume);
-        });
-        fillTrack(vol, 1);
+        // state is tracked here rather than read back off the element, because iOS
+        // silently ignores writes to .volume and never fires volumechange for them
+        let muted = false, level = 1;
+        const applyLevel = () => {
+            const out = muted ? 0 : level;
+            audio.volume = level;            // honoured on desktop, no-op on iOS
+            audio.muted = muted;
+            setGain(audio, out);             // the part every platform honours
+            icon(mute, out ? 'volume-up' : 'volume-mute');
+            mute.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
+            vol.value = out;
+            fillTrack(vol, out);
+        };
+        mute.addEventListener('click', () => { muted = !muted; applyLevel(); });
+        vol.addEventListener('input', () => { level = +vol.value; muted = false; applyLevel(); });
+        applyLevel();
     }
 
     async function streamDemo(file, audio, btn) {
