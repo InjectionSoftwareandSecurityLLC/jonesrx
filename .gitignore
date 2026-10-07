@@ -3,3 +3,13 @@
 # Raw (unencoded) core game sources — kept local for dev.
 js/altergame.js
 js/terminal.js
+
+# Holds the plaintext root password and temple keys; the hashes it emits are
+# committed (inside the packed game sources), the inputs are not.
+tools/genshadow.py
+
+# Documents the encoding used for js/glyph*.dat. CI does not need it.
+tools/pack.py
+
+__pycache__/
+.venv/

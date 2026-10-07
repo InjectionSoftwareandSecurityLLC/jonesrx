@@ -1,0 +1,114 @@
+{
+  "_comment": "Per-platform counts live in 'sources' and are summed by tools/fetch_catalog.py. Refresh them with tools/fetch_plays.py. An entry in 'plays' is a hand-written override that wins over the sum; blank means derive. A track with zero across every platform renders as '< 1K'. 'streams' overrides the derived cross-platform total.",
+  "_aliases": "Tracks Spotify counts as one song. The target's figure is mirrored onto the key, every regeneration.",
+  "aliases": {
+    "new-low-feat-steelpraud": "new-low"
+  },
+  "totals": {
+    "streams": "",
+    "monthlyListeners": "69",
+    "topTrack": ""
+  },
+  "plays": {
+    "painful": "",
+    "upside-down": "",
+    "new-low": "",
+    "crash-out": "",
+    "luv-u": "",
+    "give-up-go-home": "",
+    "drop-dead": "",
+    "toxic": "",
+    "awhf": "",
+    "times-up-intro": "",
+    "fake-love": "",
+    "slow-me-down": "",
+    "close": "",
+    "new-low-feat-steelpraud": "",
+    "bloodline": "",
+    "atd": "",
+    "vices": "",
+    "two-face": "",
+    "patron": ""
+  },
+  "sources": {
+    "luv-u": {
+      "soundcloud": 23,
+      "youtube": 35
+    },
+    "crash-out": {
+      "soundcloud": 243,
+      "youtube": 354
+    },
+    "give-up-go-home": {
+      "soundcloud": 14,
+      "youtube": 164
+    },
+    "drop-dead": {
+      "soundcloud": 36,
+      "youtube": 141
+    },
+    "close": {
+      "soundcloud": 21,
+      "youtube": 462
+    },
+    "atd": {
+      "soundcloud": 43,
+      "youtube": 140
+    },
+    "times-up-intro": {
+      "soundcloud": 39,
+      "youtube": 76
+    },
+    "painful": {
+      "soundcloud": 59,
+      "spotify": 4766,
+      "youtube": 648
+    },
+    "two-face": {
+      "soundcloud": 17,
+      "youtube": 233
+    },
+    "upside-down": {
+      "soundcloud": 22,
+      "spotify": 1191,
+      "youtube": 475
+    },
+    "new-low": {
+      "soundcloud": 3,
+      "spotify": 1107,
+      "youtube": 105
+    },
+    "awhf": {
+      "soundcloud": 6,
+      "youtube": 58
+    },
+    "bloodline": {
+      "soundcloud": 2,
+      "youtube": 49
+    },
+    "toxic": {
+      "soundcloud": 7
+    },
+    "fake-love": {
+      "soundcloud": 7,
+      "youtube": 53
+    },
+    "patron": {
+      "soundcloud": 69,
+      "youtube": 268
+    },
+    "slow-me-down": {
+      "soundcloud": 5,
+      "youtube": 24
+    },
+    "vices": {
+      "soundcloud": 84,
+      "youtube": 25
+    },
+    "new-low-feat-steelpraud": {
+      "soundcloud": 151,
+      "spotify": 1107,
+      "youtube": 309
+    }
+  }
+}

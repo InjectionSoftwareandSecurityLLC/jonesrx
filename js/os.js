@@ -26,6 +26,7 @@
         { id: 'videos',   name: 'Videos',   icon: 'fa-play-circle' },
         { id: 'social',   name: 'Social',   icon: 'fa-share-alt' },
         { id: 'terminal', name: 'Terminal', icon: 'fa-terminal' },
+        { id: 'files',    name: 'Files',    icon: 'fa-folder-open' },
         { id: 'temples',  name: 'Temples',  icon: 'fa-crosshairs' },
         { id: 'exploit',  name: 'Exploit',  icon: 'fa-bug' },
         { id: 'sessions', name: 'Sessions', icon: 'fa-network-wired' },
@@ -35,7 +36,6 @@
     const PHONE_DOCK = ['tracks', 'videos', 'terminal', 'social'];
 
     // Raphael unlocks 1, Michael 2, Gabriel 3, Uriel 3 (9 total)
-    // tracks ship as opaque .dat (base64 text) and are decoded to a Blob at play time
     const DEMOS = [
         { name: 'ALTER — Demo 1', file: 'assets/tracks/demo-01.dat', angel: 'raphael' },
         { name: 'ALTER — Demo 2', file: 'assets/tracks/demo-02.dat', angel: 'michael' },
@@ -176,6 +176,16 @@
         if (id === 'terminal') { const inp = $('#termInput'); if (inp) setTimeout(() => inp.focus(), 60); }
         if ((id === 'exploit' || id === 'sessions') && window.ALTERGAME) window.ALTERGAME.render();
         if (id === 'settings') refreshSettings();
+        if (id === 'files') {
+            // open at home, and follow elevation when it changes under us
+            const fs = fbFS(), elev = !!(fs && fs.elevated());
+            if (elev !== FB.elev || !$('#win-files').dataset.visited) {
+                FB.elev = elev;
+                FB.path = fbHome();
+                $('#win-files').dataset.visited = '1';
+            }
+            fbRender();
+        }
     }
     function closeApp(id) {
         const win = winEl(id);
@@ -585,13 +595,19 @@
         });
     }
 
+    // the visualizer is shared by both playlists, so it parks in the app body
+    const vizHome = () => $('#win-tracks .app-pad');
+    function parkViz() {
+        const viz = $('#vizWrap'), home = vizHome();
+        if (viz && home && viz.parentNode !== home) home.appendChild(viz);
+    }
+
     function refreshVault() {
         const vault = $('#demoVault'), list = $('#demoList'), msg = $('#vaultMsg');
         if (!vault || !list) return;
         const count = DEMOS.filter(d => unlocked.has(d.angel)).length;
         vault.dataset.unlocked = String(count);
-        const viz = $('#vizWrap');
-        if (viz && viz.parentNode !== vault) vault.appendChild(viz);   // rescue it before wiping the list
+        parkViz();                       // rescue it before wiping the list
         list.innerHTML = '';
         if (count === 0) {
             if (msg) msg.style.display = '';
@@ -819,14 +835,14 @@
         if (kind === 'star') {                     // interlocking equilateral triangles
             for (let t = 0; t < 2; t++) {
                 for (let i = 0; i < 3; i++) {
-                    const a = t * Math.PI + i * (Math.PI * 2 / 3);
+                    // start at -90deg so one triangle points up and the other down,
+                    // rather than sitting on a vertex at 3 o'clock
+                    const a = -Math.PI / 2 + t * Math.PI + i * (Math.PI * 2 / 3);
                     const px = Math.cos(a) * r, py = Math.sin(a) * r;
                     i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
                 }
                 ctx.closePath();
             }
-            ctx.moveTo(r * .58, 0);
-            ctx.arc(0, 0, r * .58, 0, Math.PI * 2);
         } else if (kind === 'stack') {             // twin up-triangles offset by half a height
             tri(ctx, r * .85, -r, r * .33);
             tri(ctx, r * .85, -r * .33, r);
@@ -856,11 +872,11 @@
 
     // park the visualizer directly above whichever track is playing
     function mountViz(audio) {
-        const wrap = $('#vizWrap'), row = audio.closest('.demo-item');
+        const wrap = $('#vizWrap'), row = audio.closest('.demo-item, .cat-row');
         if (!wrap || !row || !row.parentNode) return;
         if (wrap.nextElementSibling !== row) row.parentNode.insertBefore(wrap, row);
-        const label = $('#vizLabel'), name = $('.demo-name', row);
-        if (label && name) label.textContent = '\u25B6 ' + name.textContent;
+        const label = $('#vizLabel'), name = $('.demo-name, .c-title', row);
+        if (label && name) label.textContent = '\u25B6 ' + name.textContent.trim();
         wrap.scrollIntoView({ block: 'nearest' });
     }
 
@@ -890,7 +906,6 @@
         });
     };
 
-    // decode a base64-encoded track into an in-memory Blob and stream it
     const clock = (s) => isFinite(s) && s > 0
         ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0')
         : '0:00';
@@ -960,6 +975,373 @@
         } catch (e) {
             btn.disabled = false; btn.textContent = 'unavailable';
         }
+    }
+
+    /* ============================================================
+       CATALOG — released tracks from js/catalog-data.js
+       Rows with a local master play inline through the shared audio
+       bus (so the visualizer works); the rest link out to Apple Music.
+       ============================================================ */
+    let catSortKey = 'released', catSortDesc = true, catFilter = '';
+    const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    function initCatalog() {
+        const rows = $('#catRows');
+        if (!rows) return;
+        $('#catFind')?.addEventListener('input', (e) => {
+            catFilter = e.target.value.trim().toLowerCase();
+            renderCatalog();
+        });
+        $('#catSort')?.addEventListener('click', () => {
+            const order = ['released', 'title', 'plays'];
+            const i = order.indexOf(catSortKey);
+            if (catSortDesc) { catSortDesc = false; }
+            else { catSortKey = order[(i + 1) % order.length]; catSortDesc = true; }
+            renderCatalog();
+        });
+        $$('.pl-tab').forEach(tab => tab.addEventListener('click', () => switchPlaylist(tab.dataset.pl)));
+        renderCatalog();
+    }
+
+    function switchPlaylist(which) {
+        $$('.pl-tab').forEach(t => {
+            const on = t.dataset.pl === which;
+            t.classList.toggle('is-on', on);
+            t.setAttribute('aria-selected', String(on));
+        });
+        const cat = $('#plCatalog'), vault = $('#plVault');
+        if (cat) cat.hidden = which !== 'catalog';
+        if (vault) vault.hidden = which !== 'vault';
+        parkViz();                       // the pane it was sitting in may now be hidden
+    }
+
+    function renderCatalog() {
+        const host = $('#catRows'), data = window.CATALOG;
+        if (!host) return;
+        if (!data || !data.tracks || !data.tracks.length) {
+            host.innerHTML = '<p class="vault-locked-msg">Catalog unavailable.</p>';
+            return;
+        }
+        parkViz();
+        let list = data.tracks.slice();
+        if (catFilter) {
+            list = list.filter(t => (t.title + ' ' + t.album).toLowerCase().includes(catFilter));
+        }
+        const playNum = (v) => {
+            const m = String(v || '').trim().replace(/,/g, '').match(/^([\d.]+)\s*([KMB])?$/i);
+            if (!m) return -1;
+            return parseFloat(m[1]) * ({ k: 1e3, m: 1e6, b: 1e9 }[(m[2] || '').toLowerCase()] || 1);
+        };
+        list.sort((a, b) => {
+            if (catSortKey === 'title') {
+                const d = a.title.localeCompare(b.title);
+                return catSortDesc ? -d : d;
+            }
+            if (catSortKey === 'plays') {
+                const d = playNum(a.plays) - playNum(b.plays);
+                return catSortDesc ? -d : d;
+            }
+            const d = (a.released || '').localeCompare(b.released || '');
+            if (d) return catSortDesc ? -d : d;
+            // same release: keep album order rather than whatever the array held
+            return (a.disc || 1) - (b.disc || 1) || (a.trackNumber || 0) - (b.trackNumber || 0);
+        });
+
+        const label = { released: 'year', title: 'title', plays: 'plays' }[catSortKey];
+        const sortBtn = $('#catSort');
+        if (sortBtn) sortBtn.textContent = label + (catSortDesc ? ' \u2193' : ' \u2191');
+        const count = $('#catCount');
+        if (count) count.textContent = list.length + (list.length === 1 ? ' track' : ' tracks');
+
+        // counts are summed across every platform that publishes them; a track with
+        // zero everywhere shows "< 1K" rather than a bare 0
+        const compact = (n) => n >= 1e9 ? (n / 1e9).toFixed(1).replace(/\.0$/, '') + 'B'
+            : n >= 1e6 ? (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
+            : n >= 1e4 ? Math.round(n / 1e3) + 'K'
+            : n >= 1e3 ? (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'K' : String(n);
+        const show = (v) => /^\d+$/.test(String(v)) ? compact(+v) : String(v);
+        const SRC = { spotify: 'Spotify', soundcloud: 'SoundCloud', youtube: 'YouTube' };
+        const playCell = (t) => {
+            const src = t.playSources || {};
+            const tip = Object.keys(src).map(k => `${SRC[k] || k} ${(+src[k]).toLocaleString()}`).join(' \u00b7 ');
+            return t.plays
+                ? { text: show(t.plays), cls: '', tip: tip || '' }
+                : { text: '< 1K', cls: ' is-low', tip: 'no public count on any platform' };
+        };
+
+        host.innerHTML = '';
+        list.forEach((t, i) => {
+            const row = document.createElement('div');
+            row.className = 'cat-row' + (t.local ? ' has-audio' : '');
+            // singles name the release after the track, so the subtitle would just repeat
+            const sub = t.album && t.album !== t.title ? `<em class="c-album">${esc(t.album)}</em>` : '';
+            const pc = playCell(t);
+            row.innerHTML = `
+                <span class="c-num">${i + 1}</span>
+                <span class="c-title">${esc(t.title)}${sub}</span>
+                <span class="c-plays${pc.cls}"${pc.tip ? ` title="${esc(pc.tip)}"` : ''}>${esc(pc.text)}</span>
+                <span class="c-year">${esc(t.year)}</span>
+                <span class="c-dur">${esc(t.duration)}</span>
+                <span class="c-go"></span>`;
+            const go = $('.c-go', row);
+            if (t.local) {
+                go.innerHTML = `<button class="demo-load" type="button">&#9654;</button>
+                    <audio preload="none"></audio>
+                    <div class="xport" hidden>
+                        <button class="xp-btn xp-play" type="button" aria-label="Play"><i class="fas fa-play"></i></button>
+                        <input class="xp-seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+                        <span class="xp-time">0:00</span>
+                        <button class="xp-btn xp-mute" type="button" aria-label="Mute"><i class="fas fa-volume-up"></i></button>
+                        <input class="xp-vol" type="range" min="0" max="1" step=".01" value="1" aria-label="Volume">
+                    </div>`;
+                const audio = $('audio', row), btn = $('.demo-load', row);
+                audio.addEventListener('play', () => audioClaim('demo', audio));
+                audio.addEventListener('pause', () => audioRelease('demo', audio));
+                audio.addEventListener('ended', () => audioRelease('demo', audio));
+                bindTransport(row, audio);
+                btn.addEventListener('click', () => {
+                    audio.src = t.local;
+                    $('.xport', row).hidden = false;
+                    btn.remove();
+                    audio.play().catch(() => {});
+                });
+            } else if (t.appleUrl) {
+                go.innerHTML = `<a class="cat-out" href="${esc(t.appleUrl)}" target="_blank"
+                    rel="noopener" title="Listen on Apple Music"><i class="fas fa-external-link-alt"></i></a>`;
+            }
+            host.appendChild(row);
+        });
+    }
+
+    function renderAbout() {
+        const data = window.CATALOG;
+        if (!data) return;
+        const s = data.stats || {};
+        const years = s.firstYear ? (new Date().getFullYear() - +s.firstYear) || 1 : '';
+
+        const info = $('#sysInfo');
+        if (info) {
+            // only render figures we actually have; blanks stay out of the panel
+            const cells = [
+                ['streams', s.streams], ['tracks', s.trackCount], ['releases', s.releaseCount],
+                ['monthly', s.monthlyListeners], ['top track', s.topTrack],
+                ['active', years ? years + (years === 1 ? ' yr' : ' yrs') : ''], ['since', s.firstYear]
+            ].filter(([, v]) => v !== '' && v != null);
+            info.innerHTML = cells.map(([k, v]) =>
+                `<div class="si-cell"><span class="si-val">${esc(v)}</span><span class="si-key">${esc(k)}</span></div>`
+            ).join('');
+        }
+
+        const grid = $('#discoGrid');
+        if (grid) {
+            grid.innerHTML = (data.releases || []).map(r => `
+                <div class="disco-item">
+                    <button class="disco-face" type="button" aria-expanded="false">
+                        <img src="${esc(r.art)}" alt="${esc(r.title)} cover" loading="lazy">
+                        <span class="disco-pick"><i class="fas fa-play"></i> listen</span>
+                    </button>
+                    <span class="disco-title">${esc(r.title)}</span>
+                    <span class="disco-meta">${esc(r.kind)} \u00b7 ${esc(r.year)}</span>
+                    <div class="disco-links" hidden>
+                        <a href="${esc(r.appleUrl)}" target="_blank" rel="noopener"><i class="fab fa-apple"></i> Apple Music</a>
+                        <a href="${esc(r.spotifyUrl)}" target="_blank" rel="noopener"><i class="fab fa-spotify"></i> Spotify</a>
+                    </div>
+                </div>`).join('');
+            $$('.disco-face', grid).forEach(face => face.addEventListener('click', () => {
+                const item = face.closest('.disco-item'), links = $('.disco-links', item);
+                const open = links.hidden;
+                $$('.disco-links', grid).forEach(l => { l.hidden = true; });
+                $$('.disco-face', grid).forEach(f => f.setAttribute('aria-expanded', 'false'));
+                links.hidden = !open;
+                face.setAttribute('aria-expanded', String(open));
+            }));
+        }
+    }
+
+    /* ============================================================
+       FILES — GUI over the terminal's filesystem. It never holds its
+       own copy of the tree or its own idea of permissions; both come
+       from the ALTERTERM bridge, so root is earned at the prompt only.
+       ============================================================ */
+    const FB = { path: '/home/jones', grid: true, elev: false };
+    const fbFS = () => (window.ALTERTERM && window.ALTERTERM.fs) || null;
+    // root's home is /root; jones's is /home/jones
+    const fbHome = () => {
+        const fs = fbFS();
+        return fs && fs.elevated() ? '/root' : '/home/jones';
+    };
+
+    function initFiles() {
+        if (!$('#fbBody')) return;
+        $('#fbUp')?.addEventListener('click', () => {
+            const p = FB.path.replace(/\/[^/]*$/, '');
+            fbGo(p || '/');
+        });
+        $('#fbHome')?.addEventListener('click', () => fbGo(fbHome()));
+        $('#fbView')?.addEventListener('click', () => { FB.grid = !FB.grid; fbRender(); });
+        $('#fbViewerClose')?.addEventListener('click', fbCloseViewer);
+        $('#fbViewer')?.addEventListener('click', (e) => {
+            if (e.target.id === 'fbViewer') fbCloseViewer();
+        });
+    }
+
+    const fbGo = (p) => { FB.path = p; fbRender(); };
+
+    function fbRender() {
+        const body = $('#fbBody'), crumbs = $('#fbCrumbs'), status = $('#fbStatus');
+        const fs = fbFS();
+        if (!body) return;
+        if (!fs) {
+            body.innerHTML = '<p class="fb-msg">filesystem unavailable.</p>';
+            return;
+        }
+
+        const parts = FB.path.split('/').filter(Boolean);
+        crumbs.innerHTML = `<button class="fb-crumb" data-p="/">/</button>` +
+            parts.map((seg, i) => {
+                const p = '/' + parts.slice(0, i + 1).join('/');
+                return `<button class="fb-crumb" data-p="${esc(p)}">${esc(seg)}</button>`;
+            }).join('<span class="fb-sep">/</span>');
+        $$('.fb-crumb', crumbs).forEach(b => b.addEventListener('click', () => fbGo(b.dataset.p)));
+
+        const res = fs.list(FB.path);
+        if (res.error === 'denied') {
+            body.innerHTML = '<div class="fb-msg fb-denied">' +
+                '<i class="fas fa-lock"></i>' +
+                '<p>permission denied</p>' +
+                '<p class="fb-msg-sub">this path answers to root alone. open the Terminal, ' +
+                'run <code>sudo</code>, then reopen Files.</p></div>';
+            status.textContent = FB.path + ' — denied';
+            return;
+        }
+        if (res.error) {
+            body.innerHTML = '<p class="fb-msg">no such directory.</p>';
+            status.textContent = FB.path;
+            return;
+        }
+
+        body.className = 'fb-body ' + (FB.grid ? 'is-grid' : 'is-list');
+        if (!res.entries.length) {
+            body.innerHTML = '<p class="fb-msg">this folder is empty.</p>';
+            status.textContent = FB.path + ' — 0 items';
+            return;
+        }
+
+        body.innerHTML = res.entries.map(e => {
+            const icon = e.denied ? 'fa-lock' : e.dir ? 'fa-folder'
+                : e.img ? 'fa-image' : e.bin ? 'fa-file-code' : 'fa-file-alt';
+            const thumb = e.img
+                ? `<span class="fb-thumb" data-draw="${esc(e.draw)}">`
+                  + (e.url ? `<img src="${esc(e.url)}" alt="" loading="lazy">` : '')
+                  + '</span>'
+                : `<i class="fas ${icon} fb-icon"></i>`;
+            return `<button class="fb-item${e.denied ? ' is-denied' : ''}${e.img ? ' is-img' : ''}"
+                        data-name="${esc(e.name)}" data-dir="${e.dir}" data-denied="${e.denied}">
+                    ${thumb}
+                    <span class="fb-name">${esc(e.name)}</span>
+                    <span class="fb-meta">${e.dir ? '—' : fbSize(e.size)}</span>
+                </button>`;
+        }).join('');
+
+        // hexagram thumbnails have no source image; they're drawn
+        $$('.fb-thumb[data-draw]', body).forEach(sp => {
+            if (sp.dataset.draw) fbDrawSigil(sp, sp.dataset.draw);
+        });
+        $$('.fb-item', body).forEach(btn => btn.addEventListener('click', () => {
+            const name = btn.dataset.name;
+            const next = (FB.path === '/' ? '' : FB.path) + '/' + name;
+            if (btn.dataset.denied === 'true') return fbDenied(name);
+            if (btn.dataset.dir === 'true') return fbGo(next);
+            fbOpen(next, name);
+        }));
+        status.textContent = `${FB.path} — ${res.entries.length} item${res.entries.length === 1 ? '' : 's'}`
+            + (fs.elevated() ? '  ·  root' : '');
+    }
+
+    const fbSize = (n) => n >= 1048576 ? (n / 1048576).toFixed(1) + 'M'
+        : n >= 1024 ? Math.round(n / 1024) + 'K' : n + 'B';
+
+    function fbDenied(name) {
+        const v = $('#fbViewer'), inner = $('#fbViewerInner');
+        inner.innerHTML = '<div class="fb-msg fb-denied"><i class="fas fa-lock"></i>' +
+            '<p>permission denied</p><p class="fb-msg-sub">open the Terminal, run ' +
+            '<code>sudo</code>, then reopen Files.</p></div>';
+        fbSetDownload(null);
+        $('#fbViewerName').textContent = name;
+        v.hidden = false;
+    }
+
+    async function fbOpen(path, name) {
+        const fs = fbFS();
+        const res = await fs.read(path);
+        const inner = $('#fbViewerInner');
+        let dl = null;                       // {href, name} once we know what to offer
+        if (res.error === 'denied') return fbDenied(name);
+        if (res.error) {
+            inner.innerHTML = '<p class="fb-msg">cannot open this item.</p>';
+        } else if (res.binary) {
+            if (/\.pdf$/i.test(name) && res.url) {
+                // render in place rather than handing the file straight to the browser
+                inner.innerHTML = `<iframe class="fb-pdf" src="${esc(res.url)}#view=FitH"`
+                    + ` title="${esc(name)}"></iframe>`;
+                dl = { href: res.url, name };
+            } else if (res.url) {
+                inner.innerHTML = '<div class="fb-art">'
+                    + `<img src="${esc(res.url)}" alt="${esc(name)}"></div>`;
+                dl = { href: res.url, name };
+            } else if (res.draw) {
+                inner.innerHTML = '<canvas class="fb-canvas" width="420" height="420"></canvas>';
+                fbDrawSigil(inner, res.draw, 420);
+                const c = inner.querySelector('canvas');
+                if (c) dl = { href: c.toDataURL('image/png'), name };
+            } else {
+                inner.innerHTML = `<p class="fb-msg">${esc(res.desc || 'binary file')}</p>`;
+            }
+        } else {
+            const text = res.text || '';
+            inner.innerHTML = `<pre class="fb-text">${esc(text)}</pre>`;
+            dl = { href: URL.createObjectURL(new Blob([text], { type: 'text/plain' })), name };
+        }
+        fbSetDownload(dl);
+        $('#fbViewerName').textContent = name;
+        $('#fbViewer').hidden = false;
+    }
+
+    function fbSetDownload(dl) {
+        const a = $('#fbViewerDl');
+        if (!a) return;
+        if (FB.blob) { URL.revokeObjectURL(FB.blob); FB.blob = null; }
+        if (!dl) { a.hidden = true; a.removeAttribute('href'); return; }
+        if (dl.href.startsWith('blob:')) FB.blob = dl.href;
+        a.href = dl.href;
+        a.setAttribute('download', dl.name);
+        a.hidden = false;
+    }
+
+    const fbCloseViewer = () => {
+        $('#fbViewer').hidden = true;
+        $('#fbViewerInner').innerHTML = '';
+        fbSetDownload(null);
+    };
+
+    // reuse the visualizer's sigil geometry so the art matches what floats in the bars
+    function fbDrawSigil(host, kind, size) {
+        let c = host.querySelector('canvas');
+        if (!c) {
+            c = document.createElement('canvas');
+            c.width = c.height = size || 64;
+            host.appendChild(c);
+        }
+        const ctx = c.getContext('2d');
+        const r = c.width * 0.36;
+        ctx.clearRect(0, 0, c.width, c.height);
+        ctx.lineWidth = Math.max(1.5, c.width / 90);
+        ctx.strokeStyle = getComputedStyle(document.documentElement)
+            .getPropertyValue('--neon').trim() || '#00f0ff';
+        ctx.shadowColor = ctx.strokeStyle;
+        ctx.shadowBlur = c.width / 14;
+        sigilPath(ctx, kind, c.width / 2, c.height / 2, r, 0);
+        ctx.stroke();
     }
 
     function unlockAngel(angel) {
@@ -1119,6 +1501,9 @@
             updateNemo(t || 'default');
         } catch (e) {}
         refreshSigils(); refreshTemples(); refreshVault();
+        initCatalog();
+        renderAbout();
+        initFiles();
         initDesktopSigils();
         initPanelSigils();
         initSettings();

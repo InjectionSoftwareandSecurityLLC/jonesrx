@@ -470,6 +470,68 @@ body.is-mobile .win-grip { display: none; }
 .app-h:first-child { margin-top: 0; }
 
 .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+
+/* ── about: stat panel, chips, discography ── */
+.sysinfo {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 1px; margin: 18px 0 4px;
+    background: rgba(var(--neon-rgb), .28);
+    border: 1px solid rgba(var(--neon-rgb), .28);
+}
+.si-cell {
+    display: flex; flex-direction: column; gap: 3px; align-items: center;
+    padding: 12px 8px; background: var(--bg);
+}
+.si-val {
+    font-family: var(--mono); font-size: 17px; color: var(--neon);
+    text-shadow: var(--glow); font-variant-numeric: tabular-nums; line-height: 1;
+    text-align: center; word-break: break-word;
+}
+.si-key {
+    font-family: var(--mono); font-size: 8.5px; letter-spacing: 1.6px;
+    text-transform: uppercase; color: rgba(255,255,255,.4); text-align: center;
+}
+.chip-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+    padding: 5px 11px; font-family: var(--mono); font-size: 11px; letter-spacing: .6px;
+    color: var(--neon); background: rgba(var(--neon-rgb), .1);
+    border: 1px solid rgba(var(--neon-rgb), .4); border-radius: 20px;
+}
+.chip-dim { color: rgba(255,255,255,.6); background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.16); }
+.disco-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 14px; }
+.disco-item { display: flex; flex-direction: column; gap: 5px; position: relative; }
+.disco-face {
+    position: relative; display: block; padding: 0; background: none; border: none;
+    cursor: pointer; width: 100%; line-height: 0;
+}
+.disco-face img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+    border: 1px solid rgba(var(--neon-rgb), .35); transition: var(--t);
+}
+.disco-face:hover img, .disco-face[aria-expanded="true"] img {
+    border-color: var(--neon); box-shadow: 0 0 16px rgba(var(--neon-rgb), .45);
+    transform: translateY(-2px);
+}
+.disco-pick {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--neon); line-height: 1;
+    background: rgba(0,0,0,.62); opacity: 0; transition: var(--t);
+}
+.disco-face:hover .disco-pick, .disco-face[aria-expanded="true"] .disco-pick { opacity: 1; }
+.disco-title { color: var(--neon); font-size: 12px; line-height: 1.3; }
+.disco-meta {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 1px;
+    text-transform: uppercase; color: rgba(255,255,255,.4);
+}
+.disco-links { display: flex; flex-direction: column; gap: 1px; margin-top: 4px; }
+.disco-links a {
+    display: flex; align-items: center; gap: 7px; padding: 7px 9px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: .8px;
+    color: var(--neon); background: rgba(var(--neon-rgb), .1);
+    border: 1px solid rgba(var(--neon-rgb), .32); text-decoration: none; transition: var(--t);
+}
+.disco-links a:hover { background: rgba(var(--neon-rgb), .26); box-shadow: 0 0 10px rgba(var(--neon-rgb), .35); }
 .neon-link {
     display: flex; align-items: center; gap: 10px; padding: 12px 14px;
     border: 1px solid rgba(var(--neon-rgb), .5); background: rgba(var(--neon-rgb), .05);
@@ -490,6 +552,199 @@ body.is-mobile .win-grip { display: none; }
 .presave-label { font-size: 10px; letter-spacing: 3px; color: rgba(var(--neon-rgb), .7); }
 .presave-title { font-size: 26px; color: #fff; text-shadow: var(--glow); }
 .presave-cta { color: var(--neon); font-size: 13px; }
+
+/* ── playlist switch + released catalog ── */
+.pl-switch {
+    display: flex; gap: 0; margin: 26px 0 14px;
+    border: 1px solid rgba(var(--neon-rgb), .35); border-radius: 3px; overflow: hidden;
+}
+.pl-tab {
+    flex: 1; padding: 9px 12px; background: none; border: none; cursor: pointer;
+    color: rgba(255,255,255,.5); font-family: var(--mono); font-size: 11px;
+    letter-spacing: 1.5px; text-transform: uppercase; transition: var(--t);
+}
+.pl-tab:hover { color: var(--neon); background: rgba(var(--neon-rgb), .07); }
+.pl-tab.is-on {
+    color: var(--neon); background: rgba(var(--neon-rgb), .14);
+    text-shadow: 0 0 8px rgba(var(--neon-rgb), .6);
+}
+.cat-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.cat-count { font-family: var(--mono); font-size: 10px; letter-spacing: 1px; color: rgba(255,255,255,.45); }
+.cat-find {
+    flex: 1; min-width: 0; padding: 6px 9px; font-size: 12px; font-family: var(--mono);
+    color: var(--ink); background: rgba(255,255,255,.04);
+    border: 1px solid rgba(var(--neon-rgb), .3); border-radius: 3px;
+}
+.cat-find:focus { outline: none; border-color: rgba(var(--neon-rgb), .7); }
+.cat-sort {
+    flex: none; padding: 6px 10px; cursor: pointer; font-family: var(--mono); font-size: 10px;
+    letter-spacing: 1px; color: var(--neon); background: rgba(var(--neon-rgb), .1);
+    border: 1px solid rgba(var(--neon-rgb), .35); border-radius: 3px; transition: var(--t);
+}
+.cat-sort:hover { background: rgba(var(--neon-rgb), .22); }
+.cat-row {
+    display: grid; grid-template-columns: 26px 1fr 58px 44px 44px 34px;
+    align-items: center; gap: 8px; padding: 7px 8px;
+    border-bottom: 1px solid rgba(255,255,255,.06); font-size: 13px;
+}
+.cat-hdr {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(255,255,255,.4); border-bottom: 1px solid rgba(var(--neon-rgb), .3);
+}
+.cat-rows .cat-row:hover { background: rgba(var(--neon-rgb), .06); }
+.cat-row .c-num { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.35); }
+.cat-row .c-title { color: var(--neon); min-width: 0; overflow: hidden; }
+.cat-row .c-album {
+    display: block; font-style: normal; font-size: 10.5px;
+    color: rgba(255,255,255,.4); letter-spacing: .3px;
+}
+.cat-row .c-plays, .cat-row .c-year, .cat-row .c-dur {
+    font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.55);
+    font-variant-numeric: tabular-nums;
+}
+/* a YouTube-derived figure is a view count, not a cross-platform play count */
+.cat-row .c-plays.is-yt { color: rgba(var(--neon-rgb), .7); }
+/* Spotify caps its public list, so a missing count means "too few to publish" */
+.cat-row .c-plays.is-low { color: rgba(255,255,255,.28); font-size: 10px; letter-spacing: .3px; }
+.cat-row .c-go { display: flex; justify-content: flex-end; }
+.cat-out { color: rgba(var(--neon-rgb), .6); font-size: 12px; transition: var(--t); }
+.cat-out:hover { color: var(--neon); text-shadow: var(--glow); }
+.cat-row .demo-load { padding: 3px 8px; font-size: 11px; }
+.cat-note {
+    margin: 12px 0 0; padding-top: 10px; max-width: 62ch;
+    border-top: 1px solid rgba(255,255,255,.08);
+    font-size: 10.5px; line-height: 1.5; color: rgba(255,255,255,.35);
+}
+/* a playing catalog row hands its whole width to the transport */
+.cat-row.has-audio:has(.xport:not([hidden])) { grid-template-columns: 26px 1fr; }
+.cat-row.has-audio:has(.xport:not([hidden])) .c-plays,
+.cat-row.has-audio:has(.xport:not([hidden])) .c-year,
+.cat-row.has-audio:has(.xport:not([hidden])) .c-dur { display: none; }
+.cat-row .c-go { grid-column: auto; }
+.cat-row:has(.xport:not([hidden])) .c-go { grid-column: 1 / -1; }
+
+/* ── files: GUI over the terminal filesystem ── */
+.fb { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.fb-bar {
+    display: flex; align-items: center; gap: 6px; padding: 8px 10px;
+    border-bottom: 1px solid rgba(var(--neon-rgb), .28); flex: none;
+}
+.fb-nav {
+    flex: none; width: 28px; height: 26px; cursor: pointer; border-radius: 3px;
+    color: var(--neon); background: rgba(var(--neon-rgb), .1);
+    border: 1px solid rgba(var(--neon-rgb), .32); font-size: 11px; transition: var(--t);
+}
+.fb-nav:hover { background: rgba(var(--neon-rgb), .25); }
+.fb-crumbs {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 2px;
+    overflow-x: auto; white-space: nowrap; font-family: var(--mono); font-size: 11px;
+}
+.fb-crumb {
+    background: none; border: none; cursor: pointer; padding: 3px 5px; border-radius: 3px;
+    color: rgba(255,255,255,.65); font-family: var(--mono); font-size: 11px; transition: var(--t);
+}
+.fb-crumb:hover { color: var(--neon); background: rgba(var(--neon-rgb), .12); }
+.fb-sep { color: rgba(255,255,255,.25); font-size: 10px; }
+.fb-body { flex: 1; min-height: 0; overflow-y: auto; padding: 12px; }
+.fb-body.is-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px;
+    align-content: start;
+}
+.fb-body.is-list { display: flex; flex-direction: column; gap: 1px; }
+.fb-item {
+    display: flex; align-items: center; cursor: pointer; text-align: left;
+    background: none; border: 1px solid transparent; border-radius: 4px;
+    color: var(--ink); transition: var(--t); min-width: 0;
+}
+.fb-item:hover { border-color: rgba(var(--neon-rgb), .45); background: rgba(var(--neon-rgb), .08); }
+.is-grid .fb-item { flex-direction: column; gap: 6px; padding: 10px 6px; }
+.is-list .fb-item { flex-direction: row; gap: 10px; padding: 6px 8px; }
+.fb-icon { font-size: 26px; color: rgba(var(--neon-rgb), .75); }
+.is-list .fb-icon { font-size: 14px; width: 18px; text-align: center; }
+.fb-item.is-denied .fb-icon { color: rgba(255,255,255,.25); }
+.fb-item.is-denied { opacity: .55; }
+.fb-thumb {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; aspect-ratio: 1; overflow: hidden;
+    border: 1px solid rgba(var(--neon-rgb), .25); background: rgba(0,0,0,.35);
+}
+.is-list .fb-thumb { width: 26px; height: 26px; aspect-ratio: auto; flex: none; }
+.fb-thumb img, .fb-thumb canvas { max-width: 100%; max-height: 100%; object-fit: contain; }
+.fb-name {
+    font-size: 11px; line-height: 1.3; word-break: break-word;
+    overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;
+}
+.is-list .fb-name { flex: 1; min-width: 0; white-space: nowrap; text-overflow: ellipsis; display: block; }
+.fb-meta {
+    font-family: var(--mono); font-size: 9px; letter-spacing: .5px; color: rgba(255,255,255,.35);
+}
+.is-grid .fb-meta { display: none; }
+.fb-status {
+    flex: none; padding: 6px 10px; font-family: var(--mono); font-size: 10px;
+    letter-spacing: .6px; color: rgba(255,255,255,.4);
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+.fb-msg { padding: 30px 16px; text-align: center; color: rgba(255,255,255,.45); font-size: 13px; }
+.fb-denied { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.fb-denied i { font-size: 30px; color: rgba(var(--neon-rgb), .6); }
+.fb-denied p { margin: 0; color: var(--neon); letter-spacing: 1px; font-family: var(--mono); font-size: 12px; }
+.fb-msg-sub { max-width: 42ch; line-height: 1.6; }
+.fb-denied .fb-msg-sub { color: rgba(255,255,255,.5) !important; font-family: inherit !important; }
+.fb-msg-sub code {
+    color: var(--neon); background: rgba(var(--neon-rgb), .12);
+    padding: 1px 5px; border-radius: 3px; font-family: var(--mono);
+}
+/* viewer */
+.fb-viewer {
+    position: absolute; inset: 0; z-index: 30; display: flex;
+    flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    background: rgba(2,3,8,.93); backdrop-filter: blur(4px); padding: 36px 20px 24px;
+}
+.fb-viewer-close {
+    position: absolute; top: 8px; right: 12px; background: none; border: none;
+    color: var(--neon); font-size: 24px; cursor: pointer; line-height: 1;
+}
+.fb-viewer-inner {
+    flex: 1 1 auto; width: 100%; min-height: 0; max-width: 100%; overflow: auto;
+    display: flex; align-items: center; justify-content: center;
+}
+.fb-viewer-foot {
+    flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
+    gap: 14px; flex-wrap: wrap;
+}
+.fb-viewer-name { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.55); }
+/* every state restates colour/underline: bootstrap's a:hover outranks a bare .class rule */
+.fb-viewer-dl,
+.fb-viewer-dl:link,
+.fb-viewer-dl:visited {
+    font-family: var(--mono); font-size: 11px; text-decoration: none; cursor: pointer;
+    color: var(--neon); border: 1px solid rgba(var(--neon-rgb), .5); border-radius: 4px;
+    padding: 5px 12px; background: rgba(var(--neon-rgb), .08); transition: var(--t);
+}
+.fb-viewer-dl:hover,
+.fb-viewer-dl:focus {
+    color: var(--neon); text-decoration: none;
+    background: rgba(var(--neon-rgb), .2);
+    border-color: rgba(var(--neon-rgb), .8);
+    box-shadow: 0 0 14px rgba(var(--neon-rgb), .35);
+    outline: none;
+}
+.fb-viewer-dl:focus-visible { box-shadow: 0 0 0 2px rgba(var(--neon-rgb), .55); }
+.fb-viewer-dl:active {
+    color: var(--bg); text-decoration: none;
+    background: var(--neon);
+    border-color: var(--neon);
+    box-shadow: 0 0 18px rgba(var(--neon-rgb), .55);
+}
+.fb-text {
+    margin: 0; font-family: var(--mono); font-size: 12px; line-height: 1.55;
+    color: var(--ink); white-space: pre-wrap; text-align: left; max-width: 76ch;
+}
+/* themed art is a real rendered file now, so the preview needs no filtering */
+.fb-art { position: relative; display: inline-block; line-height: 0; }
+.fb-art img { max-width: 100%; max-height: 62vh; display: block; }
+.fb-pdf { width: 100%; height: 100%; min-height: 320px; border: 0; background: #fff; border-radius: 4px; }
+.fb-canvas { max-width: 100%; height: auto; }
 
 /* demo vault */
 .demo-vault { margin-top: 26px; padding-top: 10px; border-top: 1px dashed rgba(var(--neon-rgb), .3); }
@@ -1212,4 +1467,12 @@ body.is-mobile .win-body { padding-bottom: calc(34px + env(safe-area-inset-botto
 
     .ex-mod-desc, .ex-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .ex-target, .ex-mod { min-width: 0; }
+
+    /* catalog drops the columns that don't survive a phone width */
+    .cat-row { grid-template-columns: 20px 1fr 52px 30px; gap: 6px; font-size: 12px; }
+    .cat-row .c-year, .cat-row .c-dur { display: none; }
+    .pl-tab { font-size: 9.5px; letter-spacing: 1px; padding: 9px 6px; }
+    .cat-head { flex-wrap: wrap; }
+    .cat-find { flex: 1 1 100%; order: 3; }
+    .cat-row:has(.xport:not([hidden])) { grid-template-columns: 20px 1fr; }
 }
