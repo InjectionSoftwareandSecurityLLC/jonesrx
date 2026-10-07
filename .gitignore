@@ -1,1 +1,5 @@
 .DS_Store
+
+# Raw (unencoded) core game sources — kept local for dev.
+js/altergame.js
+js/terminal.js

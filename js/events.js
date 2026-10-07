@@ -76,22 +76,3 @@ async function fetchEvents() {
 }
 
 fetchEvents();
-
-function clickThroughNotification(){
-    var url = de("aHR0cHM6Ly9hNHRpZXQ3azVleHNldzdtN3h2cHFjYWN4aTBveWd4ZS5sYW1iZGEtdXJsLnVzLWVhc3QtMi5vbi5hd3Mv")
-    fetch(url)
-      .then(response => {
-        if (response.ok) {
-            window.location.href = "";
-        } else {
-            window.location.href = "";
-        }
-      })
-      .catch(error => {
-            window.location.href = "";
-      });
-}
-
-function de(str) {
-    return decodeURIComponent(escape(atob(str)));
-}

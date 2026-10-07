@@ -1,4 +1,2 @@
 # jonesrx
-Jones RX Landing Page
-
-## WIP
+Jones RX website
