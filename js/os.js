@@ -732,6 +732,33 @@
                 altarHostMarker.remove();
             }
         }
+        fitAltar();
+    }
+
+    // shrink the altar on phones so at least 3 rows of apps stay on screen
+    // (2 rows is acceptable on very short viewports)
+    const SIGIL_BAR = 62;        // theme switcher pinned under the altar
+    function fitAltar() {
+        const altar = $('#altar'), lock = $('#phoneLock'), grid = $('#phoneGrid');
+        if (!altar || !lock) return;
+        if (!document.body.classList.contains('is-mobile')) {
+            altar.style.transform = ''; altar.style.transformOrigin = '';
+            lock.style.height = '';
+            return;
+        }
+        altar.style.transform = '';                       // measure unscaled
+        const natural = altar.getBoundingClientRect().height || 394;
+        const app = grid && grid.querySelector('.phone-app');
+        const rowH = app ? app.getBoundingClientRect().height : 81;
+        const rows = window.innerHeight < 620 ? 2 : 3;
+        const gridNeed = rows * rowH + (rows - 1) * 20 + 26;   // gaps + grid padding
+        const chrome = ($('#phoneStatus')?.offsetHeight || 37)
+                     + ($('#phoneDock')?.offsetHeight || 84) + 34;   // + home indicator
+        const avail = window.innerHeight - chrome - gridNeed - SIGIL_BAR;
+        const s = Math.max(.28, Math.min(1, avail / natural));
+        altar.style.transformOrigin = 'center top';
+        altar.style.transform = `scale(${s.toFixed(3)})`;
+        lock.style.height = Math.round(natural * s + SIGIL_BAR) + 'px';
     }
 
     /* ============================================================
