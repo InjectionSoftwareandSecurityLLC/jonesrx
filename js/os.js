@@ -590,6 +590,8 @@
         if (!vault || !list) return;
         const count = DEMOS.filter(d => unlocked.has(d.angel)).length;
         vault.dataset.unlocked = String(count);
+        const viz = $('#vizWrap');
+        if (viz && viz.parentNode !== vault) vault.appendChild(viz);   // rescue it before wiping the list
         list.innerHTML = '';
         if (count === 0) {
             if (msg) msg.style.display = '';
@@ -603,8 +605,19 @@
             if (on) {
                 row.innerHTML = `<span class="demo-name">${d.name}</span>
                     <button class="demo-load" type="button">&#9654; load</button>
-                    <audio controls preload="none" style="display:none"></audio>`;
+                    <div class="xport" hidden>
+                        <button class="xp-btn xp-play" type="button" aria-label="Play"><i class="fas fa-play"></i></button>
+                        <input class="xp-seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+                        <span class="xp-time">0:00</span>
+                        <button class="xp-btn xp-mute" type="button" aria-label="Mute"><i class="fas fa-volume-up"></i></button>
+                        <input class="xp-vol" type="range" min="0" max="1" step=".01" value="1" aria-label="Volume">
+                    </div>
+                    <audio preload="none"></audio>`;
                 const btn = $('.demo-load', row), audio = $('audio', row);
+                audio.addEventListener('play', () => audioClaim('demo', audio));
+                audio.addEventListener('pause', () => audioRelease('demo', audio));
+                audio.addEventListener('ended', () => audioRelease('demo', audio));
+                bindTransport(row, audio);
                 btn.addEventListener('click', () => streamDemo(d.file, audio, btn));
             } else {
                 const label = ANGELS[d.angel] ? ANGELS[d.angel].label : d.angel;
@@ -615,7 +628,305 @@
         });
     }
 
+    /* ============================================================
+       AUDIO BUS — one source at a time, RGB pulse, visualizer
+       demo <audio> : pulse + visualizer     spotify : pulse only
+       youtube      : neither (it has its own picture)
+       ============================================================ */
+    const AUDIO = { current: null, owner: null, spotify: [] };
+
+    const pauseDemos = (except) =>
+        $$('#demoList audio').forEach(a => { if (a !== except && !a.paused) a.pause(); });
+    // only poke players we know are playing — pausing an unloaded embed throws
+    const pauseSpotify = () =>
+        AUDIO.spotify.forEach(e => { if (e.playing) { e.playing = false; try { e.ctrl.pause(); } catch (_) {} } });
+    const pauseYouTube = () =>
+        $$('#ytPlayer').forEach(f => {
+            try { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch (e) {}
+        });
+
+    // a source announces it started; every other source stands down
+    function audioClaim(kind, el) {
+        if (AUDIO.current === kind && kind !== 'demo') return;   // spotify spams updates
+        AUDIO.current = kind;
+        AUDIO.owner = el || null;
+        if (kind !== 'demo') pauseDemos(); else pauseDemos(el);
+        if (kind !== 'spotify') pauseSpotify();
+        if (kind !== 'youtube') pauseYouTube();
+        document.documentElement.classList.toggle('audio-live', kind === 'demo' || kind === 'spotify');
+        if (kind === 'demo') startViz(el); else stopViz();
+    }
+    // pause events land a tick late, so a displaced track must not tear down its successor
+    function audioRelease(kind, el) {
+        if (AUDIO.current !== kind) return;
+        if (el && AUDIO.owner && el !== AUDIO.owner) return;
+        AUDIO.current = null;
+        AUDIO.owner = null;
+        document.documentElement.classList.remove('audio-live');
+        stopViz();
+    }
+
+    /* ---- visualizer (demo audio only — cross-origin frames can't be tapped) ---- */
+    let actx = null, analyser = null, vizRAF = null;
+    const srcCache = new WeakMap();
+    function startViz(audio) {
+        const canvas = $('#vizCanvas');
+        if (!canvas || !audio) return;
+        try {
+            actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+            if (actx.state === 'suspended') actx.resume();
+            if (!analyser) {
+                analyser = actx.createAnalyser();
+                analyser.fftSize = 1024;
+                analyser.smoothingTimeConstant = .72;
+                // measured content range for these masters: bass peaks ~-26dB, air ~-73dB
+                analyser.minDecibels = -78;
+                analyser.maxDecibels = -22;
+                analyser.connect(actx.destination);
+            }
+            let src = srcCache.get(audio);          // one source node per element, ever
+            if (!src) { src = actx.createMediaElementSource(audio); srcCache.set(audio, src); }
+            try { src.disconnect(); } catch (e) {}
+            src.connect(analyser);
+        } catch (e) { return; }
+
+        $('#vizWrap')?.classList.add('on');
+        mountViz(audio);
+        const ctx = canvas.getContext('2d');
+        const bins = new Uint8Array(analyser.frequencyBinCount);
+        const bars = buildBarMap(actx.sampleRate, analyser.fftSize);
+        const vals = new Float32Array(BARS);
+        if (!hexes.length) seedHexes(canvas.width, canvas.height);
+        cancelAnimationFrame(vizRAF);
+
+        const draw = () => {
+            vizRAF = requestAnimationFrame(draw);
+            analyser.getByteFrequencyData(bins);
+            const w = canvas.width, h = canvas.height, n = bins.length;
+
+            let level = 0;
+            for (let i = 0; i < BARS; i++) {
+                const b = bars[i];
+                let peak = 0, sum = 0, cnt = 0;
+                for (let j = b.lo; j < b.hi && j < n; j++) { if (bins[j] > peak) peak = bins[j]; sum += bins[j]; cnt++; }
+                const raw = cnt ? (peak * .65 + (sum / cnt) * .35) / 255 : 0;
+                // lift the naturally-quiet top end, then expand so only real peaks reach full height
+                const adj = raw + b.tilt * Math.min(1, raw * 5);
+                vals[i] = Math.pow(Math.min(1, adj), 2.2);
+                level += vals[i];
+            }
+            level /= BARS;
+            let bass = 0; for (let i = 0; i < 8; i++) bass += vals[i];
+            bass /= 8;
+            const t = performance.now();
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.globalCompositeOperation = 'lighter';   // neon bloom where things overlap
+
+            // hexagrams drifting up through the spectrum
+            hexes.forEach(hx => {
+                hx.y -= hx.vy * (.35 + bass * 2.4);
+                hx.rot += hx.spin * (.5 + bass * 2);
+                if (hx.y < -44) { hx.y = h + 34; hx.x = Math.random() * w; }
+                const r = hx.r * (1 + bass * .55);
+                const hue = (hx.hue + t / 24) % 360;
+                ctx.lineWidth = 1.2;
+                ctx.strokeStyle = `hsla(${hue}, 100%, 68%, ${(.18 + level * .62).toFixed(3)})`;
+                ctx.shadowColor = `hsl(${hue}, 100%, 60%)`;
+                ctx.shadowBlur = 8 + bass * 20;
+                sigilPath(ctx, hx.kind, hx.x, hx.y, r, hx.rot);
+                ctx.stroke();
+            });
+
+            // mirrored bars blooming out from the centre line
+            const mid = h / 2, bw = w / BARS, span = h * .46;
+            for (let i = 0; i < BARS; i++) {
+                const v = vals[i];
+                const bh = Math.max(1, v * span);
+                const hue = ((i / BARS) * 360 + t / 18) % 360;
+                ctx.fillStyle = `hsla(${hue}, 100%, ${55 + v * 22}%, .92)`;
+                ctx.shadowColor = `hsl(${hue}, 100%, 60%)`;
+                ctx.shadowBlur = 5 + v * 15;
+                const x = i * bw, bwid = Math.max(1, bw - 1.6);
+                ctx.fillRect(x, mid - bh, bwid, bh);
+                ctx.fillRect(x, mid, bwid, bh);
+            }
+
+            ctx.shadowBlur = 0;
+            ctx.globalCompositeOperation = 'source-over';
+        };
+        draw();
+    }
+
+    /* ---- log-spaced bar mapping ----
+       FFT bins are linear in frequency but music energy isn't, so a straight
+       bin-per-bar layout leaves the top three quarters of the canvas dead.
+       Each bar owns an octave-ish slice from 40Hz up; tilt compensates for the
+       measured ~32dB bass-to-air rolloff in these masters. */
+    const BARS = 64;
+    function buildBarMap(sampleRate, fftSize) {
+        const binHz = sampleRate / fftSize, fMin = 40, fMax = Math.min(16000, sampleRate / 2);
+        const map = [];
+        for (let i = 0; i < BARS; i++) {
+            const lo = fMin * Math.pow(fMax / fMin, i / BARS);
+            const hi = fMin * Math.pow(fMax / fMin, (i + 1) / BARS);
+            const a = Math.floor(lo / binHz);
+            map.push({ lo: a, hi: Math.max(a + 1, Math.ceil(hi / binHz)), tilt: (i / BARS) * .42 });
+        }
+        return map;
+    }
+
+    /* ---- hexagram motes that float through the bars ---- */
+    const hexes = [];
+    // the four corner variants off the altar frame, plus the pentacle
+    const SIGILS = ['star', 'stack', 'diamond', 'hourglass', 'pentacle'];
+    function seedHexes(w, h) {
+        for (let i = 0; i < 12; i++) {
+            hexes.push({
+                x: Math.random() * w, y: Math.random() * h,
+                r: 7 + Math.random() * 15,
+                rot: Math.random() * Math.PI,
+                spin: (Math.random() - .5) * .02,
+                vy: .25 + Math.random() * .7,
+                hue: Math.random() * 360,
+                kind: SIGILS[i % SIGILS.length]
+            });
+        }
+    }
+
+    const tri = (ctx, halfW, apexY, baseY) => {
+        ctx.moveTo(0, apexY);
+        ctx.lineTo(-halfW, baseY);
+        ctx.lineTo(halfW, baseY);
+        ctx.closePath();
+    };
+
+    function sigilPath(ctx, kind, x, y, r, rot) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.beginPath();
+        if (kind === 'star') {                     // interlocking equilateral triangles
+            for (let t = 0; t < 2; t++) {
+                for (let i = 0; i < 3; i++) {
+                    const a = t * Math.PI + i * (Math.PI * 2 / 3);
+                    const px = Math.cos(a) * r, py = Math.sin(a) * r;
+                    i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+                }
+                ctx.closePath();
+            }
+            ctx.moveTo(r * .58, 0);
+            ctx.arc(0, 0, r * .58, 0, Math.PI * 2);
+        } else if (kind === 'stack') {             // twin up-triangles offset by half a height
+            tri(ctx, r * .85, -r, r * .33);
+            tri(ctx, r * .85, -r * .33, r);
+        } else if (kind === 'diamond') {           // up + down sharing a base
+            tri(ctx, r * .78, -r, 0);
+            tri(ctx, r * .78, r, 0);
+        } else if (kind === 'hourglass') {         // down + up meeting at a point
+            tri(ctx, r * .95, 0, -r);
+            tri(ctx, r * .95, 0, r);
+        } else {                                   // pentacle — 5 points, every second one
+            for (let i = 0; i <= 5; i++) {
+                const a = -Math.PI / 2 + (i * 2 % 5) * (Math.PI * 2 / 5);
+                const px = Math.cos(a) * r, py = Math.sin(a) * r;
+                i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+            }
+            ctx.moveTo(r, 0);
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+        }
+        ctx.restore();
+    }
+    function stopViz() {
+        cancelAnimationFrame(vizRAF); vizRAF = null;
+        const c = $('#vizCanvas');
+        if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height);
+        $('#vizWrap')?.classList.remove('on');
+    }
+
+    // park the visualizer directly above whichever track is playing
+    function mountViz(audio) {
+        const wrap = $('#vizWrap'), row = audio.closest('.demo-item');
+        if (!wrap || !row || !row.parentNode) return;
+        if (wrap.nextElementSibling !== row) row.parentNode.insertBefore(wrap, row);
+        const label = $('#vizLabel'), name = $('.demo-name', row);
+        if (label && name) label.textContent = '\u25B6 ' + name.textContent;
+        wrap.scrollIntoView({ block: 'nearest' });
+    }
+
+    /* ---- bridges to the embedded players ---- */
+    function initYouTubeBridge() {
+        window.addEventListener('message', (e) => {
+            if (!/youtube\.com$/.test(new URL(e.origin).hostname.replace(/^www\./, ''))) return;
+            let d; try { d = JSON.parse(e.data); } catch (_) { return; }
+            const st = d && d.info && typeof d.info.playerState === 'number' ? d.info.playerState : null;
+            if (st === 1) audioClaim('youtube');
+            else if (st === 2 || st === 0) audioRelease('youtube');
+        });
+    }
+    // Spotify's iframe API calls this once it loads
+    window.onSpotifyIframeApiReady = (IFrameAPI) => {
+        $$('.spotify-embed').forEach(el => {
+            IFrameAPI.createController(el, { uri: el.dataset.uri, width: '100%', height: 420 }, (ctrl) => {
+                const entry = { ctrl, playing: false };
+                AUDIO.spotify.push(entry);
+                ctrl.addListener('playback_update', (ev) => {
+                    const playing = !!(ev && ev.data && ev.data.isPaused === false);
+                    if (playing === entry.playing) return;
+                    entry.playing = playing;
+                    if (playing) audioClaim('spotify'); else audioRelease('spotify');
+                });
+            });
+        });
+    };
+
     // decode a base64-encoded track into an in-memory Blob and stream it
+    const clock = (s) => isFinite(s) && s > 0
+        ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0')
+        : '0:00';
+
+    /* native <audio controls> chrome differs wildly per engine, so we drive a hidden
+       element from our own transport and style that instead */
+    function bindTransport(row, audio) {
+        const play = $('.xp-play', row), seek = $('.xp-seek', row), time = $('.xp-time', row),
+              mute = $('.xp-mute', row), vol = $('.xp-vol', row);
+        const icon = (btn, name) => { $('i', btn).className = 'fas fa-' + name; };
+        const fillTrack = (el, frac) => el.style.setProperty('--fill', (frac * 100).toFixed(2) + '%');
+        let scrubbing = false;
+
+        play.addEventListener('click', () => {
+            audio.paused ? audio.play().catch(() => {}) : audio.pause();
+        });
+        audio.addEventListener('play', () => { icon(play, 'pause'); play.setAttribute('aria-label', 'Pause'); });
+        ['pause', 'ended'].forEach(ev => audio.addEventListener(ev, () => {
+            icon(play, 'play'); play.setAttribute('aria-label', 'Play');
+        }));
+
+        const sync = () => {
+            const d = audio.duration;
+            if (!scrubbing && d) { seek.value = (audio.currentTime / d) * 1000; fillTrack(seek, audio.currentTime / d); }
+            time.textContent = clock(audio.currentTime) + ' / ' + clock(d);
+        };
+        audio.addEventListener('timeupdate', sync);
+        audio.addEventListener('loadedmetadata', sync);
+
+        seek.addEventListener('input', () => { scrubbing = true; fillTrack(seek, seek.value / 1000); });
+        seek.addEventListener('change', () => {
+            if (audio.duration) audio.currentTime = (seek.value / 1000) * audio.duration;
+            scrubbing = false;
+        });
+
+        mute.addEventListener('click', () => { audio.muted = !audio.muted; });
+        vol.addEventListener('input', () => { audio.volume = +vol.value; audio.muted = false; });
+        audio.addEventListener('volumechange', () => {
+            const off = audio.muted || !audio.volume;
+            icon(mute, off ? 'volume-mute' : 'volume-up');
+            vol.value = off ? 0 : audio.volume;
+            fillTrack(vol, off ? 0 : audio.volume);
+        });
+        fillTrack(vol, 1);
+    }
+
     async function streamDemo(file, audio, btn) {
         btn.disabled = true; btn.innerHTML = '&#8230;';
         try {
@@ -626,7 +937,7 @@
             const bytes = new Uint8Array(bin.length);
             for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
             audio.src = URL.createObjectURL(new Blob([bytes], { type: 'audio/mpeg' }));
-            audio.style.display = '';
+            $('.xport', btn.closest('.demo-item')).hidden = false;
             btn.remove();
             audio.play().catch(() => {});
         } catch (e) {
@@ -794,6 +1105,7 @@
         initDesktopSigils();
         initPanelSigils();
         initSettings();
+        initYouTubeBridge();
         $('#homeIndicator')?.addEventListener('click', goHome);
 
         $('#themeReset')?.addEventListener('click', resetTheme);
