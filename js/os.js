@@ -651,8 +651,9 @@
        ============================================================ */
     const AUDIO = { current: null, owner: null, spotify: [] };
 
-    const pauseDemos = (except) =>
-        $$('#demoList audio').forEach(a => { if (a !== except && !a.paused) a.pause(); });
+    // every local player, not just the demo vault — the tracklist has its own rows
+    const pauseLocalAudio = (except) =>
+        $$('audio').forEach(a => { if (a !== except && !a.paused) a.pause(); });
     // only poke players we know are playing — pausing an unloaded embed throws
     const pauseSpotify = () =>
         AUDIO.spotify.forEach(e => { if (e.playing) { e.playing = false; try { e.ctrl.pause(); } catch (_) {} } });
@@ -666,7 +667,7 @@
         if (AUDIO.current === kind && kind !== 'demo') return;   // spotify spams updates
         AUDIO.current = kind;
         AUDIO.owner = el || null;
-        if (kind !== 'demo') pauseDemos(); else pauseDemos(el);
+        if (kind !== 'demo') pauseLocalAudio(); else pauseLocalAudio(el);
         if (kind !== 'spotify') pauseSpotify();
         if (kind !== 'youtube') pauseYouTube();
         document.documentElement.classList.toggle('audio-live', kind === 'demo' || kind === 'spotify');
@@ -1121,11 +1122,18 @@
 
         const info = $('#sysInfo');
         if (info) {
+            const tracks = data.tracks || [];
+            const ms = tracks.reduce((n, t) => n + (t.durationMs || 0), 0);
+            const mins = Math.round(ms / 60000);
+            const runtime = mins ? (mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m`) : '';
+
             // only render figures we actually have; blanks stay out of the panel
             const cells = [
                 ['streams', s.streams], ['tracks', s.trackCount], ['releases', s.releaseCount],
-                ['monthly', s.monthlyListeners], ['top track', s.topTrack],
-                ['active', years ? years + (years === 1 ? ' yr' : ' yrs') : ''], ['since', s.firstYear]
+                ['runtime', runtime], ['monthly', s.monthlyListeners], ['top track', s.topTrack],
+                ['shows', s.showsPlayed],
+                ['active', years ? years + (years === 1 ? ' yr' : ' yrs') : ''],
+                ['since', s.firstYear], ['latest', s.latestYear]
             ].filter(([, v]) => v !== '' && v != null);
             info.innerHTML = cells.map(([k, v]) =>
                 `<div class="si-cell"><span class="si-val">${esc(v)}</span><span class="si-key">${esc(k)}</span></div>`
