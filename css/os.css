@@ -360,7 +360,7 @@ body.is-mobile .desktop-sigils { display: none; }
 .altar:focus-visible { outline: 1px dashed rgba(var(--neon-rgb), .6); outline-offset: 14px; }
 
 /* ── WHITE THEME: everything illuminates the same, in white ── */
-html[data-theme="white"] .psig.lit { color: #fff !important; text-shadow: 0 0 8px #fff, 0 0 16px rgba(255,255,255,.7); }
+html[data-theme="white"] .psig.lit:not(.psig-reset) { color: #fff !important; text-shadow: 0 0 8px #fff, 0 0 16px rgba(255,255,255,.7); }
 html[data-theme="white"] .dsig {
     filter: brightness(0) invert(1) drop-shadow(0 0 5px #fff) drop-shadow(0 0 13px rgba(255,255,255,.6));
 }
@@ -1121,8 +1121,10 @@ body.is-mobile .phone-home {
     flex: 0 0 auto; display: flex; align-items: flex-start; justify-content: center;
     padding: 4px 0 0; position: relative; min-height: 0;   /* height is set by fitAltar() */
 }
-body.is-mobile .altar-stage { position: static; pointer-events: auto; }
-body.is-mobile .altar { transform: none; }
+/* the stage spans the whole lock area, so it must stay transparent to taps —
+   only the altar itself is interactive, or it swallows the sigil bar below it */
+body.is-mobile .altar-stage { position: static; pointer-events: none; }
+body.is-mobile .altar { transform: none; pointer-events: auto; }
 /* tappable theme switcher pinned below the altar, clear of the cube */
 .phone-lock-sigils {
     position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
@@ -1135,7 +1137,7 @@ body.is-mobile .altar { transform: none; }
     color: rgba(255,255,255,.3); font-size: 22px; line-height: 1;
     padding: 8px 10px; cursor: pointer; border-radius: 12px;
 }
-.phone-lock-sigils .psig-reset { color: rgba(255,255,255,.55); font-size: 20px; }
+.phone-lock-sigils .psig-reset { color: rgba(var(--neon-rgb), .7); font-size: 20px; }
 .phone-lock-sigils .psig.lit:active { background: rgba(255,255,255,.12); }
 .phone-grid {
     flex: 1; overflow-y: auto; padding: 18px 22px 8px;
