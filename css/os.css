@@ -882,8 +882,8 @@ body.is-mobile .phone-home {
 .phone-status .phs-time { font-weight: bold; }
 .phone-status .phs-right i { margin-left: 6px; }
 .phone-lock {
-    flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
-    padding: 6px 0 74px; position: relative; min-height: 48vh;
+    flex: 0 0 auto; display: flex; align-items: flex-start; justify-content: center;
+    padding: 4px 0 0; position: relative; min-height: 0;   /* height is set by fitAltar() */
 }
 body.is-mobile .altar-stage { position: static; pointer-events: auto; }
 body.is-mobile .altar { transform: none; }
