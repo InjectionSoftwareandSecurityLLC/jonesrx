@@ -20,6 +20,7 @@ import pathlib
 import re
 import subprocess
 import sys
+import time
 import unicodedata
 import urllib.request
 
@@ -141,13 +142,23 @@ def spotify(by_key, sources, totals):
         print("  playwright not installed - skipping")
         print("  (pip install playwright && playwright install chromium)\n")
         return
-    with sync_playwright() as p:
-        b = p.chromium.launch()
-        pg = b.new_page(viewport={"width": 1280, "height": 900})
-        pg.goto(ARTIST_URL, wait_until="domcontentloaded")
-        pg.wait_for_timeout(5500)
-        text = pg.inner_text("body")
-        b.close()
+
+    # the artist page sometimes settles with the listener count rendered but the
+    # Popular table still empty; retry rather than publish a half-read scrape
+    text = ""
+    for attempt in range(1, 4):
+        with sync_playwright() as p:
+            b = p.chromium.launch()
+            pg = b.new_page(viewport={"width": 1280, "height": 900})
+            pg.goto(ARTIST_URL, wait_until="domcontentloaded")
+            pg.wait_for_timeout(5500)
+            text = pg.inner_text("body")
+            b.close()
+        start, end = text.find("\nPopular\n"), text.find("Popular releases")
+        if start >= 0 and end > start and re.search(r"\n[\d][\d,]*\n", text[start:end]):
+            break
+        print(f"  attempt {attempt}: page came back without play figures, retrying")
+        time.sleep(3)
 
     m = re.search(r"([\d,.]+)\s*monthly listeners", text, re.I)
     if m:

@@ -1,4 +1,13 @@
-name: Refresh catalog
+name: Refresh data
+
+# Everything the browser can read for itself (merch, catalogue, events, videos)
+# is fetched client-side at runtime. This job exists for the two things it
+# can't: Spotify and SoundCloud play counts, which are only available by
+# driving a real browser. It also keeps the baked fallbacks current.
+#
+# Every fetch step is allowed to fail. The tools leave previous values in place
+# rather than overwriting them with zeroes, so a blocked scrape means "nothing
+# committed", never corrupted stats.
 
 on:
   schedule:
@@ -8,27 +17,77 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: pip
 
-      - name: Rebuild catalog from the iTunes lookup API
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt yt-dlp
+          python -m playwright install --with-deps chromium
+
+      # Spotify + SoundCloud + YouTube play counts. Most likely step to be
+      # refused from a datacenter IP, so it must not take the job down.
+      #
+      # No credentials here, matching build.sh: the Spotify figures come from
+      # driving a real browser, and YouTube reuses the key already public in
+      # js/videos.js. If that key is ever referrer-restricted this step needs
+      # YOUTUBE_API_KEY from secrets, since CI sends no referrer.
+      - name: Refresh play counts
+        id: plays
+        continue-on-error: true
+        run: python3 tools/fetch_plays.py
+
+      # fetch_catalog.py reads SPOTIFY_CLIENT_ID/SECRET if they exist and
+      # otherwise emits search links. build.sh has never supplied them, so
+      # neither does this job; add them here if that ever changes.
+      - name: Rebuild catalogue, stats and shows
+        id: catalog
+        continue-on-error: true
         run: python3 tools/fetch_catalog.py
 
-      - name: Commit if the catalog moved
+      - name: Refresh merch mirror
+        id: merch
+        continue-on-error: true
+        run: python3 tools/fetch_merch.py
+
+      # the data files are referenced as ?v=<content hash>; without this a
+      # returning visitor keeps serving the previous copy from cache
+      - name: Update cache busters
+        run: python3 tools/bump_versions.py
+
+      - name: Report what each source did
         run: |
-          if git diff --quiet -- js/catalog-data.js; then
-            echo "no change"
+          printf 'play counts : %s\n' "${{ steps.plays.outcome }}"
+          printf 'catalogue   : %s\n' "${{ steps.catalog.outcome }}"
+          printf 'merch       : %s\n' "${{ steps.merch.outcome }}"
+          echo
+          git diff --stat -- data/stats-manual.json js/catalog-data.js \
+                             js/merch-data.js index.html || true
+
+      - name: Commit if anything moved
+        run: |
+          TRACKED="data/stats-manual.json js/catalog-data.js js/merch-data.js index.html"
+          if git diff --quiet -- $TRACKED; then
+            echo "nothing changed"
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add js/catalog-data.js
-          git commit -m "chore: refresh catalog data"
+          git add $TRACKED
+          git commit -m "chore: refresh streaming data"
           git push

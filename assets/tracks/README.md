@@ -1,7 +1,6 @@
 # ALTER — Early Access Demo Tracks
 
-Drop your demo tracks here as **base64-encoded** text files (so the raw mp3s
-aren't directly downloadable from the directory). Name them `demo-01.dat`
+Drop your demo tracks here as **base64-encoded** text files. Name them `demo-01.dat`
 through `demo-09.dat`.
 
 ```
