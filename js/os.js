@@ -31,7 +31,7 @@
         { id: 'exploit',  name: 'Exploit',  icon: 'fa-bug' },
         { id: 'sessions', name: 'Sessions', icon: 'fa-network-wired' },
         { id: 'settings', name: 'Settings', icon: 'fa-sliders-h' },
-        { id: 'merch',    name: 'Merch',    icon: 'fa-tshirt', url: 'https://sweltersounds.com/collections/jones' }
+        { id: 'merch',    name: 'Merch',    icon: 'fa-tshirt' }
     ];
     const PHONE_DOCK = ['tracks', 'videos', 'terminal', 'social'];
 
@@ -894,7 +894,9 @@
     // Spotify's iframe API calls this once it loads
     window.onSpotifyIframeApiReady = (IFrameAPI) => {
         $$('.spotify-embed').forEach(el => {
-            IFrameAPI.createController(el, { uri: el.dataset.uri, width: '100%', height: 420 }, (ctrl) => {
+            // the API maps theme:'dark' to ?theme=0, Spotify's flat dark player;
+            // the default tints the background from the artwork instead
+            IFrameAPI.createController(el, { uri: el.dataset.uri, width: '100%', height: 420, theme: 'dark' }, (ctrl) => {
                 const entry = { ctrl, playing: false };
                 AUDIO.spotify.push(entry);
                 ctrl.addListener('playback_update', (ev) => {
@@ -1112,6 +1114,32 @@
             }
             host.appendChild(row);
         });
+    }
+
+    function renderMerch() {
+        const grid = $('#mrGrid'), data = window.MERCH;
+        if (!grid || !data) return;
+        const store = $('#mrStore');
+        if (store && data.store) store.href = data.store;
+
+        const draw = (q) => {
+            const term = (q || '').trim().toLowerCase();
+            const items = data.items.filter(i => !term || i.title.toLowerCase().includes(term));
+            $('#mrCount').textContent = `${items.length} item${items.length === 1 ? '' : 's'}`;
+            grid.innerHTML = items.map(i => `
+                <a class="mr-item${i.available ? '' : ' is-out'}" href="${esc(i.url)}"
+                   target="_blank" rel="noopener" title="${esc(i.desc || i.title)}">
+                    <span class="mr-shot">
+                        ${i.img ? `<img src="${esc(i.img)}" alt="${esc(i.title)}" loading="lazy">` : ''}
+                        ${i.available ? '' : '<span class="mr-flag">sold out</span>'}
+                    </span>
+                    <span class="mr-name">${esc(i.title)}</span>
+                    <span class="mr-price">$${esc(i.price)}${i.priceMax ? ' <i>\u2013 $' + esc(i.priceMax) + '</i>' : ''}</span>
+                </a>`).join('') ||
+                '<p class="mr-empty">nothing matches that.</p>';
+        };
+        draw('');
+        $('#mrFind')?.addEventListener('input', (e) => draw(e.target.value));
     }
 
     function renderAbout() {
@@ -1511,6 +1539,7 @@
         refreshSigils(); refreshTemples(); refreshVault();
         initCatalog();
         renderAbout();
+        renderMerch();
         initFiles();
         initDesktopSigils();
         initPanelSigils();

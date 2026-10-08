@@ -471,6 +471,66 @@ body.is-mobile .win-grip { display: none; }
 
 .link-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 
+/* ── merch (mirror of the Swelter Sounds collection) ── */
+.mr-head {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.mr-find {
+    flex: 1 1 160px; min-width: 0; padding: 7px 11px;
+    font-family: var(--mono); font-size: 12px; color: var(--ink);
+    background: rgba(255,255,255,.04); border: 1px solid rgba(var(--neon-rgb), .3);
+    border-radius: 4px; outline: none; transition: var(--t);
+}
+.mr-find:focus { border-color: rgba(var(--neon-rgb), .75); box-shadow: 0 0 10px rgba(var(--neon-rgb), .25); }
+.mr-count { font-family: var(--mono); font-size: 10.5px; color: rgba(255,255,255,.45); letter-spacing: 1px; }
+.mr-store,
+.mr-store:link,
+.mr-store:visited {
+    font-family: var(--mono); font-size: 11px; text-decoration: none; color: var(--neon);
+    border: 1px solid rgba(var(--neon-rgb), .5); border-radius: 4px; padding: 5px 11px;
+    background: rgba(var(--neon-rgb), .08); transition: var(--t); white-space: nowrap;
+}
+.mr-store:hover,
+.mr-store:focus {
+    color: var(--neon); text-decoration: none; background: rgba(var(--neon-rgb), .2);
+    border-color: rgba(var(--neon-rgb), .8); box-shadow: 0 0 14px rgba(var(--neon-rgb), .35); outline: none;
+}
+.mr-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(146px, 1fr)); gap: 14px;
+}
+.mr-item,
+.mr-item:link,
+.mr-item:visited {
+    display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: var(--ink);
+    border: 1px solid rgba(var(--neon-rgb), .22); border-radius: 6px; padding: 9px;
+    background: rgba(255,255,255,.02); transition: var(--t);
+}
+.mr-item:hover,
+.mr-item:focus {
+    text-decoration: none; color: var(--ink);
+    border-color: rgba(var(--neon-rgb), .7);
+    box-shadow: 0 0 16px rgba(var(--neon-rgb), .25);
+    transform: translateY(-2px); outline: none;
+}
+.mr-shot {
+    position: relative; display: block; aspect-ratio: 1; overflow: hidden;
+    border-radius: 4px; background: rgba(0,0,0,.45);
+}
+.mr-shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mr-item.is-out .mr-shot img { filter: grayscale(1) brightness(.5); }
+.mr-flag {
+    position: absolute; inset: auto 0 0 0; text-align: center; padding: 3px 0;
+    font-family: var(--mono); font-size: 9px; letter-spacing: 1.4px; text-transform: uppercase;
+    background: rgba(2,3,8,.82); color: rgba(255,255,255,.7);
+}
+.mr-name {
+    font-family: var(--mono); font-size: 11px; line-height: 1.35; color: var(--ink);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.mr-price { font-family: var(--mono); font-size: 12px; color: var(--neon); text-shadow: var(--glow); }
+.mr-price i { font-style: normal; font-size: 10px; color: rgba(255,255,255,.4); text-shadow: none; }
+.mr-empty { font-family: var(--mono); font-size: 12px; color: rgba(255,255,255,.45); }
+
 /* ── about: stat panel, chips, discography ── */
 /* flex rather than grid: auto-fit leaves unfilled cells on the last row, and the
    container tint shows through them as a blank bar. flex-grow has no leftovers. */
@@ -1294,8 +1354,22 @@ html.audio-live .xport input[type="range"]::-moz-range-thumb { animation: rgbThu
 /* ============================================================
    PORTED COMPONENTS (loader / spotify / glow) — themed
    ============================================================ */
-.spotify-wrapper { max-width: 800px; width: 100%; }
-.spotify-wrapper iframe { border: 1px solid rgba(var(--neon-rgb), .4); box-shadow: 0 0 16px rgba(var(--neon-rgb), .2); }
+/* Spotify's iframe is cross-origin, so its chrome can't be restyled. Clipping it
+   inside our own frame is the most integration available. */
+.spotify-wrapper {
+    max-width: 800px; width: 100%;
+    border: 1px solid rgba(var(--neon-rgb), .4);
+    border-radius: 12px; overflow: hidden;
+    background: rgba(255,255,255,.02);
+    box-shadow: 0 0 18px rgba(var(--neon-rgb), .18);
+    transition: var(--t);
+}
+.spotify-wrapper:hover,
+.spotify-wrapper:focus-within {
+    border-color: rgba(var(--neon-rgb), .72);
+    box-shadow: 0 0 26px rgba(var(--neon-rgb), .3);
+}
+.spotify-wrapper iframe { display: block; border: 0; border-radius: 0; }
 @keyframes glow { 0%{box-shadow:0 0 5px,0 0 10px} 50%{box-shadow:0 0 15px,0 0 30px} 100%{box-shadow:0 0 10px,0 0 20px} }
 
 .neon-loader { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; gap: 22px; }

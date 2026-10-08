@@ -1,163 +1,152 @@
 /* ── Booking CTA ── */
-.booking-cta {
-    text-align: center;
-    margin: 40px auto 0;
-    width: 100%;
-}
-
+.booking-cta { text-align: center; margin: 0 auto 18px; width: 100%; }
 .booking-cta .primary-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-    box-sizing: border-box;
+    display: flex; justify-content: center; align-items: center;
+    margin-left: auto; margin-right: auto; box-sizing: border-box;
 }
 
-/* ── Neon Warn / Err Signs ── */
-.neon-warn {
-    font-family: 'Neon', cursive;
-    font-size: clamp(1.7rem, 7vw, 5rem);   /* 5rem overflows a phone-width window */
-    max-width: 100%;
-    color: white;
-    text-shadow:
-        0 0 5px yellow,
-        0 0 10px yellow,
-        0 0 20px yellow,
-        0 0 30px yellow;
-    transform: rotate(-10deg);
+/* ── Shows ────────────────────────────────────────────────────────────
+   Ticket-stub rows — date block, venue, action. Mono type and hairline
+   rules so this reads as part of the OS, not the old neon sign.      */
+.ev-group { margin: 0 0 22px; }
+.ev-head {
+    display: flex; align-items: center; gap: 9px; margin: 0 0 10px;
+    font-family: var(--mono); font-size: 10px; font-weight: 400;
+    letter-spacing: 2.2px; text-transform: uppercase; color: rgba(255,255,255,.45);
+}
+.ev-head::after {
+    content: ''; flex: 1 1 auto; height: 1px;
+    background: linear-gradient(90deg, rgba(var(--neon-rgb), .35), transparent);
+}
+.ev-n {
+    order: 3; padding: 1px 7px; border-radius: 10px;
+    background: rgba(var(--neon-rgb), .12); border: 1px solid rgba(var(--neon-rgb), .3);
+    color: var(--neon); font-size: 9.5px; letter-spacing: 1px;
 }
 
-.neon-err {
-    font-family: 'Neon', cursive;
-    font-size: clamp(1.7rem, 7vw, 5rem);
-    max-width: 100%;
-    color: white;
-    text-shadow:
-        0 0 5px red,
-        0 0 10px red,
-        0 0 20px red,
-        0 0 30px red;
-    transform: rotate(-10deg);
+.ev-row {
+    display: grid; grid-template-columns: 58px minmax(0, 1fr) auto;
+    align-items: center; gap: 14px; padding: 11px 12px; margin-bottom: 8px;
+    border: 1px solid rgba(var(--neon-rgb), .2); border-radius: 6px;
+    background: rgba(255,255,255,.02); transition: var(--t);
+}
+.ev-row:hover {
+    border-color: rgba(var(--neon-rgb), .55);
+    box-shadow: 0 0 14px rgba(var(--neon-rgb), .18);
+}
+.ev-row.is-past { opacity: .55; }
+.ev-row.is-past:hover { opacity: .85; }
+
+.ev-when {
+    display: flex; flex-direction: column; align-items: center; gap: 1px;
+    padding: 6px 0; border-radius: 4px;
+    background: rgba(var(--neon-rgb), .07); border: 1px solid rgba(var(--neon-rgb), .18);
+    font-family: var(--mono); line-height: 1;
+}
+.ev-mon { font-size: 9px; letter-spacing: 1.4px; color: var(--neon); }
+.ev-day { font-size: 19px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ev-yr  { font-size: 8.5px; letter-spacing: .8px; color: rgba(255,255,255,.35); }
+
+.ev-what { min-width: 0; }
+.ev-venue {
+    margin: 0 0 3px; font-family: var(--mono); font-size: 13px; font-weight: 400;
+    color: var(--ink); line-height: 1.3; overflow: hidden;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.ev-where, .ev-time {
+    margin: 0; font-family: var(--mono); font-size: 10.5px; line-height: 1.5;
+    color: rgba(255,255,255,.5);
+}
+.ev-time { color: rgba(255,255,255,.34); letter-spacing: .6px; }
+.ev-tz {
+    display: inline-block; margin-left: 3px; padding: 1px 5px; border-radius: 3px;
+    font-size: 9px; letter-spacing: 1px;
+    background: rgba(var(--neon-rgb), .1); border: 1px solid rgba(var(--neon-rgb), .22);
+    color: rgba(var(--neon-rgb), 1); opacity: .85; cursor: help;
 }
 
-/* ── Events Container ── */
-.neon-events {
-    font-family: 'Neon', cursive;
-    text-align: center;
-    border: 2px solid;
-    background-color: rgba(0, 0, 0, 0.85);
-    color: white;
-    text-decoration: none;
-    transition: 0.3s;
-    display: inline-block;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    font-size: 2rem;
-    min-width: 200px;
-    width: 150px;
+/* ── Played history expander ── */
+.ev-expand {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; margin-top: 2px; padding: 9px 12px; cursor: pointer;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 1.4px; text-transform: uppercase;
+    color: rgba(255,255,255,.5); background: rgba(255,255,255,.02);
+    border: 1px dashed rgba(var(--neon-rgb), .28); border-radius: 6px; transition: var(--t);
+}
+.ev-expand:hover,
+.ev-expand:focus-visible {
+    color: var(--neon); border-color: rgba(var(--neon-rgb), .6);
+    background: rgba(var(--neon-rgb), .07); outline: none;
+}
+.ev-expand i { transition: transform .25s ease; font-size: 10px; }
+.ev-expand.is-open i { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .ev-expand i { transition: none; } }
+
+.ev-tix,
+.ev-tix:link,
+.ev-tix:visited {
+    display: inline-block; white-space: nowrap; text-decoration: none;
+    font-family: var(--mono); font-size: 11px; letter-spacing: .6px; color: var(--neon);
+    border: 1px solid rgba(var(--neon-rgb), .5); border-radius: 4px;
+    padding: 6px 14px; background: rgba(var(--neon-rgb), .08); transition: var(--t);
+}
+.ev-tix:hover,
+.ev-tix:focus {
+    color: var(--neon); text-decoration: none; outline: none;
+    background: rgba(var(--neon-rgb), .2); border-color: rgba(var(--neon-rgb), .8);
+    box-shadow: 0 0 14px rgba(var(--neon-rgb), .35);
+}
+.ev-tix:active { color: var(--bg); background: var(--neon); border-color: var(--neon); }
+
+.ev-done {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 1.4px;
+    text-transform: uppercase; color: rgba(255,255,255,.3);
+    border: 1px solid rgba(255,255,255,.12); border-radius: 4px;
+    padding: 5px 10px; white-space: nowrap;
 }
 
-.neon-events-card {
-    background-color: transparent !important;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    height: 280px;
+/* ── Empty / error ── */
+.ev-msg {
+    font-family: var(--mono); font-size: 12px; line-height: 1.7;
+    color: rgba(255,255,255,.55); text-align: center;
+    border: 1px dashed rgba(var(--neon-rgb), .28); border-radius: 6px;
+    padding: 16px 18px; margin: 0 0 22px;
 }
+.ev-msg i { color: var(--neon); margin-right: 6px; }
+.ev-msg a { color: var(--neon); text-decoration: none; border-bottom: 1px solid rgba(var(--neon-rgb), .4); }
+.ev-msg a:hover { color: var(--neon); text-shadow: var(--glow); }
+.ev-msg.is-err { border-color: rgba(255,70,70,.4); }
+.ev-msg.is-err i { color: #ff5555; }
 
-.card-body {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+/* ── Loading: skeletons in the real layout, so nothing jumps on arrival ── */
+.ev-row.is-skeleton { pointer-events: none; border-color: rgba(var(--neon-rgb), .12); }
+.sk {
+    display: block; border-radius: 3px;
+    background: linear-gradient(90deg,
+        rgba(var(--neon-rgb), .06) 0%, rgba(var(--neon-rgb), .18) 50%, rgba(var(--neon-rgb), .06) 100%);
+    background-size: 200% 100%; animation: ev-sheen 1.3s ease-in-out infinite;
 }
-
-.event-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    max-height: 160px;
-    overflow: hidden;
-    margin-right: 20px;
+.sk-sm   { width: 22px; height: 7px; margin: 2px auto; }
+.sk-lg   { width: 30px; height: 15px; margin: 2px auto; }
+.sk-line { width: 72%; height: 11px; margin-bottom: 7px; }
+.sk-line.short { width: 44%; margin-bottom: 0; }
+.sk-pill { width: 68px; height: 28px; border-radius: 4px; }
+@keyframes ev-sheen {
+    from { background-position: 180% 0; }
+    to   { background-position: -80% 0; }
 }
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
 
-.event-details h4, .event-details h5, .event-details p {
-    margin: 5px 0;
-    font-size: 1.2rem;
-}
-
-.card-body img {
-    max-width: 120px;
-    height: auto;
-    margin-right: 20px;
-}
-
-.event-action {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.card-body .event-action a {
-    padding: 8px 16px;
-    text-align: center;
-    font-size: 1rem;
-    margin-top: 10px;
-}
-
-.card-body .event-action .neon-events-button {
-    margin-top: 10px;
-}
-
-/* ── Events Button ── */
-.neon-events-button {
-    font-family: 'Neon', cursive;
-    text-align: center;
-    padding: 20px 40px;
-    border: 2px solid;
-    background-color: rgba(0, 0, 0, 0.85);
-    color: white;
-    text-decoration: none;
-    transition: 0.3s;
-    display: inline-block;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    font-size: 2rem;
-    min-width: 200px;
-    width: 150px;
-}
-
-.neon-events-button:hover, .neon-events-button:focus {
-    filter: brightness(1.5);
-    animation: glow 0.8s infinite alternate;
-    text-decoration: none;
-}
-
-/* ── Responsive ── */
-@media (max-width: 768px) {
-    .neon-events-card {
-        flex-direction: column;
-        height: auto;
-        align-items: center;
-        width: 100%;
+/* ── Narrow windows: drop the action onto its own row ── */
+@media (max-width: 480px) {
+    .ev-row {
+        grid-template-columns: 48px minmax(0, 1fr);
+        grid-template-areas: 'when what' 'go go'; gap: 10px 12px;
     }
-
-    .neon-events {
-        width: 100%;
-    }
-
-    .card-body {
-        flex-direction: column;
-    }
-
-    .event-details {
-        max-height: none;
-    }
-
-    .neon-events-button {
-        width: 300px;
-    }
+    .ev-when { grid-area: when; }
+    .ev-what { grid-area: what; }
+    .ev-go   { grid-area: go; }
+    .ev-go .ev-tix, .ev-go .ev-done { display: block; text-align: center; }
+    .ev-day { font-size: 17px; }
+    .ev-venue { font-size: 12px; }
 }
