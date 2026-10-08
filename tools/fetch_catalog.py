@@ -32,7 +32,7 @@ import urllib.request
 
 ARTIST_ID = "1776303110"
 SPOTIFY_ARTIST = "159bHbMtw2LRCSPg5gWmh6"
-BIT_ARTIST = "Jones RX"
+BIT_ARTIST = "id_15564526"                              # the name endpoint serves a stale cache
 BIT_APP_ID = "26113258b4b0ab3265bf61cdb27edeab"      # same id the events page uses
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "js" / "catalog-data.js"

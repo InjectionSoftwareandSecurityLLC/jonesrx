@@ -13,10 +13,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/os.css?v=30">
-    <link rel="stylesheet" href="css/about.css?v=2">
-    <link rel="stylesheet" href="css/events.css?v=5">
-    <link rel="stylesheet" href="css/videos.css?v=3">
+    <link rel="stylesheet" href="css/os.css?v=e4a853e3">
+    <link rel="stylesheet" href="css/about.css?v=6f512847">
+    <link rel="stylesheet" href="css/events.css?v=2f06431c">
+    <link rel="stylesheet" href="css/videos.css?v=2b3e2c40">
 </head>
 <body>
 
@@ -210,9 +210,9 @@
                                 <div class="cat-rows" id="catRows"></div>
                             </div>
                             <p class="cat-note">
-                                * Play counts are a combined total of publicly reported figures from Spotify,
-                                SoundCloud, and YouTube. Apple Music and other platforms do not publish per-track
-                                counts and are not included, so real totals are higher.
+                                * Play counts shown are a combined total of publicly reported figures from Spotify,
+                                SoundCloud, and YouTube. Other platforms either do not publish per-track
+                                counts or are not easily accessible to the public. These are not included, so real totals may be slightly higher.
                             </p>
                         </div>
 
@@ -234,8 +234,8 @@
                     <div class="app-pad">
                         <div class="neon-about-container">
                             <p class="about-data">
-                                Hacker and Alt/Pop Artist from ATL, GA. Blending sounds from Hyperpop, EDM, R&amp;B, and alternative
-                                music to create sounds you can dance or cry to. Your choice &mdash; I suggest both :)
+                                Hacker and Alt/Pop Artist from ATL, GA. Blending sounds from Hyperpop, EDM, R&amp;B, and Alternative
+                                music to create songs you can dance or cry to. Your choice &mdash; I suggest both :)
                             </p>
                         </div>
 
@@ -304,8 +304,8 @@
                         <div class="booking-cta">
                             <a class="neon-link booking" id="bookingBtn" href="mailto:sweltersounds@gmail.com"><i class="fas fa-envelope"></i> Booking</a>
                         </div>
-                        <div id="events-container" class="container mt-3">
-                            <div class="d-flex flex-wrap justify-content-center" id="events"></div>
+                        <div id="events-container">
+                            <div id="events"></div>
                         </div>
                         <div class="spotify-wrapper mx-auto mt-3">
                             <div class="spotify-embed" data-uri="spotify:playlist:2yFS2GY2OEMjvgjmNclNVZ"></div>
@@ -408,6 +408,25 @@
                 </div>
             </section>
 
+            <!-- MERCH (mirrors the Swelter Sounds collection; the shop itself refuses framing) -->
+            <section class="win" id="win-merch" data-app="merch" aria-label="Merch">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-tshirt"></i> merch</span>
+                </header>
+                <div class="win-body">
+                    <div class="app-pad">
+                        <div class="mr-head">
+                            <input class="mr-find" id="mrFind" type="search" placeholder="filter merch…" aria-label="Filter merch">
+                            <span class="mr-count" id="mrCount"></span>
+                            <a class="mr-store" id="mrStore" href="https://sweltersounds.com/collections/jones"
+                               target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> full store</a>
+                        </div>
+                        <div class="mr-grid" id="mrGrid"></div>
+                    </div>
+                </div>
+            </section>
+
             <!-- EXPLOIT CONSOLE (altersploit) -->
             <section class="win" id="win-exploit" data-app="exploit" aria-label="Exploit Console">
                 <header class="win-bar">
@@ -477,9 +496,10 @@
 
     </div>
 
-    <script src="js/catalog-data.js?v=8"></script>
-    <script src="js/pixsizes.js?v=2"></script>
-    <script src="js/os.js?v=30"></script>
+    <script src="js/catalog-data.js?v=0ab6b4f8"></script>
+    <script src="js/merch-data.js?v=3aeaeac6"></script>
+    <script src="js/pixsizes.js?v=36538eb0"></script>
+    <script src="js/os.js?v=3fc78e4b"></script>
     <script>
     (function () {
         var _0x7b = function (z) {
@@ -491,12 +511,12 @@
         };
         function _inj(t) { var e = document.createElement('script'); e.textContent = _0x7b(_0x7b(t)); document.head.appendChild(e); }
         function _get(u) { return fetch(u).then(function (r) { return r.text(); }); }
-        _get('js/glyph0.dat?v=43').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=43'); }).then(function (t) { _inj(t); });
+        _get('js/glyph0.dat?v=5e0410dd').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=3e8a349c'); }).then(function (t) { _inj(t); });
     })();
     </script>
     <script src="js/gallery.js"></script>
-    <script src="js/events.js?v=3"></script>
-    <script src="js/videos.js?v=5"></script>
+    <script src="js/events.js?v=e7ed01fa"></script>
+    <script src="js/videos.js?v=bc2598f0"></script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>

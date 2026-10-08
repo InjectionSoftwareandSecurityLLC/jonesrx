@@ -169,10 +169,16 @@ def spotify(by_key, sources, totals):
             tracks.append({"name": tok, "plays": 0})
     for t in tracks:
         slug = by_key.get(norm(t["name"]))
-        if slug:
-            sources.setdefault(slug, {})["spotify"] = t["plays"]
-            hits += 1
-            print(f"  {t['plays']:>9,}  {slug}")
+        if not slug:
+            continue
+        # a name with no parseable figure means "unread", not "zero" — writing a 0
+        # would publish a play count we never actually measured
+        if not t["plays"]:
+            print(f"  {'--':>9}  {slug}  (listed, no figure read \u2014 left as-is)")
+            continue
+        sources.setdefault(slug, {})["spotify"] = t["plays"]
+        hits += 1
+        print(f"  {t['plays']:>9,}  {slug}")
     print(f"  {hits} of the capped Popular list read\n")
 
 
