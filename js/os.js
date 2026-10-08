@@ -27,6 +27,7 @@
         { id: 'social',   name: 'Social',   icon: 'fa-share-alt' },
         { id: 'terminal', name: 'Terminal', icon: 'fa-terminal' },
         { id: 'files',    name: 'Files',    icon: 'fa-folder-open' },
+        { id: 'notepad',  name: 'Notepad',  icon: 'fa-file-alt' },
         { id: 'temples',  name: 'Temples',  icon: 'fa-crosshairs' },
         { id: 'exploit',  name: 'Exploit',  icon: 'fa-bug' },
         { id: 'sessions', name: 'Sessions', icon: 'fa-network-wired' },
@@ -174,6 +175,8 @@
         focusWin(win);
         setDockActive();
         if (id === 'terminal') { const inp = $('#termInput'); if (inp) setTimeout(() => inp.focus(), 60); }
+        if (id === 'notepad') npRenderList();
+        if (id === 'merch') mrRefresh(false);
         if ((id === 'exploit' || id === 'sessions') && window.ALTERGAME) window.ALTERGAME.render();
         if (id === 'settings') refreshSettings();
         if (id === 'files') {
@@ -630,6 +633,7 @@
                     </div>
                     <audio preload="none"></audio>`;
                 const btn = $('.demo-load', row), audio = $('audio', row);
+                audio.dataset.srt = d.file.replace(/\.[^.]+$/, '.srt');
                 audio.addEventListener('play', () => audioClaim('demo', audio));
                 audio.addEventListener('pause', () => audioRelease('demo', audio));
                 audio.addEventListener('ended', () => audioRelease('demo', audio));
@@ -719,6 +723,9 @@
 
         $('#vizWrap')?.classList.add('on');
         mountViz(audio);
+        // keyed off the element, not the load button: that button is removed after the
+        // first play, so replaying a track must not inherit another track's cues
+        loadCues(audio.dataset.srt || '');
         const ctx = canvas.getContext('2d');
         const bins = new Uint8Array(analyser.frequencyBinCount);
         const bars = buildBarMap(actx.sampleRate, analyser.fftSize);
@@ -728,6 +735,7 @@
 
         const draw = () => {
             vizRAF = requestAnimationFrame(draw);
+            tickLyric(audio.currentTime);
             analyser.getByteFrequencyData(bins);
             const w = canvas.width, h = canvas.height, n = bins.length;
 
@@ -869,11 +877,151 @@
         const c = $('#vizCanvas');
         if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height);
         $('#vizWrap')?.classList.remove('on');
+        // nothing left to look at, so don't strand the user on a blank fullscreen
+        if ($('#vizWrap')?.classList.contains('fs')) {
+            if (fsEl()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+            else setVizFull(false);
+        }
     }
 
     // park the visualizer directly above whichever track is playing
-    function mountViz(audio) {
-        const wrap = $('#vizWrap'), row = audio.closest('.demo-item, .cat-row');
+    /* ---- timed lyrics ----------------------------------------------
+       Cues ride the visualizer's existing rAF loop rather than the audio
+       element's timeupdate event, which only fires ~4x/sec and would let
+       lines land a beat late. */
+    const srtCache = new Map();
+    let cues = null, cueIdx = -1;
+    const LYRIC_HOLD = 1.2;                  // how long a line lingers once nothing follows it
+
+    // SRT puts a comma before the milliseconds; WebVTT uses a period
+    function parseSRT(text) {
+        const out = [];
+        const secs = (t) => {
+            const m = t.trim().match(/(\d+):(\d+):(\d+)[,.](\d+)/);
+            return m ? (+m[1]) * 3600 + (+m[2]) * 60 + (+m[3]) + (+m[4]) / 1000 : NaN;
+        };
+        String(text).replace(/\r/g, '').split(/\n\s*\n/).forEach(block => {
+            const lines = block.split('\n').filter(l => l.trim() !== '');
+            const at = lines.findIndex(l => l.includes('-->'));
+            if (at < 0) return;
+            const [from, to] = lines[at].split('-->');
+            const start = secs(from), end = secs(to);
+            const body = lines.slice(at + 1).join(' ').trim();
+            if (isFinite(start) && isFinite(end) && body) out.push({ start, end, body });
+        });
+        return out.sort((a, b) => a.start - b.start);
+    }
+
+    async function loadCues(src) {
+        const el = $('#vizLyric');
+        cues = null; cueIdx = -1;
+        if (el) { el.textContent = ''; el.classList.remove('on'); }
+        if (!src) return;
+        if (srtCache.has(src)) { cues = srtCache.get(src); return; }
+        try {
+            const r = await fetch(src);
+            if (!r.ok) throw 0;
+            const parsed = parseSRT(await r.text());
+            srtCache.set(src, parsed.length ? parsed : null);
+            cues = srtCache.get(src);
+        } catch (e) { srtCache.set(src, null); }
+    }
+
+    function tickLyric(t) {
+        const el = $('#vizLyric');
+        if (!el || !cues) return;
+        // Layered vocals put the next line's start before the previous line's end,
+        // so the latest line to have *started* wins and the previous one cuts early.
+        // A line then holds until its successor arrives rather than blinking out in
+        // the sub-second gaps between stacked takes.
+        let i = -1;
+        for (let k = cues.length - 1; k >= 0; k--) {
+            if (cues[k].start <= t) { i = k; break; }
+        }
+        let show = i;
+        if (i >= 0) {
+            const c = cues[i], next = cues[i + 1];
+            const until = next ? Math.min(next.start, c.end + LYRIC_HOLD)
+                               : c.end + LYRIC_HOLD;
+            if (t >= until) show = -1;          // real instrumental gap: let it fade
+        }
+        if (show === cueIdx) return;
+        cueIdx = show;
+        if (show < 0) { el.classList.remove('on'); return; }
+        el.textContent = cues[show].body;
+        el.classList.remove('on');
+        void el.offsetWidth;                 // restart the fade for back-to-back lines
+        el.classList.add('on');
+    }
+
+    /* ---- fullscreen visualizer ---------------------------------------
+       Real fullscreen where the browser allows it; iOS Safari refuses it on
+       anything but <video>, so fall back to a fixed overlay that covers the
+       viewport. Both share the .fs class, so the styling is one path. */
+    const VIZ_BASE = { w: 600, h: 110 };
+    const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement || null;
+
+    function sizeVizCanvas(full) {
+        const canvas = $('#vizCanvas');
+        if (!canvas) return;
+        if (full) {
+            // the wrap animates its height, so measuring the element here catches a
+            // mid-transition value; the viewport is the real target either way
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = Math.round(window.innerWidth * dpr);
+            canvas.height = Math.round(window.innerHeight * dpr);
+        } else {
+            canvas.width = VIZ_BASE.w;
+            canvas.height = VIZ_BASE.h;
+        }
+        hexes.length = 0;                    // they carry absolute coords, so re-scatter
+        seedHexes(canvas.width, canvas.height);
+    }
+
+    function setVizFull(on) {
+        const wrap = $('#vizWrap'), btn = $('#vizFull');
+        if (!wrap) return;
+        wrap.classList.toggle('fs', on);
+        document.documentElement.classList.toggle('viz-fs', on);
+        if (btn) {
+            btn.innerHTML = `<i class="fas fa-${on ? 'compress' : 'expand'}"></i>`;
+            btn.setAttribute('aria-label', (on ? 'Exit fullscreen' : 'Fullscreen') + ' visualizer');
+        }
+        requestAnimationFrame(() => sizeVizCanvas(on));
+    }
+
+    function toggleVizFull() {
+        const wrap = $('#vizWrap');
+        if (!wrap) return;
+        const isOn = wrap.classList.contains('fs');
+        if (isOn) {
+            if (fsEl()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+            else setVizFull(false);
+            return;
+        }
+        const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
+        if (req) {
+            Promise.resolve(req.call(wrap)).catch(() => setVizFull(true));   // denied: overlay instead
+        } else {
+            setVizFull(true);
+        }
+    }
+
+    function initVizFull() {
+        $('#vizFull')?.addEventListener('click', toggleVizFull);
+        const sync = () => setVizFull(!!fsEl());
+        document.addEventListener('fullscreenchange', sync);
+        document.addEventListener('webkitfullscreenchange', sync);
+        // the overlay fallback has no Esc handling of its own
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !fsEl() && $('#vizWrap')?.classList.contains('fs')) setVizFull(false);
+        });
+        window.addEventListener('resize', () => {
+            if ($('#vizWrap')?.classList.contains('fs')) sizeVizCanvas(true);
+        });
+    }
+
+    function mountViz(audio) {        const wrap = $('#vizWrap'), row = audio.closest('.demo-item, .cat-row');
         if (!wrap || !row || !row.parentNode) return;
         if (wrap.nextElementSibling !== row) row.parentNode.insertBefore(wrap, row);
         const label = $('#vizLabel'), name = $('.demo-name, .c-title', row);
@@ -987,6 +1135,143 @@
        ============================================================ */
     let catSortKey = 'released', catSortDesc = true, catFilter = '';
     const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    /* ── live catalogue ───────────────────────────────────────────────
+       iTunes' lookup API is open and CORS-enabled, so releases and tracks can
+       be read straight from the browser and a new drop appears without a
+       deploy. Play counts can't: Spotify and SoundCloud both refuse
+       cross-origin reads, so those stay baked and are merged back in by slug.
+       catShape() must keep matching tools/fetch_catalog.py. */
+    const CAT_LOOKUP = 'https://itunes.apple.com/lookup?id=1776303110&entity=';
+    const CAT_CACHE = 'alter_catalog_feed';
+    const CAT_TTL = 6 * 60 * 60 * 1000;
+
+    const catSlug = (s) => s
+        .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().replace(/&/g, 'and')
+        .replace(/[\u2018\u2019']/g, '')
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    const catHiRes = (u, size = 600) =>
+        (u || '').replace(/\/\d+x\d+bb\.(jpg|png)$/, `/${size}x${size}bb.$1`);
+    const catBare = (s) => s.replace(/\s*-\s*(Single|EP)$/i, '');
+
+    function catShape(songs, albums, baked) {
+        // keep whatever the build could reach that the browser can't
+        const prev = {};
+        (baked.tracks || []).forEach(t => { prev[t.slug] = t; });
+
+        const tracks = songs.map(s => {
+            const title = s.trackName || '';
+            const slug = catSlug(title);
+            const ms = s.trackTimeMillis || 0;
+            const was = prev[slug] || {};
+            return {
+                slug, title,
+                album: catBare(s.collectionName || ''),
+                year: (s.releaseDate || '').slice(0, 4),
+                released: (s.releaseDate || '').slice(0, 10),
+                durationMs: ms,
+                duration: ms ? `${Math.floor(ms / 60000)}:${String(Math.floor(ms / 1000) % 60).padStart(2, '0')}` : '',
+                art: catHiRes(s.artworkUrl100 || ''),
+                disc: s.discNumber || 1,
+                trackNumber: s.trackNumber || 0,
+                appleUrl: s.trackViewUrl || '',
+                spotifyUrl: was.spotifyUrl || '',
+                popularity: was.popularity != null ? was.popularity : null,
+                plays: was.plays || '',
+                playSources: was.playSources || {},
+                local: was.local || ''
+            };
+        });
+        tracks.sort((a, b) => (a.disc - b.disc) || (a.trackNumber - b.trackNumber));
+        tracks.sort((a, b) => (b.released || '').localeCompare(a.released || ''));
+
+        const prevRel = {};
+        (baked.releases || []).forEach(r => { prevRel[r.slug] = r; });
+        const releases = albums.map(a => {
+            const raw = a.collectionName || '';
+            // the build slugs the raw name, suffix and all ("luv-u-single")
+            const slug = catSlug(raw);
+            const was = prevRel[slug] || {};
+            // python's quote() leaves "/" alone; encodeURIComponent doesn't
+            const q = encodeURIComponent(`${catBare(raw)} Jones RX`).replace(/%2F/g, '/');
+            return {
+                slug,
+                title: catBare(raw),
+                kind: /-\s*EP$/i.test(raw) ? 'EP' : /-\s*Single$/i.test(raw) ? 'Single' : 'Album',
+                year: (a.releaseDate || '').slice(0, 4),
+                released: (a.releaseDate || '').slice(0, 10),
+                trackCount: a.trackCount || 0,
+                art: catHiRes(a.artworkUrl100 || ''),
+                appleUrl: a.collectionViewUrl || '',
+                spotifyUrl: was.spotifyUrl || 'https://open.spotify.com/search/' + q
+            };
+        });
+        releases.sort((a, b) => (b.released || '').localeCompare(a.released || ''));
+
+        const years = tracks.map(t => t.year).filter(Boolean).sort();
+        return {
+            generated: true,
+            artist: baked.artist || 'Jones RX',
+            tracks, releases,
+            stats: Object.assign({}, baked.stats, {
+                trackCount: tracks.length,
+                releaseCount: releases.length,
+                firstYear: years[0] || (baked.stats || {}).firstYear,
+                latestYear: years[years.length - 1] || (baked.stats || {}).latestYear
+            })
+        };
+    }
+
+    async function catFetchLive(baked) {
+        const grab = async (entity) => {
+            const r = await fetch(CAT_LOOKUP + entity + '&limit=200');
+            if (!r.ok) throw new Error('itunes ' + r.status);
+            return (await r.json()).results || [];
+        };
+        const [songs, albums] = await Promise.all([grab('song'), grab('album')]);
+        const data = catShape(
+            songs.filter(x => x.wrapperType === 'track'),
+            albums.filter(x => x.wrapperType === 'collection'),
+            baked);
+        if (!data.tracks.length) throw new Error('itunes empty');
+        return data;
+    }
+
+    // the one stat the browser can read live; Spotify/SoundCloud counts cannot be
+    async function catLiveShows() {
+        const r = await fetch('https://rest.bandsintown.com/artists/id_15564526/events' +
+            '?app_id=26113258b4b0ab3265bf61cdb27edeab&date=past');
+        if (!r.ok) throw new Error('bit ' + r.status);
+        const j = await r.json();
+        return Array.isArray(j) ? j.length : null;
+    }
+
+    async function refreshCatalog() {
+        const baked = window.ALTER_CATALOG_BAKED || window.CATALOG;
+        if (!baked) return;
+        window.ALTER_CATALOG_BAKED = baked;
+        try {
+            const c = JSON.parse(localStorage.getItem(CAT_CACHE) || 'null');
+            if (c && Date.now() - c.at < CAT_TTL && c.data && c.data.tracks.length) {
+                window.CATALOG = c.data;
+                renderCatalog(); renderAbout();
+                return;
+            }
+        } catch (e) {}
+        try {
+            const data = await catFetchLive(baked);
+            try {
+                const shows = await catLiveShows();
+                if (shows != null) data.stats.showsPlayed = shows;
+            } catch (e) {}
+            window.CATALOG = data;
+            try { localStorage.setItem(CAT_CACHE, JSON.stringify({ at: Date.now(), data })); } catch (e) {}
+            renderCatalog(); renderAbout();
+        } catch (e) {
+            // the baked copy is already on screen
+        }
+    }
 
     function initCatalog() {
         const rows = $('#catRows');
@@ -1116,31 +1401,385 @@
         });
     }
 
+    /* ── merch ────────────────────────────────────────────────────────
+       The store can't be iframed, so the collection is mirrored locally and
+       the cart is ours. Checkout hands everything to Shopify in one cart
+       permalink (/cart/<variant>:<qty>,...), which opens a real checkout
+       with the whole order already in it. */
+    const MR = { q: '', kind: 'all', sort: 'new', max: 0, stock: false, cart: [], pick: null };
+    const MR_KEY = 'alter_cart';
+    let mrRefresh = () => {};
+
+    function mrLoad() {
+        try { MR.cart = JSON.parse(localStorage.getItem(MR_KEY) || '[]') || []; }
+        catch (e) { MR.cart = []; }
+        if (!Array.isArray(MR.cart)) MR.cart = [];
+    }
+    const mrSave = () => { try { localStorage.setItem(MR_KEY, JSON.stringify(MR.cart)); } catch (e) {} };
+    const mrCount = () => MR.cart.reduce((n, l) => n + l.q, 0);
+    const mrTotal = () => MR.cart.reduce((n, l) => n + l.q * parseFloat(l.p), 0);
+
+    const mrMoney = (n) => '$' + (Number.isInteger(n) ? n : n.toFixed(2));
+
+    // the documented Shopify cart permalink; no API key involved
+    function mrLink(lines, storefront) {
+        const shop = (window.MERCH && window.MERCH.shop) || '';
+        const pairs = lines.map(l => `${l.v}:${l.q}`).join(',');
+        return `${shop}/cart/${pairs}${storefront ? '?storefront=true' : ''}`;
+    }
+    const mrGo = (lines, storefront) => {
+        if (!lines.length) return;
+        window.open(mrLink(lines, storefront), '_blank', 'noopener');
+    };
+
+    function mrAdd(line) {
+        const hit = MR.cart.find(l => l.v === line.v);
+        if (hit) hit.q += line.q; else MR.cart.push(line);
+        mrSave(); mrBadge(); mrDrawCart();
+    }
+    function mrBump(vid, d) {
+        const hit = MR.cart.find(l => l.v === vid);
+        if (!hit) return;
+        hit.q += d;
+        if (hit.q < 1) MR.cart = MR.cart.filter(l => l.v !== vid);
+        mrSave(); mrBadge(); mrDrawCart();
+    }
+
+    function mrBadge() {
+        const n = mrCount(), el = $('#mrBagN');
+        if (!el) return;
+        el.textContent = n;
+        el.hidden = n === 0;
+        $('#mrBag')?.classList.toggle('has', n > 0);
+    }
+
+    function mrDrawCart() {
+        const list = $('#mrCartList');
+        if (!list) return;
+        list.innerHTML = MR.cart.map(l => `
+            <li class="mr-line">
+                ${l.img ? `<img src="${esc(l.img)}" alt="" loading="lazy">` : '<span class="mr-line-nopic"></span>'}
+                <div class="mr-line-txt">
+                    <span class="mr-line-name">${esc(l.t)}</span>
+                    ${l.vt ? `<span class="mr-line-opt">${esc(l.vt)}</span>` : ''}
+                    <span class="mr-line-price">${esc(mrMoney(parseFloat(l.p)))}</span>
+                </div>
+                <div class="mr-line-qty">
+                    <button data-dec="${esc(l.v)}" aria-label="One fewer">&minus;</button>
+                    <b>${l.q}</b>
+                    <button data-inc="${esc(l.v)}" aria-label="One more">+</button>
+                </div>
+                <button class="mr-line-x" data-del="${esc(l.v)}" aria-label="Remove">&times;</button>
+            </li>`).join('') || '<li class="mr-cart-empty">your cart is empty.</li>';
+        $('#mrCartSum').textContent = mrMoney(mrTotal());
+        const empty = !MR.cart.length;
+        $('#mrCartGo').disabled = empty;
+        $('#mrCartView').disabled = empty;
+    }
+
+    /* ---- variant picker ---- */
+    // variant titles come back as "Black / XS", matching item.opts in order
+    const mrParts = (vt) => vt.split(' / ');
+
+    function mrPickOpen(item, intent) {
+        MR.pick = { item, sel: item.opts.map(() => null) };
+        // preselect the first combination that is actually in stock
+        const first = item.vars.find(v => v[3]) || item.vars[0];
+        if (first) MR.pick.sel = mrParts(first[1]);
+        $('#mrPickImg').src = item.img || '';
+        $('#mrPickName').textContent = item.title;
+        $('#mrPickLink').href = item.url;
+        $('#mrPick').hidden = false;
+        mrPickDraw();
+        // land on the button they actually pressed, so Enter does what they meant
+        const go = intent === 'buy' ? $('#mrPickBuy') : $('#mrPickAdd');
+        if (!go.disabled) go.focus();
+    }
+    const mrPickClose = () => { $('#mrPick').hidden = true; MR.pick = null; };
+
+    function mrPickMatch() {
+        const { item, sel } = MR.pick;
+        return item.vars.find(v => {
+            const p = mrParts(v[1]);
+            return sel.every((s, i) => p[i] === s);
+        });
+    }
+
+    function mrPickDraw() {
+        const { item, sel } = MR.pick;
+        const box = $('#mrPickOpts');
+        box.innerHTML = item.opts.map((name, i) => {
+            // only offer values that exist alongside the other picks
+            const vals = [...new Set(item.vars.map(v => mrParts(v[1])[i]))];
+            return `<label class="mr-opt">${esc(name)}
+                <select data-oi="${i}">${vals.map(val => {
+                    const live = item.vars.some(v => {
+                        const p = mrParts(v[1]);
+                        return p[i] === val && v[3] &&
+                               sel.every((s, j) => j === i || p[j] === s);
+                    });
+                    return `<option value="${esc(val)}"${val === sel[i] ? ' selected' : ''}>` +
+                        `${esc(val)}${live ? '' : ' \u2014 sold out'}</option>`;
+                }).join('')}</select></label>`;
+        }).join('');
+
+        const v = mrPickMatch();
+        const ok = !!(v && v[3]);
+        $('#mrPickPrice').textContent = v ? mrMoney(parseFloat(v[2]))
+            : 'that combination isn\u2019t made';
+        $('#mrPickAdd').disabled = !ok;
+        $('#mrPickBuy').disabled = !ok;
+        $('#mrPickAdd').textContent = ok ? 'add to cart'
+            : v ? 'sold out' : 'unavailable';
+    }
+
+    function mrPickLine() {
+        const v = mrPickMatch();
+        if (!v || !v[3]) return null;
+        const i = MR.pick.item;
+        return { v: v[0], t: i.title, vt: v[1], p: v[2], img: i.img, url: i.url, q: 1 };
+    }
+
+    // simple products have one variant and nothing to choose
+    function mrQuickLine(item) {
+        const v = item.vars.find(x => x[3]);
+        return v ? { v: v[0], t: item.title, vt: '', p: v[2], img: item.img, url: item.url, q: 1 } : null;
+    }
+
+    /* ---- live catalogue -------------------------------------------
+       Shopify serves products.json with Access-Control-Allow-Origin: *, so the
+       collection can be read straight from the browser. js/merch-data.js is
+       only a fallback: it paints instantly and covers the store being
+       unreachable, but anything added on Shopify shows up without a deploy.
+       mrShape() must keep producing the same records as fetch_merch.py. */
+    const MR_FEED = 'https://sweltersounds.com/collections/jones/products.json?limit=250';
+    const MR_CACHE = 'alter_merch_feed';
+    const MR_TTL = 30 * 60 * 1000;
+
+    const MR_KINDS = [
+        ['Hoodie',    /hoodie|zip[- ]?up|sweatshirt|crewneck|jacket/i],
+        ['Tee',       /t-?shirt|tee\b|crop top/i],
+        ['Pants',     /sweatpants|track pants|joggers|leggings|shorts/i],
+        ['Hat',       /\bhat\b|\bcap\b|beanie|visor/i],
+        ['Bag',       /tote|backpack|fanny pack|pouch|\bbag\b/i],
+        ['Wall Art',  /poster|canvas|flag|tapestry/i],
+        ['Sticker',   /sticker|pin set|\bpins?\b|magnet/i],
+        ['Drinkware', /mug|tumbler|bottle/i],
+        ['Home',      /pillow|blanket|towel|curtain|mouse ?pad|desk ?mat|rug/i],
+        ['Case',      /case|skin\b/i]
+    ];
+    const mrKindOf = (t) => (MR_KINDS.find(([, re]) => re.test(t)) || ['Other'])[0];
+    const mrCash = (v) => Number.isInteger(v) ? String(v) : v.toFixed(2);
+    const mrThumb = (src, px = 400) =>
+        src.replace(/(\.(?:jpg|jpeg|png|webp))(\?|$)/i, `_${px}x$1$2`);
+    const mrPlain = (body) => (body || '')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&nbsp;|\u00a0/g, ' ')
+        .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+        .replace(/&#39;|&rsquo;/g, '\u2019').replace(/&quot;/g, '"')
+        .replace(/\s+/g, ' ').trim().slice(0, 160);
+
+    function mrShape(products) {
+        const base = (window.MERCH && window.MERCH.store) ||
+            'https://sweltersounds.com/collections/jones';
+        return (products || []).map(p => {
+            const vars = p.variants || [];
+            const prices = vars.map(v => parseFloat(v.price)).filter(n => !isNaN(n));
+            if (!prices.length) return null;
+            const lo = Math.min(...prices), hi = Math.max(...prices);
+            const title = p.title.replace('Jones - ', '').trim();
+            const opts = (p.options || []).map(o => o.name);
+            return {
+                title,
+                url: `${base}/products/${p.handle}`,
+                img: p.images && p.images[0] ? mrThumb(p.images[0].src) : '',
+                price: mrCash(lo),
+                priceMax: hi !== lo ? mrCash(hi) : '',
+                low: Math.round(lo * 100) / 100,
+                available: vars.some(v => v.available),
+                kind: mrKindOf(title),
+                added: (p.published_at || p.created_at || '').slice(0, 10),
+                // a lone "Title" option means there is no real choice to make
+                opts: (opts.length === 1 && opts[0] === 'Title') ? [] : opts,
+                vars: vars.map(v => [String(v.id), v.title, mrCash(parseFloat(v.price)),
+                                     v.available ? 1 : 0]),
+                desc: mrPlain(p.body_html)
+            };
+        }).filter(Boolean)
+          .sort((a, b) => (a.available === b.available)
+              ? a.title.localeCompare(b.title) : (a.available ? -1 : 1));
+    }
+
+    function mrCached() {
+        try {
+            const c = JSON.parse(localStorage.getItem(MR_CACHE) || 'null');
+            if (c && Date.now() - c.at < MR_TTL && Array.isArray(c.items) && c.items.length) return c.items;
+        } catch (e) {}
+        return null;
+    }
+
+    async function mrFetchLive() {
+        const r = await fetch(MR_FEED, { cache: 'no-store' });
+        if (!r.ok) throw new Error('feed ' + r.status);
+        const items = mrShape((await r.json()).products);
+        if (!items.length) throw new Error('feed empty');
+        try { localStorage.setItem(MR_CACHE, JSON.stringify({ at: Date.now(), items })); } catch (e) {}
+        return items;
+    }
+
     function renderMerch() {
         const grid = $('#mrGrid'), data = window.MERCH;
         if (!grid || !data) return;
         const store = $('#mrStore');
         if (store && data.store) store.href = data.store;
+        let items = mrCached() || data.items || [];
 
-        const draw = (q) => {
-            const term = (q || '').trim().toLowerCase();
-            const items = data.items.filter(i => !term || i.title.toLowerCase().includes(term));
-            $('#mrCount').textContent = `${items.length} item${items.length === 1 ? '' : 's'}`;
-            grid.innerHTML = items.map(i => `
-                <a class="mr-item${i.available ? '' : ' is-out'}" href="${esc(i.url)}"
-                   target="_blank" rel="noopener" title="${esc(i.desc || i.title)}">
-                    <span class="mr-shot">
-                        ${i.img ? `<img src="${esc(i.img)}" alt="${esc(i.title)}" loading="lazy">` : ''}
-                        ${i.available ? '' : '<span class="mr-flag">sold out</span>'}
-                    </span>
-                    <span class="mr-name">${esc(i.title)}</span>
-                    <span class="mr-price">$${esc(i.price)}${i.priceMax ? ' <i>\u2013 $' + esc(i.priceMax) + '</i>' : ''}</span>
-                </a>`).join('') ||
-                '<p class="mr-empty">nothing matches that.</p>';
+        mrLoad(); mrBadge(); mrDrawCart();
+
+        const slider = $('#mrMax');
+
+        function fitControls() {
+            const lows = items.map(i => i.low || 0);
+            const ceiling = Math.ceil(Math.max(...lows));
+            const floor = Math.floor(Math.min(...lows));
+            const wasMax = +slider.value === +slider.max || !slider.value;
+            slider.min = floor;
+            slider.max = ceiling;
+            // keep the shopper's ceiling unless the catalogue outgrew it
+            if (wasMax || MR.max > ceiling) { slider.value = ceiling; MR.max = ceiling; }
+            const keep = $('#mrKind').value || 'all';
+            const kinds = [...new Set(items.map(i => i.kind))].sort();
+            $('#mrKind').innerHTML = '<option value="all">all</option>' +
+                kinds.map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join('');
+            if (kinds.includes(keep)) $('#mrKind').value = keep;
+            else if (keep !== 'all') MR.kind = 'all';
+            return ceiling;
+        }
+        let ceiling = fitControls();
+
+        const sorters = {
+            new: (a, b) => (b.added || '').localeCompare(a.added || '') || a.title.localeCompare(b.title),
+            lo: (a, b) => a.low - b.low,
+            hi: (a, b) => b.low - a.low,
+            az: (a, b) => a.title.localeCompare(b.title)
         };
-        draw('');
-        $('#mrFind')?.addEventListener('input', (e) => draw(e.target.value));
+
+        function draw() {
+            const term = MR.q.trim().toLowerCase();
+            const list = items.filter(i =>
+                (!term || i.title.toLowerCase().includes(term) ||
+                          (i.desc || '').toLowerCase().includes(term)) &&
+                (MR.kind === 'all' || i.kind === MR.kind) &&
+                (!MR.stock || i.available) &&
+                i.low <= MR.max
+            ).sort(sorters[MR.sort]);
+
+            $('#mrCount').textContent = `${list.length} item${list.length === 1 ? '' : 's'}`;
+            $('#mrMaxOut').textContent = '$' + MR.max;
+
+            grid.innerHTML = list.map(i => {
+                const idx = items.indexOf(i);
+                const range = i.priceMax ? ' <i>\u2013 $' + esc(i.priceMax) + '</i>' : '';
+                return `
+                <div class="mr-item${i.available ? '' : ' is-out'}">
+                    <a class="mr-link" href="${esc(i.url)}" target="_blank" rel="noopener"
+                       title="${esc(i.desc || i.title)}">
+                        <span class="mr-shot">
+                            ${i.img ? `<img src="${esc(i.img)}" alt="${esc(i.title)}" loading="lazy">` : ''}
+                            ${i.available ? '' : '<span class="mr-flag">sold out</span>'}
+                            <span class="mr-kind">${esc(i.kind)}</span>
+                        </span>
+                        <span class="mr-name">${esc(i.title)}</span>
+                        <span class="mr-price">$${esc(i.price)}${range}</span>
+                    </a>
+                    ${i.available ? `<span class="mr-act">
+                        <button class="mr-add" data-i="${idx}" data-act="add">add to cart</button>
+                        <button class="mr-buy" data-i="${idx}" data-act="buy">buy now</button>
+                    </span>` : ''}
+                </div>`;
+            }).join('') || '<p class="mr-empty">nothing matches that.</p>';
+        }
+
+        $('#mrFind').addEventListener('input', (e) => { MR.q = e.target.value; draw(); });
+        $('#mrKind').addEventListener('change', (e) => { MR.kind = e.target.value; draw(); });
+        $('#mrSort').addEventListener('change', (e) => { MR.sort = e.target.value; draw(); });
+        $('#mrMax').addEventListener('input', (e) => { MR.max = +e.target.value; draw(); });
+        $('#mrStock').addEventListener('change', (e) => { MR.stock = e.target.checked; draw(); });
+        $('#mrReset').addEventListener('click', () => {
+            MR.q = ''; MR.kind = 'all'; MR.sort = 'new'; MR.max = ceiling; MR.stock = false;
+            $('#mrFind').value = ''; $('#mrKind').value = 'all';
+            $('#mrSort').value = 'new'; $('#mrMax').value = ceiling; $('#mrStock').checked = false;
+            draw();
+        });
+
+        // pull the live collection; the baked copy is already on screen meanwhile
+        mrRefresh = async (force) => {
+            if (!force && mrCached()) return;
+            const tag = $('#mrLive');
+            tag.className = 'mr-live'; tag.textContent = 'syncing\u2026'; tag.hidden = false;
+            try {
+                items = await mrFetchLive();
+                ceiling = fitControls();
+                draw();
+                tag.textContent = 'live'; tag.classList.add('ok');
+            } catch (err) {
+                tag.textContent = 'offline copy'; tag.classList.add('bad');
+            }
+        };
+        mrRefresh(false);
+
+        grid.addEventListener('click', (e) => {
+            const b = e.target.closest('[data-act]');
+            if (!b) return;
+            const item = items[+b.dataset.i];
+            // a size or colour has to be chosen before either action can mean anything
+            if (item.opts.length) return mrPickOpen(item, b.dataset.act);
+            const line = mrQuickLine(item);
+            if (!line) return;
+            if (b.dataset.act === 'buy') mrGo([line]);
+            else { mrAdd(line); mrFlash(b); }
+        });
+
+        $('#mrPickX').addEventListener('click', mrPickClose);
+        $('#mrPick').addEventListener('click', (e) => { if (e.target.id === 'mrPick') mrPickClose(); });
+        $('#mrPickOpts').addEventListener('change', (e) => {
+            const i = +e.target.dataset.oi;
+            MR.pick.sel[i] = e.target.value;
+            mrPickDraw();
+        });
+        $('#mrPickAdd').addEventListener('click', () => {
+            const line = mrPickLine();
+            if (line) { mrAdd(line); mrPickClose(); }
+        });
+        $('#mrPickBuy').addEventListener('click', () => {
+            const line = mrPickLine();
+            if (line) { mrGo([line]); mrPickClose(); }
+        });
+
+        $('#mrBag').addEventListener('click', () => { $('#mrCart').hidden = false; mrDrawCart(); });
+        $('#mrCartX').addEventListener('click', () => { $('#mrCart').hidden = true; });
+        $('#mrCart').addEventListener('click', (e) => { if (e.target.id === 'mrCart') $('#mrCart').hidden = true; });
+        $('#mrCartList').addEventListener('click', (e) => {
+            const t = e.target.closest('button');
+            if (!t) return;
+            if (t.dataset.inc) mrBump(t.dataset.inc, 1);
+            else if (t.dataset.dec) mrBump(t.dataset.dec, -1);
+            else if (t.dataset.del) { MR.cart = MR.cart.filter(l => l.v !== t.dataset.del); mrSave(); mrBadge(); mrDrawCart(); }
+        });
+        $('#mrCartGo').addEventListener('click', () => mrGo(MR.cart));
+        $('#mrCartView').addEventListener('click', () => mrGo(MR.cart, true));
+        $('#mrCartClear').addEventListener('click', () => { MR.cart = []; mrSave(); mrBadge(); mrDrawCart(); });
+
+        draw();
     }
+
+    function mrFlash(btn) {
+        btn.classList.add('ok');
+        const was = btn.textContent;
+        btn.textContent = 'added \u2713';
+        setTimeout(() => { btn.classList.remove('ok'); btn.textContent = was; }, 900);
+    }
+
 
     function renderAbout() {
         const data = window.CATALOG;
@@ -1206,6 +1845,109 @@
         const fs = fbFS();
         return fs && fs.elevated() ? '/root' : '/home/jones';
     };
+
+    /* ── notepad ──────────────────────────────────────────────────────
+       A GUI front end on the same storage the terminal editors use, so a
+       note written in nano shows up here and vice versa. */
+    const NP = { path: null };
+    const npAPI = () => window.ALTERTERM && window.ALTERTERM.notes;
+
+    function npStatus(msg, bad) {
+        const el = $('#npStatus');
+        if (!el) return;
+        el.textContent = msg || '';
+        el.classList.toggle('bad', !!bad);
+    }
+
+    function npRenderList() {
+        const api = npAPI(), ul = $('#npList');
+        if (!api || !ul) return;
+        const files = api.list();
+        if (!files.length) {
+            ul.innerHTML = '<li class="np-empty">no files yet</li>';
+            return;
+        }
+        ul.innerHTML = files.map(p => {
+            const name = p.slice(p.lastIndexOf('/') + 1);
+            const dir = p.slice(0, p.lastIndexOf('/'));
+            const on = p === NP.path ? ' on' : '';
+            return `<li class="np-item${on}" data-path="${esc(p)}">` +
+                `<i class="fas fa-file-alt"></i>` +
+                `<span class="np-item-name">${esc(name)}</span>` +
+                `<span class="np-item-dir">${esc(dir)}</span></li>`;
+        }).join('');
+    }
+
+    function npOpen(path) {
+        const api = npAPI();
+        if (!api) return;
+        const body = api.read(path);
+        if (body == null) return;
+        NP.path = path;
+        $('#npName').value = path;
+        $('#npArea').value = body;
+        npRenderList();
+        npStatus(`${body.split('\n').length} lines`);
+    }
+
+    function npNew() {
+        const api = npAPI();
+        NP.path = null;
+        $('#npName').value = (api ? api.home : '/home/jones') + '/';
+        $('#npArea').value = '';
+        npRenderList();
+        npStatus('');
+        $('#npName').focus();
+    }
+
+    function npSave() {
+        const api = npAPI();
+        if (!api) return npStatus('filesystem unavailable', true);
+        let path = $('#npName').value.trim();
+        if (!path || path.endsWith('/')) return npStatus('name the file first', true);
+        if (!path.startsWith('/')) path = api.home + '/' + path;
+        // renaming means the old file should go away
+        const old = NP.path;
+        const err = api.write(path, $('#npArea').value);
+        if (err) return npStatus(`${path}: ${err}`, true);
+        if (old && old !== path) api.remove(old);
+        NP.path = path;
+        $('#npName').value = path;
+        npRenderList();
+        npStatus(`saved ${path}`);
+    }
+
+    function npDelete() {
+        const api = npAPI();
+        if (!api || !NP.path) return npStatus('nothing to delete', true);
+        const gone = NP.path;
+        if (api.remove(gone)) return npStatus('cannot delete that', true);
+        npNew();
+        npStatus(`deleted ${gone}`);
+    }
+
+    function initNotepad() {
+        if (!$('#npArea')) return;
+        $('#npNew').addEventListener('click', npNew);
+        $('#npSave').addEventListener('click', npSave);
+        $('#npDel').addEventListener('click', npDelete);
+        $('#npList').addEventListener('click', (e) => {
+            const li = e.target.closest('.np-item');
+            if (li) npOpen(li.dataset.path);
+        });
+        $('#npArea').addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') { e.preventDefault(); npSave(); }
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const a = e.target, p = a.selectionStart;
+                a.value = a.value.slice(0, p) + '    ' + a.value.slice(a.selectionEnd);
+                a.setSelectionRange(p + 4, p + 4);
+            }
+        });
+        // the list can change from under us while the terminal is in use
+        $('#win-notepad')?.addEventListener('mouseenter', npRenderList);
+        npNew();
+    }
 
     function initFiles() {
         if (!$('#fbBody')) return;
@@ -1541,6 +2283,9 @@
         renderAbout();
         renderMerch();
         initFiles();
+        initNotepad();
+        refreshCatalog();
+        initVizFull();
         initDesktopSigils();
         initPanelSigils();
         initSettings();

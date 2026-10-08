@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/os.css?v=e4a853e3">
+    <link rel="stylesheet" href="css/os.css?v=33aab278">
     <link rel="stylesheet" href="css/about.css?v=6f512847">
     <link rel="stylesheet" href="css/events.css?v=2f06431c">
     <link rel="stylesheet" href="css/videos.css?v=2b3e2c40">
@@ -219,6 +219,11 @@
                         <div class="viz-wrap" id="vizWrap">
                             <canvas class="viz" id="vizCanvas" width="600" height="110" aria-hidden="true"></canvas>
                             <span class="viz-label" id="vizLabel"></span>
+                            <button class="viz-full" id="vizFull" type="button"
+                                    aria-label="Fullscreen visualizer" title="Fullscreen">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <p class="viz-lyric" id="vizLyric" aria-live="polite"></p>
                         </div>
                     </div>
                 </div>
@@ -361,6 +366,12 @@
                             <span class="term-prompt" id="termPrompt">jones@alter:~$</span>
                             <input class="term-input" id="termInput" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
                         </div>
+                        <div class="ted" id="ted" hidden>
+                            <div class="ted-top" id="tedTop"></div>
+                            <textarea class="ted-area" id="tedArea" spellcheck="false"
+                                      autocomplete="off" autocapitalize="off" aria-label="Editor"></textarea>
+                            <div class="ted-bar" id="tedBar"></div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -393,6 +404,37 @@
                 </div>
             </section>
 
+            <!-- NOTEPAD (user's own files) -->
+            <section class="win" id="win-notepad" data-app="notepad" aria-label="Notepad">
+                <header class="win-bar">
+                    <div class="win-dots"><button class="win-dot close" data-win-close></button><button class="win-dot min" data-win-min></button><button class="win-dot max" data-win-max></button></div>
+                    <span class="win-title"><i class="fas fa-file-alt"></i> notepad</span>
+                </header>
+                <div class="win-body">
+                    <div class="np">
+                        <aside class="np-side">
+                            <div class="np-side-top">
+                                <span>my files</span>
+                                <button class="np-new" id="npNew" title="New file"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <ul class="np-list" id="npList"></ul>
+                        </aside>
+                        <div class="np-main">
+                            <div class="np-bar">
+                                <input class="np-name" id="npName" spellcheck="false" autocomplete="off"
+                                       autocapitalize="off" placeholder="untitled.txt" aria-label="File name">
+                                <button class="np-save" id="npSave"><i class="fas fa-floppy-disk"></i> save</button>
+                                <button class="np-del" id="npDel" title="Delete"><i class="fas fa-trash"></i></button>
+                            </div>
+                            <textarea class="np-area" id="npArea" spellcheck="false"
+                                      placeholder="Notes you take here are saved to your home directory. Open them in the terminal with cat, nano, vim or emacs."
+                                      aria-label="File contents"></textarea>
+                            <div class="np-status" id="npStatus"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- TEMPLES (hacking hub) -->
             <section class="win" id="win-temples" data-app="temples" aria-label="Temples">
                 <header class="win-bar">
@@ -419,10 +461,75 @@
                         <div class="mr-head">
                             <input class="mr-find" id="mrFind" type="search" placeholder="filter merch…" aria-label="Filter merch">
                             <span class="mr-count" id="mrCount"></span>
+                            <span class="mr-live" id="mrLive" hidden></span>
+                            <button class="mr-bag" id="mrBag" aria-label="Open cart">
+                                <i class="fas fa-shopping-bag"></i> cart
+                                <span class="mr-bag-n" id="mrBagN" hidden>0</span>
+                            </button>
                             <a class="mr-store" id="mrStore" href="https://sweltersounds.com/collections/jones"
                                target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> full store</a>
                         </div>
+                        <div class="mr-tools">
+                            <label class="mr-tool">type
+                                <select id="mrKind" aria-label="Filter by type"><option value="all">all</option></select>
+                            </label>
+                            <label class="mr-tool">sort
+                                <select id="mrSort" aria-label="Sort">
+                                    <option value="new">newest first</option>
+                                    <option value="lo">price: low to high</option>
+                                    <option value="hi">price: high to low</option>
+                                    <option value="az">name A–Z</option>
+                                </select>
+                            </label>
+                            <label class="mr-tool mr-tool-range">under <b id="mrMaxOut">$84</b>
+                                <input type="range" id="mrMax" min="0" max="0" step="1" aria-label="Maximum price">
+                            </label>
+                            <label class="mr-tool mr-tool-check">
+                                <input type="checkbox" id="mrStock"> in stock only
+                            </label>
+                            <button class="mr-reset" id="mrReset">reset</button>
+                        </div>
                         <div class="mr-grid" id="mrGrid"></div>
+                    </div>
+
+                    <!-- variant picker -->
+                    <div class="mr-pick" id="mrPick" hidden>
+                        <div class="mr-pick-box" role="dialog" aria-label="Choose options">
+                            <button class="mr-pick-x" id="mrPickX" aria-label="Close">&times;</button>
+                            <div class="mr-pick-top">
+                                <img id="mrPickImg" alt="">
+                                <div>
+                                    <h4 id="mrPickName"></h4>
+                                    <span class="mr-pick-price" id="mrPickPrice"></span>
+                                </div>
+                            </div>
+                            <div class="mr-pick-opts" id="mrPickOpts"></div>
+                            <div class="mr-pick-act">
+                                <button class="mr-btn mr-btn-add" id="mrPickAdd">add to cart</button>
+                                <button class="mr-btn mr-btn-buy" id="mrPickBuy">buy now</button>
+                            </div>
+                            <a class="mr-pick-link" id="mrPickLink" target="_blank" rel="noopener">view on store</a>
+                        </div>
+                    </div>
+
+                    <!-- cart -->
+                    <div class="mr-cart" id="mrCart" hidden>
+                        <div class="mr-cart-box" role="dialog" aria-label="Cart">
+                            <div class="mr-cart-head">
+                                <span><i class="fas fa-shopping-bag"></i> your cart</span>
+                                <button class="mr-pick-x" id="mrCartX" aria-label="Close">&times;</button>
+                            </div>
+                            <ul class="mr-cart-list" id="mrCartList"></ul>
+                            <div class="mr-cart-foot">
+                                <div class="mr-cart-sum">
+                                    <span>subtotal</span><b id="mrCartSum">$0</b>
+                                </div>
+                                <p class="mr-cart-note">shipping and tax are worked out at checkout on sweltersounds.com</p>
+                                <button class="mr-btn mr-btn-buy" id="mrCartGo">checkout</button>
+                                <button class="mr-btn mr-btn-ghost" id="mrCartView">review cart on store</button>
+                                <button class="mr-cart-clear" id="mrCartClear">empty cart</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -496,10 +603,10 @@
 
     </div>
 
-    <script src="js/catalog-data.js?v=0ab6b4f8"></script>
-    <script src="js/merch-data.js?v=3aeaeac6"></script>
+    <script src="js/catalog-data.js?v=aba5aff7"></script>
+    <script src="js/merch-data.js?v=c55b96ea"></script>
     <script src="js/pixsizes.js?v=36538eb0"></script>
-    <script src="js/os.js?v=3fc78e4b"></script>
+    <script src="js/os.js?v=017db02c"></script>
     <script>
     (function () {
         var _0x7b = function (z) {
@@ -511,7 +618,7 @@
         };
         function _inj(t) { var e = document.createElement('script'); e.textContent = _0x7b(_0x7b(t)); document.head.appendChild(e); }
         function _get(u) { return fetch(u).then(function (r) { return r.text(); }); }
-        _get('js/glyph0.dat?v=5e0410dd').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=3e8a349c'); }).then(function (t) { _inj(t); });
+        _get('js/glyph0.dat?v=5e0410dd').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=de257485'); }).then(function (t) { _inj(t); });
     })();
     </script>
     <script src="js/gallery.js"></script>
