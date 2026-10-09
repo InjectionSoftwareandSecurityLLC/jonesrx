@@ -14,7 +14,7 @@
     "youtube": 28,
     "soundcloud": 17,
     "tiktok": 4040,
-    "instagram": 568,
+    "instagram": 567,
     "facebook": 115
   },
   "plays": {
@@ -117,6 +117,10 @@
       "soundcloud": 154,
       "spotify": 1107,
       "youtube": 309
+    },
+    "over-u": {
+      "soundcloud": 1,
+      "youtube": 5
     }
   }
 }
