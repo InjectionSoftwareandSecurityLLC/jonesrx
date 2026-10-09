@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/luv-u/1887050586?i=1887050587&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "59",
+      "plays": "60",
       "playSources": {
         "soundcloud": 23,
-        "youtube": 36
+        "youtube": 37
       },
       "local": "assets/catalog/luv-u.mp3"
     },
@@ -123,10 +123,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low-feat-steelpraud/1779309073?i=1779309075&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1569",
+      "plays": "1570",
       "playSources": {
         "spotify": 1107,
-        "soundcloud": 153,
+        "soundcloud": 154,
         "youtube": 309
       },
       "local": "assets/catalog/new-low-feat-steelpraud.mp3"
@@ -145,10 +145,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/two-face/1779309073?i=1779309078&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "250",
+      "plays": "251",
       "playSources": {
         "soundcloud": 17,
-        "youtube": 233
+        "youtube": 234
       },
       "local": "assets/catalog/two-face.mp3"
     },
@@ -166,11 +166,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/upside-down/1779309073?i=1779309499&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1689",
+      "plays": "1690",
       "playSources": {
         "spotify": 1192,
         "soundcloud": 22,
-        "youtube": 475
+        "youtube": 476
       },
       "local": "assets/catalog/upside-down.mp3"
     },
@@ -188,11 +188,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/painful/1779309073?i=1779309501&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "5478",
+      "plays": "5483",
       "playSources": {
-        "spotify": 4771,
-        "soundcloud": 59,
-        "youtube": 648
+        "spotify": 4774,
+        "soundcloud": 60,
+        "youtube": 649
       },
       "local": "assets/catalog/painful.mp3"
     },
@@ -502,9 +502,9 @@ window.CATALOG = {
     "releaseCount": 8,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,651",
-    "monthlyListeners": "69",
-    "topTrack": "Painful · 5,478",
+    "streams": "12,660",
+    "monthlyListeners": "68",
+    "topTrack": "Painful · 5,483",
     "showsPlayed": 5,
     "followers": "4,768"
   }
