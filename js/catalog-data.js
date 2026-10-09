@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/luv-u/1887050586?i=1887050587&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "58",
+      "plays": "59",
       "playSources": {
         "soundcloud": 23,
-        "youtube": 35
+        "youtube": 36
       },
       "local": "assets/catalog/luv-u.mp3"
     },
@@ -123,10 +123,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low-feat-steelpraud/1779309073?i=1779309075&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1568",
+      "plays": "1569",
       "playSources": {
         "spotify": 1107,
-        "soundcloud": 152,
+        "soundcloud": 153,
         "youtube": 309
       },
       "local": "assets/catalog/new-low-feat-steelpraud.mp3"
@@ -188,9 +188,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/painful/1779309073?i=1779309501&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "5476",
+      "plays": "5478",
       "playSources": {
-        "spotify": 4769,
+        "spotify": 4771,
         "soundcloud": 59,
         "youtube": 648
       },
@@ -502,9 +502,9 @@ window.CATALOG = {
     "releaseCount": 8,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,647",
+    "streams": "12,651",
     "monthlyListeners": "69",
-    "topTrack": "Painful · 5,476",
+    "topTrack": "Painful · 5,478",
     "showsPlayed": 5
   }
 };
