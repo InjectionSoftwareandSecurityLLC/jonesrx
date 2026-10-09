@@ -266,6 +266,92 @@ def youtube(by_key, sources):
         print(f"  lookup failed ({e})\n")
 
 
+# -- follower counts -------------------------------------------------
+# Profiles the About "followers" stat aggregates. Each platform only yields its
+# count to a particular caller: TikTok embeds it in page JSON, while Instagram
+# and Facebook only put it in the og:description they serve to link-preview
+# crawlers - hence the per-platform user agents.
+TIKTOK_URL = "https://www.tiktok.com/@jonesrx"
+INSTAGRAM_URL = "https://www.instagram.com/itsjonesrx/"
+FACEBOOK_URL = "https://www.facebook.com/people/Jones-RX/100072044476434/"
+CRAWLER_UA = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+FB_UA = "facebookexternalhit/1.1"
+
+
+def _count(s):
+    """'1,234' / '1.2K' / '3.4M' -> int."""
+    m = re.match(r"([\d.,]+)\s*([KMB]?)", s.strip(), re.I)
+    if not m:
+        return None
+    v = float(m.group(1).replace(",", ""))
+    v *= {"k": 1e3, "m": 1e6, "b": 1e9}.get(m.group(2).lower(), 1)
+    return int(round(v))
+
+
+def sc_followers():
+    """SoundCloud publishes followers_count in the profile page hydration JSON."""
+    m = re.search(r'"followers_count":\s*(\d+)', get("https://soundcloud.com/jonesrx"))
+    return int(m.group(1)) if m else None
+
+
+def tiktok_followers():
+    m = re.search(r'"followerCount":\s*(\d+)', get(TIKTOK_URL))
+    return int(m.group(1)) if m else None
+
+
+def ig_followers():
+    html = get(INSTAGRAM_URL, headers={"User-Agent": CRAWLER_UA,
+                                       "Accept-Language": "en-US,en;q=0.9"})
+    m = re.search(r'og:description" content="([\d.,KMB]+)\s+Followers', html, re.I)
+    return _count(m.group(1)) if m else None
+
+
+def fb_followers():
+    m = re.search(r"([\d.,KMB]+)\s+followers", get(FACEBOOK_URL, headers={"User-Agent": FB_UA}), re.I)
+    return _count(m.group(1)) if m else None
+
+
+def yt_subscribers():
+    """YouTube subscriber count via the Data API, reusing the key videos.js ships."""
+    key, chan, playlists = yt_config()
+    if not key:
+        return None
+    api = "https://www.googleapis.com/youtube/v3/"
+    if not chan and playlists:
+        # resolve the channel id from the first upload when it wasn't supplied
+        d = json.loads(get(f"{api}playlistItems?part=snippet&maxResults=1"
+                           f"&playlistId={playlists[0]}&key={key}"))
+        items = d.get("items") or []
+        chan = items[0]["snippet"]["channelId"] if items else None
+    if not chan:
+        return None
+    d = json.loads(get(f"{api}channels?part=statistics&id={chan}&key={key}"))
+    items = d.get("items") or []
+    if not items or items[0]["statistics"].get("hiddenSubscriberCount"):
+        return None
+    sub = items[0]["statistics"].get("subscriberCount")
+    return int(sub) if sub is not None else None
+
+
+def followers(block):
+    """Refresh every social follower count; a failed read keeps the prior value
+    so a transient block or rate-limit never zeroes the aggregate."""
+    print("followers:")
+    for name, fn in (("soundcloud", sc_followers), ("tiktok", tiktok_followers),
+                     ("instagram", ig_followers), ("facebook", fb_followers),
+                     ("youtube", yt_subscribers)):
+        try:
+            n = fn()
+            if n is not None:
+                block[name] = n
+                print(f"  {name:<11}{n:>9,}")
+            else:
+                print(f"  {name:<11}{'--':>9}  (not found; kept {block.get(name)})")
+        except Exception as e:
+            print(f"  {name:<11}{'--':>9}  (failed: {e}; kept {block.get(name)})")
+    print()
+
+
 def main():
     only = None
     if "--only" in sys.argv:
@@ -286,6 +372,8 @@ def main():
         spotify(by_key, sources, data["totals"])
     if only in (None, "youtube"):
         youtube(by_key, sources)
+    if only in (None, "followers"):
+        followers(data.setdefault("followers", {}))
 
     # Spotify treats an alias pair as one song, so mirror that component only;
     # the other platforms list them separately and are summed on their own

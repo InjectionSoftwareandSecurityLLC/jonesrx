@@ -1796,9 +1796,10 @@
 
             // only render figures we actually have; blanks stay out of the panel
             const cells = [
-                ['streams', s.streams], ['tracks', s.trackCount], ['releases', s.releaseCount],
-                ['runtime', runtime], ['monthly', s.monthlyListeners], ['top track', s.topTrack],
-                ['shows', s.showsPlayed],
+                ['streams', s.streams], ['total followers', s.followers],
+                ['tracks', s.trackCount], ['releases', s.releaseCount],
+                ['runtime', runtime], ['monthly', s.monthlyListeners],
+                ['top track', s.topTrack], ['shows', s.showsPlayed],
                 ['active', years ? years + (years === 1 ? ' yr' : ' yrs') : ''],
                 ['since', s.firstYear], ['latest', s.latestYear]
             ].filter(([, v]) => v !== '' && v != null);
