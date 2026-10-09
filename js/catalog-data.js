@@ -5,6 +5,27 @@ window.CATALOG = {
   "artist": "Jones RX",
   "tracks": [
     {
+      "slug": "over-u",
+      "title": "Over U",
+      "album": "Over U",
+      "year": "2026",
+      "released": "2026-10-09",
+      "durationMs": 228624,
+      "duration": "3:48",
+      "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c2/e7/bd/c2e7bd9c-e0c1-ee74-3643-7824a2389746/artwork.jpg/600x600bb.jpg",
+      "disc": 1,
+      "trackNumber": 1,
+      "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
+      "spotifyUrl": "",
+      "popularity": null,
+      "plays": "6",
+      "playSources": {
+        "soundcloud": 1,
+        "youtube": 5
+      },
+      "local": "assets/catalog/over-u.mp3"
+    },
+    {
       "slug": "luv-u",
       "title": "Luv U",
       "album": "Luv U",
@@ -409,6 +430,17 @@ window.CATALOG = {
   ],
   "releases": [
     {
+      "slug": "over-u-single",
+      "title": "Over U",
+      "kind": "Single",
+      "year": "2026",
+      "released": "2026-10-09",
+      "trackCount": 1,
+      "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c2/e7/bd/c2e7bd9c-e0c1-ee74-3643-7824a2389746/artwork.jpg/600x600bb.jpg",
+      "appleUrl": "https://music.apple.com/us/album/over-u/6821119879",
+      "spotifyUrl": "https://open.spotify.com/search/Over%20U%20Jones%20RX"
+    },
+    {
       "slug": "luv-u-single",
       "title": "Luv U",
       "kind": "Single",
@@ -498,14 +530,14 @@ window.CATALOG = {
     }
   ],
   "stats": {
-    "trackCount": 19,
-    "releaseCount": 8,
+    "trackCount": 20,
+    "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,660",
+    "streams": "12,666",
     "monthlyListeners": "68",
     "topTrack": "Painful · 5,483",
     "showsPlayed": 5,
-    "followers": "4,768"
+    "followers": "4,767"
   }
 };

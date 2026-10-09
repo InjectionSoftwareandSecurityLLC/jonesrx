@@ -50,6 +50,38 @@ def itunes(entity):
     return fetch(f"https://itunes.apple.com/lookup?id={ARTIST_ID}&entity={entity}&limit=200")["results"]
 
 
+def itunes_search_songs():
+    """Apple links a new release to the artist lookup up to a day after it is
+    searchable, so a single is live before the site's feed sees it. Pull the
+    artist's songs from the search index (filtered to our exact id) to backfill."""
+    url = ("https://itunes.apple.com/search?term=Jones+RX&attribute=artistTerm"
+           "&entity=song&limit=200")
+    return [r for r in fetch(url).get("results", [])
+            if r.get("artistId") == int(ARTIST_ID) and r.get("wrapperType") == "track"]
+
+
+def backfill(songs, albums):
+    """Add any searchable song/collection the artist lookup hasn't linked yet."""
+    have_song = {slug(s.get("trackName", "")) for s in songs}
+    have_coll = {a.get("collectionId") for a in albums}
+    synth = {}
+    for r in itunes_search_songs():
+        if slug(r.get("trackName", "")) not in have_song:
+            songs.append(r)
+        cid = r.get("collectionId")
+        if cid and cid not in have_coll and cid not in synth:
+            synth[cid] = {
+                "wrapperType": "collection", "collectionId": cid,
+                "collectionName": r.get("collectionName", ""),
+                "releaseDate": r.get("releaseDate", ""),
+                "trackCount": r.get("trackCount") or 1,
+                "artworkUrl100": r.get("artworkUrl100", ""),
+                "collectionViewUrl": (r.get("collectionViewUrl", "") or "").split("?")[0],
+            }
+    albums.extend(synth.values())
+    return songs, albums
+
+
 # -- shows played, via Bandsintown -------------------------------------
 def previous_shows():
     """The figure already published, so a failed lookup can fall back to it."""
@@ -156,6 +188,10 @@ def spotify_enrich(tracks, releases):
 def main():
     songs = [r for r in itunes("song") if r.get("wrapperType") == "track"]
     albums = [r for r in itunes("album") if r.get("wrapperType") == "collection"]
+    try:
+        songs, albums = backfill(songs, albums)
+    except Exception as e:
+        print(f"  search backfill skipped ({e})")
 
     manual = json.loads(MANUAL.read_text()) if MANUAL.exists() else {}
     plays, totals = manual.get("plays", {}), manual.get("totals", {})

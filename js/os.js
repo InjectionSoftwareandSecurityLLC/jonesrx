@@ -1209,6 +1209,16 @@
         });
         releases.sort((a, b) => (b.released || '').localeCompare(a.released || ''));
 
+        // never let a transient live gap drop something the build already shipped:
+        // keep any baked track/release the live feed is missing, keyed by slug
+        const haveT = new Set(tracks.map(t => t.slug));
+        (baked.tracks || []).forEach(t => { if (!haveT.has(t.slug)) tracks.push(t); });
+        tracks.sort((a, b) => (a.disc - b.disc) || (a.trackNumber - b.trackNumber));
+        tracks.sort((a, b) => (b.released || '').localeCompare(a.released || ''));
+        const haveR = new Set(releases.map(r => r.slug));
+        (baked.releases || []).forEach(r => { if (!haveR.has(r.slug)) releases.push(r); });
+        releases.sort((a, b) => (b.released || '').localeCompare(a.released || ''));
+
         const years = tracks.map(t => t.year).filter(Boolean).sort();
         return {
             generated: true,
@@ -1229,11 +1239,35 @@
             if (!r.ok) throw new Error('itunes ' + r.status);
             return (await r.json()).results || [];
         };
-        const [songs, albums] = await Promise.all([grab('song'), grab('album')]);
-        const data = catShape(
-            songs.filter(x => x.wrapperType === 'track'),
-            albums.filter(x => x.wrapperType === 'collection'),
-            baked);
+        // Apple links a new release to the artist lookup a day or so after it's
+        // searchable; backfill from the search index (our exact id only) so a
+        // single appears the day it lands instead of waiting for that link.
+        const search = async () => {
+            try {
+                const r = await fetch('https://itunes.apple.com/search?term=Jones+RX' +
+                    '&attribute=artistTerm&entity=song&limit=200');
+                if (!r.ok) return [];
+                return ((await r.json()).results || []).filter(x =>
+                    x.artistId === 1776303110 && x.wrapperType === 'track');
+            } catch (e) { return []; }
+        };
+        const [songsRaw, albumsRaw, found] = await Promise.all([grab('song'), grab('album'), search()]);
+        const songs = songsRaw.filter(x => x.wrapperType === 'track');
+        const albums = albumsRaw.filter(x => x.wrapperType === 'collection');
+        const haveSong = new Set(songs.map(s => catSlug(s.trackName || '')));
+        const haveColl = new Set(albums.map(a => a.collectionId));
+        const synth = {};
+        found.forEach(r => {
+            if (!haveSong.has(catSlug(r.trackName || ''))) songs.push(r);
+            const cid = r.collectionId;
+            if (cid && !haveColl.has(cid) && !synth[cid]) synth[cid] = {
+                wrapperType: 'collection', collectionId: cid,
+                collectionName: r.collectionName, releaseDate: r.releaseDate,
+                trackCount: r.trackCount || 1, artworkUrl100: r.artworkUrl100,
+                collectionViewUrl: (r.collectionViewUrl || '').split('?')[0]
+            };
+        });
+        const data = catShape(songs, albums.concat(Object.values(synth)), baked);
         if (!data.tracks.length) throw new Error('itunes empty');
         return data;
     }
