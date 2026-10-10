@@ -538,6 +538,6 @@ window.CATALOG = {
     "monthlyListeners": "68",
     "topTrack": "Painful · 5,483",
     "showsPlayed": 5,
-    "followers": "4,769"
+    "followers": "729"
   }
 };
