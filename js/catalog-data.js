@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "6",
+      "plays": "9",
       "playSources": {
         "soundcloud": 1,
-        "youtube": 5
+        "youtube": 8
       },
       "local": "assets/catalog/over-u.mp3"
     },
@@ -166,10 +166,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/two-face/1779309073?i=1779309078&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "251",
+      "plays": "252",
       "playSources": {
         "soundcloud": 17,
-        "youtube": 234
+        "youtube": 235
       },
       "local": "assets/catalog/two-face.mp3"
     },
@@ -534,7 +534,7 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,666",
+    "streams": "12,670",
     "monthlyListeners": "68",
     "topTrack": "Painful · 5,483",
     "showsPlayed": 5,

@@ -1,199 +1,235 @@
 1
-00:00:10,240 --> 00:00:11,753
+00:00:10,368 --> 00:00:12,201
 You know I might have a death wish
 
 2
-00:00:11,753 --> 00:00:13,320
-But I’m always on the guest list
+00:00:12,201 --> 00:00:14,368
+Always on the guest list, real talk now
 
 3
-00:00:13,320 --> 00:00:15,620
-Real talk now I still know you’ve haven’t heard shit
+00:00:14,368 --> 00:00:15,852
+I still know you haven't heard shit
 
 4
-00:00:15,620 --> 00:00:17,407
-But I think it’s worthless
+00:00:15,852 --> 00:00:17,019
+But I think it's worthless
 
 5
-00:00:17,407 --> 00:00:23,840
-Probably don’t deserve this
+00:00:17,019 --> 00:00:18,185
+Probably don't deserve this
 
 6
-00:00:23,840 --> 00:00:24,090
-Could you please pipe down,
+00:00:18,185 --> 00:00:19,288
+Could you please pipe down
 
 7
-00:00:24,090 --> 00:00:24,490
-‘Fore I take this shot I can’t miss
+00:00:19,288 --> 00:00:20,928
+'Fore I take this shot I can't miss
 
 8
-00:00:24,490 --> 00:00:24,790
+00:00:20,928 --> 00:00:22,078
 Like God damn I wanna be
 
 9
-00:00:24,790 --> 00:00:24,990
+00:00:22,078 --> 00:00:23,084
 Just like Tiffany Day
 
 10
-00:00:24,990 --> 00:00:25,190
+00:00:23,084 --> 00:00:23,928
 Queuing up a track
 
 11
-00:00:25,190 --> 00:00:25,440
+00:00:23,928 --> 00:00:25,037
 Just to watch it replay
 
 12
-00:00:25,440 --> 00:00:26,175
-I wanna make ‘em all mad
+00:00:25,037 --> 00:00:26,367
+I wanna make 'em all mad
 
 13
-00:00:26,380 --> 00:00:27,688
-That I’m rockin’ this stage
+00:00:26,367 --> 00:00:27,808
+That I'm rocking this stage
 
 14
-00:00:27,980 --> 00:00:28,688
-Listen to their chants
+00:00:27,808 --> 00:00:28,848
+Listen to the chants
 
 15
-00:00:28,688 --> 00:00:30,160
+00:00:28,848 --> 00:00:30,201
 Are they screaming my name?
 
 16
-00:00:30,160 --> 00:00:31,260
+00:00:30,201 --> 00:00:31,192
 God damn I wanna be
 
 17
-00:00:31,260 --> 00:00:32,700
+00:00:31,192 --> 00:00:32,288
 Just like Tiffany Day
 
 18
-00:00:32,700 --> 00:00:33,860
+00:00:32,288 --> 00:00:33,777
 Queuing up a track
 
 19
-00:00:34,040 --> 00:00:35,180
+00:00:33,777 --> 00:00:35,432
 Just to watch it replay
 
 20
-00:00:35,380 --> 00:00:36,375
-I wanna make ‘em all mad
+00:00:35,432 --> 00:00:36,677
+I wanna make 'em all mad
 
 21
-00:00:36,580 --> 00:00:37,868
-That I’m rockin’ this stage
+00:00:36,677 --> 00:00:38,077
+That I'm rocking this stage
 
 22
-00:00:38,160 --> 00:00:38,880
-Listen to their chants
+00:00:38,077 --> 00:00:39,395
+Listen to the chants
 
 23
-00:00:38,880 --> 00:00:41,220
+00:00:39,395 --> 00:00:41,174
 Are they screaming my name?
 
 24
-00:00:41,220 --> 00:00:43,620
-I know you’ve never heard me before
+00:00:41,174 --> 00:00:43,432
+I know you've never heard of me before
 
 25
-00:00:43,720 --> 00:00:46,140
-But I’m the one you don’t want to ignore
+00:00:43,432 --> 00:00:45,432
+But I'm the one you don't want to ignore
 
 26
-00:00:46,140 --> 00:00:48,540
-Keep me in check cause I’ll open every door
+00:00:45,432 --> 00:00:48,432
+Keep me in check cause I'll open every door
 
 27
-00:00:48,620 --> 00:00:49,840
+00:00:48,432 --> 00:00:49,995
 I just wanted something more
 
 28
-00:00:49,920 --> 00:00:51,260
-I just want be adored
+00:00:49,995 --> 00:00:51,432
+I just want to be adored
 
 29
-00:00:51,760 --> 00:00:53,120
+00:00:51,432 --> 00:00:52,718
 Like is that so bad?
 
 30
-00:00:53,360 --> 00:00:55,550
-Could you remind of what I have?
+00:00:52,718 --> 00:00:54,968
+Could you remind me of what I have?
 
 31
-00:00:55,900 --> 00:00:58,120
+00:00:54,968 --> 00:00:57,604
 How do I make songs that sound like that?
 
 32
-00:00:58,180 --> 00:01:00,640
+00:00:57,604 --> 00:01:00,496
 Is it really enough or should I pack my bags?
 
 33
-00:01:10,880 --> 00:01:14,620
-Or not?
-
-34
-00:01:14,660 --> 00:01:17,240
-Are they screaming my name or not?
-
-35
-00:01:20,760 --> 00:01:22,060
+00:01:00,496 --> 00:01:02,020
 Like God damn I wanna be
 
-36
-00:01:22,060 --> 00:01:23,473
+34
+00:01:02,020 --> 00:01:03,353
 Just like Tiffany Day
+
+35
+00:01:03,353 --> 00:01:04,496
+Queuing up a track
+
+36
+00:01:04,496 --> 00:01:05,677
+Just to watch it replay
 
 37
-00:01:23,473 --> 00:01:24,633
-Queuing up a track
+00:01:05,677 --> 00:01:06,909
+I wanna make 'em all mad
 
 38
-00:01:24,820 --> 00:01:26,060
-Just to watch it replay
+00:01:06,909 --> 00:01:08,296
+That I'm rocking this stage
 
 39
-00:01:26,080 --> 00:01:27,130
-I wanna make ‘em all mad
+00:01:08,296 --> 00:01:09,555
+Listen to the chants
 
 40
-00:01:27,340 --> 00:01:28,628
-That I’m rockin’ this stage
-
-41
-00:01:28,920 --> 00:01:29,656
-Listen to their chants
-
-42
-00:01:29,656 --> 00:01:31,120
+00:01:09,555 --> 00:01:11,255
 Are they screaming my name?
 
+41
+00:01:11,255 --> 00:01:11,696
+Or not?
+
+42
+00:01:14,496 --> 00:01:18,425
+Are you screaming my name or not?
+
 43
-00:01:31,120 --> 00:01:32,220
-God damn I wanna be
+00:01:18,425 --> 00:01:19,496
+Yeah yeah
 
 44
-00:01:32,220 --> 00:01:33,660
-Just like Tiffany Day
+00:01:19,560 --> 00:01:21,693
+Like God damn I wanna be
 
 45
-00:01:33,660 --> 00:01:34,960
-Queuing up a track
+00:01:21,693 --> 00:01:23,560
+Just like Tiffany Day
 
 46
-00:01:35,220 --> 00:01:36,160
-Just to watch it replay
+00:01:23,560 --> 00:01:24,438
+Queuing up a track
 
 47
-00:01:36,260 --> 00:01:37,430
-I wanna make ‘em all mad
+00:01:24,438 --> 00:01:25,560
+Just to watch it replay
 
 48
-00:01:37,520 --> 00:01:38,804
-That I’m rockin’ this stage
+00:01:25,560 --> 00:01:26,972
+I wanna make 'em all mad
 
 49
-00:01:39,100 --> 00:01:39,804
-Listen to their chants
+00:01:26,972 --> 00:01:28,560
+That I'm rocking this stage
 
 50
-00:01:39,804 --> 00:01:51,360
+00:01:28,560 --> 00:01:29,411
+Listen to the chants
+
+51
+00:01:29,411 --> 00:01:30,560
+Are they screaming my name?
+
+52
+00:01:30,560 --> 00:01:31,985
+God damn I wanna be
+
+53
+00:01:31,985 --> 00:01:33,560
+Just like Tiffany Day
+
+54
+00:01:33,560 --> 00:01:34,438
+Queuing up a track
+
+55
+00:01:34,438 --> 00:01:35,560
+Just to watch it replay
+
+56
+00:01:35,560 --> 00:01:36,972
+I wanna make 'em all mad
+
+57
+00:01:36,972 --> 00:01:38,560
+That I'm rocking this stage
+
+58
+00:01:38,560 --> 00:01:39,837
+Listen to the chants
+
+59
+00:01:39,837 --> 00:01:41,560
 Are they screaming my name?
