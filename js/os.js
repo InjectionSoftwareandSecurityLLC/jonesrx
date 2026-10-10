@@ -1193,8 +1193,9 @@
             // the build slugs the raw name, suffix and all ("luv-u-single")
             const slug = catSlug(raw);
             const was = prevRel[slug] || {};
-            // python's quote() leaves "/" alone; encodeURIComponent doesn't
-            const q = encodeURIComponent(`${catBare(raw)} Jones RX`).replace(/%2F/g, '/');
+            // baked spotifyUrl (direct link from the build) wins; the search
+            // fallback is only for a release the build hasn't shipped yet
+            const q = encodeURIComponent(`${catBare(raw)} Jones RX`);
             return {
                 slug,
                 title: catBare(raw),

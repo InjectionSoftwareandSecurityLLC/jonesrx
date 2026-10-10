@@ -4,6 +4,18 @@
   "aliases": {
     "new-low-feat-steelpraud": "new-low"
   },
+  "_spotify": "Direct Spotify album links keyed by base-title slug. Unlike Apple's open lookup API, Spotify's needs credentials, so these are scraped once from the artist's public discography and merged by tools/fetch_catalog.py, winning over the search-link fallback. Add a line when a new single drops.",
+  "spotify": {
+    "over-u": "https://open.spotify.com/album/6rfY7SER3GjwsD21dOWqNi",
+    "luv-u": "https://open.spotify.com/album/69Rewb6yMRlXlxg1mDdtk4",
+    "crash-out": "https://open.spotify.com/album/3H4bmYQDEMVmwL7rixxBH1",
+    "give-up-go-home": "https://open.spotify.com/album/2CyuJqpTvfXxhxH0AM5BoN",
+    "drop-dead": "https://open.spotify.com/album/66QCE2pckQZefg2FMtPePK",
+    "lost-ctrl": "https://open.spotify.com/album/50GZPQDIuGOajgQSlGJMsS",
+    "new-low": "https://open.spotify.com/album/0G1i2wU2ImWkPeakdprmUO",
+    "toxic": "https://open.spotify.com/album/2Z7Wq1EbqPh149U1a27T9N",
+    "starstruck": "https://open.spotify.com/album/0xoz5xtJHPvG0iOfJIoq1s"
+  },
   "totals": {
     "streams": "",
     "monthlyListeners": "68",
@@ -14,7 +26,7 @@
     "youtube": 28,
     "soundcloud": 17,
     "tiktok": 4040,
-    "instagram": 567,
+    "instagram": 569,
     "facebook": 115
   },
   "plays": {
@@ -119,7 +131,7 @@
       "youtube": 309
     },
     "over-u": {
-      "soundcloud": 1,
+      "soundcloud": 2,
       "youtube": 8
     }
   }

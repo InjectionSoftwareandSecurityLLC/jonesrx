@@ -196,6 +196,7 @@ def main():
     manual = json.loads(MANUAL.read_text()) if MANUAL.exists() else {}
     plays, totals = manual.get("plays", {}), manual.get("totals", {})
     sources = manual.get("sources", {})
+    sp_manual = manual.get("spotify", {})
     # one aggregate follower count across every social platform we track
     follow = manual.get("followers", {})
     total_followers = sum(int(follow[k]) for k in
@@ -264,9 +265,12 @@ def main():
 
     spotify_enrich(tracks, releases)
 
-    for r in releases:                     # anything unmatched still gets a usable link
-        if not r["spotifyUrl"]:
-            q = urllib.parse.quote(f"{r['title']} Jones RX")
+    for r in releases:                     # hand-scraped direct link wins; else a usable search fallback
+        manual_url = sp_manual.get(slug(r["title"]))
+        if manual_url:
+            r["spotifyUrl"] = manual_url
+        elif not r["spotifyUrl"]:
+            q = urllib.parse.quote(f"{r['title']} Jones RX", safe="")
             r["spotifyUrl"] = f"https://open.spotify.com/search/{q}"
 
     if "--slugs" in sys.argv:

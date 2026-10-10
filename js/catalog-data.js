@@ -18,9 +18,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "9",
+      "plays": "10",
       "playSources": {
-        "soundcloud": 1,
+        "soundcloud": 2,
         "youtube": 8
       },
       "local": "assets/catalog/over-u.mp3"
@@ -438,7 +438,7 @@ window.CATALOG = {
       "trackCount": 1,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c2/e7/bd/c2e7bd9c-e0c1-ee74-3643-7824a2389746/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879",
-      "spotifyUrl": "https://open.spotify.com/search/Over%20U%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/6rfY7SER3GjwsD21dOWqNi"
     },
     {
       "slug": "luv-u-single",
@@ -449,7 +449,7 @@ window.CATALOG = {
       "trackCount": 1,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/d2/9e/d6/d29ed66a-7dbc-c57f-6951-6b5b722b68c6/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/luv-u-single/1887050586?uo=4",
-      "spotifyUrl": "https://open.spotify.com/search/Luv%20U%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/69Rewb6yMRlXlxg1mDdtk4"
     },
     {
       "slug": "crash-out-single",
@@ -460,7 +460,7 @@ window.CATALOG = {
       "trackCount": 1,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/f1/b4/45/f1b445db-b24d-6d7a-3cee-bb590a1c6480/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/crash-out-single/1822544140?uo=4",
-      "spotifyUrl": "https://open.spotify.com/search/Crash%20Out%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/3H4bmYQDEMVmwL7rixxBH1"
     },
     {
       "slug": "give-up-go-home-single",
@@ -471,7 +471,7 @@ window.CATALOG = {
       "trackCount": 1,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/ca/e1/9f/cae19f4e-8e9d-4270-0f86-95803b8fb7bf/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/give-up-go-home-single/1801621920?uo=4",
-      "spotifyUrl": "https://open.spotify.com/search/Give%20Up%20/%20Go%20Home%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/2CyuJqpTvfXxhxH0AM5BoN"
     },
     {
       "slug": "drop-dead-single",
@@ -482,7 +482,7 @@ window.CATALOG = {
       "trackCount": 1,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/65/81/ef/6581ef50-660f-48a4-52c2-5f580b18c0a9/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/drop-dead-single/1776439287?uo=4",
-      "spotifyUrl": "https://open.spotify.com/search/DROP%20DEAD%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/66QCE2pckQZefg2FMtPePK"
     },
     {
       "slug": "lost-ctrl",
@@ -493,7 +493,7 @@ window.CATALOG = {
       "trackCount": 7,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/9a/41/da/9a41da6b-b9e6-0066-2a43-203756eb9b0c/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/lost-ctrl/1779309073?uo=4",
-      "spotifyUrl": "https://open.spotify.com/search/Lost%20CTRL%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/50GZPQDIuGOajgQSlGJMsS"
     },
     {
       "slug": "new-low-single",
@@ -504,7 +504,7 @@ window.CATALOG = {
       "trackCount": 1,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/98/75/ea/9875ea39-3fbd-cbdd-9b2b-bd31c4dedadb/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/new-low-single/1778561254?uo=4",
-      "spotifyUrl": "https://open.spotify.com/search/New%20Low%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/0G1i2wU2ImWkPeakdprmUO"
     },
     {
       "slug": "toxic-single",
@@ -515,7 +515,7 @@ window.CATALOG = {
       "trackCount": 3,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/e2/e4/52/e2e45265-01ad-26fb-b943-20341d5daf86/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/toxic-single/1778545382?uo=4",
-      "spotifyUrl": "https://open.spotify.com/search/TOXIC%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/2Z7Wq1EbqPh149U1a27T9N"
     },
     {
       "slug": "starstruck-ep",
@@ -526,7 +526,7 @@ window.CATALOG = {
       "trackCount": 4,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/5e/ca/4b/5eca4ba3-9e67-4284-02f0-7bde6b456a54/artwork.jpg/600x600bb.jpg",
       "appleUrl": "https://music.apple.com/us/album/starstruck-ep/1778581995?uo=4",
-      "spotifyUrl": "https://open.spotify.com/search/Starstruck%20Jones%20RX"
+      "spotifyUrl": "https://open.spotify.com/album/0xoz5xtJHPvG0iOfJIoq1s"
     }
   ],
   "stats": {
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,670",
+    "streams": "12,671",
     "monthlyListeners": "68",
     "topTrack": "Painful · 5,483",
     "showsPlayed": 5,
-    "followers": "4,767"
+    "followers": "4,769"
   }
 };
