@@ -1099,8 +1099,11 @@ body.is-mobile .mr-reset { margin-left: 0; }
 }
 .fb-viewer-inner {
     flex: 1 1 auto; width: 100%; min-height: 0; max-width: 100%; overflow: auto;
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: flex-start;
 }
+/* auto margins center content but let tall items (long lyrics) scroll from the top;
+   align-items:center would clip the overflow above the scroll box */
+.fb-viewer-inner > * { margin: auto; }
 .fb-viewer-foot {
     flex: 0 0 auto; display: flex; align-items: center; justify-content: center;
     gap: 14px; flex-wrap: wrap;
