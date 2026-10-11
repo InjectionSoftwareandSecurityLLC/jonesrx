@@ -5,7 +5,7 @@
 
 @font-face {
     font-family: "Neon";
-    src: url('fonts/neon_font.ttf') format("truetype"),
+    src: url('../fonts/neon_font.ttf') format("truetype"),
          url('https://raw.githubusercontent.com/InjectionSoftwareandSecurityLLC/jonesrx/refs/heads/main/fonts/neon_font.ttf') format("truetype");
     font-display: swap;
 }
