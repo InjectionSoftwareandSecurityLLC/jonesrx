@@ -1,0 +1,12 @@
+# GitHub Pages already builds this repo through Jekyll (there is no .nojekyll).
+# The site uses no Jekyll features — every page is plain static HTML with no
+# front matter, so Jekyll copies it verbatim and nothing about the site changes.
+# The sole purpose of this file is to keep build-only files out of the published
+# site: jonesrx.live/tools, /data, etc. return 404 while the files stay visible
+# in the repo (this is an open-source project by intent).
+exclude:
+  - tools
+  - data
+  - build.sh
+  - requirements.txt
+  - README.md

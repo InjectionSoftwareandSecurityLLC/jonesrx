@@ -122,7 +122,7 @@ async function loadVideos() {
         }
 
         buildUI(section);
-        playVideo(0);
+        playVideo(0, false);
     } catch (err) {
         console.error('Failed to load videos:', err);
         section.innerHTML = '<p class="videos-error">Failed to load videos.</p>';
@@ -168,13 +168,18 @@ function buildUI(container) {
 }
 
 // ── Play a video ──
-function playVideo(index) {
+function playVideo(index, autoplay = true) {
     if (index < 0 || index >= allVideos.length) return;
     currentIndex = index;
     const v = allVideos[index];
 
-    document.getElementById('ytPlayer').src =
-        `https://www.youtube.com/embed/${encodeURIComponent(v.videoId)}?autoplay=1&rel=0`;
+    const frame = document.getElementById('ytPlayer');
+    // enablejsapi lets the OS audio bus hear play/pause and stop other sources
+    frame.src = `https://www.youtube.com/embed/${encodeURIComponent(v.videoId)}?rel=0&enablejsapi=1` +
+                `&origin=${encodeURIComponent(location.origin)}${autoplay ? '&autoplay=1' : ''}`;
+    frame.onload = () => {
+        try { frame.contentWindow.postMessage('{"event":"listening"}', '*'); } catch (e) {}
+    };
     document.getElementById('nowPlaying').textContent = v.title;
 
     // Highlight active card

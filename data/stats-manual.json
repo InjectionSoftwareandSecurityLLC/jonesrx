@@ -1,0 +1,138 @@
+{
+  "_comment": "Per-platform counts live in 'sources' and are summed by tools/fetch_catalog.py. Refresh them with tools/fetch_plays.py. An entry in 'plays' is a hand-written override that wins over the sum; blank means derive. A track with zero across every platform renders as '< 1K'. 'streams' overrides the derived cross-platform total.",
+  "_aliases": "Tracks Spotify counts as one song. The target's figure is mirrored onto the key, every regeneration.",
+  "aliases": {
+    "new-low-feat-steelpraud": "new-low"
+  },
+  "_spotify": "Direct Spotify album links keyed by base-title slug. Unlike Apple's open lookup API, Spotify's needs credentials, so these are scraped once from the artist's public discography and merged by tools/fetch_catalog.py, winning over the search-link fallback. Add a line when a new single drops.",
+  "spotify": {
+    "over-u": "https://open.spotify.com/album/6rfY7SER3GjwsD21dOWqNi",
+    "luv-u": "https://open.spotify.com/album/69Rewb6yMRlXlxg1mDdtk4",
+    "crash-out": "https://open.spotify.com/album/3H4bmYQDEMVmwL7rixxBH1",
+    "give-up-go-home": "https://open.spotify.com/album/2CyuJqpTvfXxhxH0AM5BoN",
+    "drop-dead": "https://open.spotify.com/album/66QCE2pckQZefg2FMtPePK",
+    "lost-ctrl": "https://open.spotify.com/album/50GZPQDIuGOajgQSlGJMsS",
+    "new-low": "https://open.spotify.com/album/0G1i2wU2ImWkPeakdprmUO",
+    "toxic": "https://open.spotify.com/album/2Z7Wq1EbqPh149U1a27T9N",
+    "starstruck": "https://open.spotify.com/album/0xoz5xtJHPvG0iOfJIoq1s"
+  },
+  "totals": {
+    "streams": "",
+    "monthlyListeners": "71",
+    "topTrack": ""
+  },
+  "_followers": "Social follower counts summed into the About 'followers' stat. All five are refreshed automatically by tools/fetch_plays.py (TikTok from page JSON, Instagram and Facebook from the og:description served to link-preview crawlers, YouTube via the Data API, SoundCloud from profile hydration). A failed scrape keeps the previous value rather than zeroing it; a hand-entered number here survives until the next successful scrape overwrites it.",
+  "followers": {
+    "youtube": 29,
+    "soundcloud": 17,
+    "tiktok": 4040,
+    "instagram": 569,
+    "facebook": 115
+  },
+  "plays": {
+    "painful": "",
+    "upside-down": "",
+    "new-low": "",
+    "crash-out": "",
+    "luv-u": "",
+    "give-up-go-home": "",
+    "drop-dead": "",
+    "toxic": "",
+    "awhf": "",
+    "times-up-intro": "",
+    "fake-love": "",
+    "slow-me-down": "",
+    "close": "",
+    "new-low-feat-steelpraud": "",
+    "bloodline": "",
+    "atd": "",
+    "vices": "",
+    "two-face": "",
+    "patron": ""
+  },
+  "sources": {
+    "luv-u": {
+      "soundcloud": 23,
+      "youtube": 37
+    },
+    "crash-out": {
+      "soundcloud": 243,
+      "youtube": 354
+    },
+    "give-up-go-home": {
+      "soundcloud": 14,
+      "youtube": 164
+    },
+    "drop-dead": {
+      "soundcloud": 36,
+      "youtube": 141
+    },
+    "close": {
+      "soundcloud": 21,
+      "youtube": 462
+    },
+    "atd": {
+      "soundcloud": 43,
+      "youtube": 140
+    },
+    "times-up-intro": {
+      "soundcloud": 39,
+      "youtube": 76
+    },
+    "painful": {
+      "soundcloud": 60,
+      "spotify": 4781,
+      "youtube": 650
+    },
+    "two-face": {
+      "soundcloud": 17,
+      "youtube": 235
+    },
+    "upside-down": {
+      "soundcloud": 22,
+      "spotify": 1192,
+      "youtube": 476
+    },
+    "new-low": {
+      "soundcloud": 3,
+      "spotify": 1108,
+      "youtube": 105
+    },
+    "awhf": {
+      "soundcloud": 6,
+      "youtube": 59
+    },
+    "bloodline": {
+      "soundcloud": 2,
+      "youtube": 49
+    },
+    "toxic": {
+      "soundcloud": 7
+    },
+    "fake-love": {
+      "soundcloud": 7,
+      "youtube": 53
+    },
+    "patron": {
+      "soundcloud": 69,
+      "youtube": 268
+    },
+    "slow-me-down": {
+      "soundcloud": 5,
+      "youtube": 24
+    },
+    "vices": {
+      "soundcloud": 84,
+      "youtube": 25
+    },
+    "new-low-feat-steelpraud": {
+      "soundcloud": 154,
+      "spotify": 1108,
+      "youtube": 309
+    },
+    "over-u": {
+      "soundcloud": 2,
+      "youtube": 19
+    }
+  }
+}
