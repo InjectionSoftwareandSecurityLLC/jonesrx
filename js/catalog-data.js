@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "10",
+      "plays": "21",
       "playSources": {
         "soundcloud": 2,
-        "youtube": 8
+        "youtube": 19
       },
       "local": "assets/catalog/over-u.mp3"
     },
@@ -144,9 +144,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low-feat-steelpraud/1779309073?i=1779309075&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1570",
+      "plays": "1571",
       "playSources": {
-        "spotify": 1107,
+        "spotify": 1108,
         "soundcloud": 154,
         "youtube": 309
       },
@@ -209,11 +209,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/painful/1779309073?i=1779309501&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "5483",
+      "plays": "5491",
       "playSources": {
-        "spotify": 4774,
+        "spotify": 4781,
         "soundcloud": 60,
-        "youtube": 649
+        "youtube": 650
       },
       "local": "assets/catalog/painful.mp3"
     },
@@ -273,9 +273,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low/1778561254?i=1778561255&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1215",
+      "plays": "1216",
       "playSources": {
-        "spotify": 1107,
+        "spotify": 1108,
         "soundcloud": 3,
         "youtube": 105
       },
@@ -437,7 +437,7 @@ window.CATALOG = {
       "released": "2026-10-09",
       "trackCount": 1,
       "art": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c2/e7/bd/c2e7bd9c-e0c1-ee74-3643-7824a2389746/artwork.jpg/600x600bb.jpg",
-      "appleUrl": "https://music.apple.com/us/album/over-u/6821119879",
+      "appleUrl": "https://music.apple.com/us/album/over-u-single/6821119879?uo=4",
       "spotifyUrl": "https://open.spotify.com/album/6rfY7SER3GjwsD21dOWqNi"
     },
     {
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,671",
-    "monthlyListeners": "68",
-    "topTrack": "Painful · 5,483",
+    "streams": "12,692",
+    "monthlyListeners": "71",
+    "topTrack": "Painful · 5,491",
     "showsPlayed": 5,
-    "followers": "729"
+    "followers": "4,770"
   }
 };

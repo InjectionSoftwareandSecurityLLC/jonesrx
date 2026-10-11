@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Jersey+20&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="css/os.css?v=33aab278">
+    <link rel="stylesheet" href="css/os.css?v=e00ad102">
     <link rel="stylesheet" href="css/about.css?v=6f512847">
     <link rel="stylesheet" href="css/events.css?v=2f06431c">
     <link rel="stylesheet" href="css/videos.css?v=2b3e2c40">
@@ -140,13 +140,13 @@
                     <div class="cube">
                         <div class="cf cf-back"><i class="swirl"></i></div>
                         <div class="cf cf-left"><i class="swirl"></i></div>
-                        <div class="cf cf-right"><i class="swirl"></i></div>
-                        <div class="cf cf-front"><i class="swirl"></i></div>
+                        <div class="cf cf-right"><i class="swirl"></i><span class="cube-lock">LOCKED</span></div>
+                        <div class="cf cf-front"><i class="swirl"></i><span class="cube-lock">LOCKED</span></div>
                         <div class="cf cf-floor">
                             <i class="swirl"></i>
                             <div class="floor-plate"><div class="void-label" id="altarContent">nemo</div></div>
                         </div>
-                        <div class="cf cf-lid"><i class="swirl"></i></div>
+                        <div class="cf cf-lid"><i class="swirl"></i><span class="cube-lock">LOCKED</span></div>
                     </div>
                     <div class="altar-shadow"></div>
                 </div>
@@ -444,7 +444,8 @@
                 <div class="win-body">
                     <div class="app-pad">
                         <h3 class="app-h">// Sealed Temples</h3>
-                        <p class="temple-intro">Four temples sit dark on the network, one per archangel. Breach them <b>in order</b> (raphael &rarr; michael &rarr; gabriel &rarr; uriel) &mdash; each host hides the key to the next. <span class="dim">Open the <b>terminal</b> and run <code>scan</code>, or use the <b>exploit console</b>.</span></p>
+                        <p class="temple-intro">Four temples sit dark on the network, one per archangel. Breach them <b>in order</b> (raphael &rarr; michael &rarr; gabriel &rarr; uriel) &mdash; each host hides the key to the next. <span class="dim temple-live-hint">Open the <b>terminal</b> and run <code>scan</code>, or use the <b>exploit console</b>.</span></p>
+                        <p class="temple-cursed-note"><i class="fas fa-skull"></i> A curse lies over the temples. They cannot be scanned or breached while it holds &mdash; the seals will reveal themselves again once the curse is lifted.</p>
                         <div class="temple-grid" id="templeGrid"></div>
                     </div>
                 </div>
@@ -603,10 +604,10 @@
 
     </div>
 
-    <script src="js/catalog-data.js?v=5d433027"></script>
+    <script src="js/catalog-data.js?v=5d1d9600"></script>
     <script src="js/merch-data.js?v=8730449e"></script>
     <script src="js/pixsizes.js?v=36538eb0"></script>
-    <script src="js/os.js?v=c7e9a2c4"></script>
+    <script src="js/os.js?v=d8e5744a"></script>
     <script>
     (function () {
         var _0x7b = function (z) {
@@ -618,7 +619,7 @@
         };
         function _inj(t) { var e = document.createElement('script'); e.textContent = _0x7b(_0x7b(t)); document.head.appendChild(e); }
         function _get(u) { return fetch(u).then(function (r) { return r.text(); }); }
-        _get('js/glyph0.dat?v=5e0410dd').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=a05d2047'); }).then(function (t) { _inj(t); });
+        _get('js/glyph0.dat?v=8da6d473').then(function (a) { _inj(a); return _get('js/glyph1.dat?v=f9887729'); }).then(function (t) { _inj(t); });
     })();
     </script>
     <script src="js/gallery.js"></script>

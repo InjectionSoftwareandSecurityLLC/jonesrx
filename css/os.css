@@ -71,6 +71,10 @@ a { color: var(--neon); text-decoration: none; }
     white-space: pre-wrap;
     margin: 0;
 }
+.boot-cursed {
+    color: #ff3b3b; font-weight: 700;
+    text-shadow: 0 0 6px rgba(255,0,0,.8), 0 0 14px rgba(255,0,0,.45);
+}
 .boot-skip {
     position: absolute; bottom: 5vh; left: 0; right: 0;
     text-align: center; color: rgba(var(--neon-rgb), .7);
@@ -1434,6 +1438,54 @@ html.audio-live .xport input[type="range"]::-moz-range-thumb { animation: rgbThu
 .temple-card[data-angel="michael"].breached { color: #ff2d2d; }
 .temple-card[data-angel="gabriel"].breached { color: #2d7bff; }
 .temple-card[data-angel="uriel"].breached   { color: #1fd882; }
+
+/* ============================================================
+   CURSE — soft-launch lock (driven by html.cursed)
+   ============================================================ */
+.temple-cursed-note { display: none; color: #ff6b6b; font-size: 13px; line-height: 1.6; margin-top: 8px; }
+.temple-cursed-note i { margin-right: 6px; }
+html.cursed .temple-live-hint { display: none; }
+html.cursed .temple-cursed-note { display: block; }
+.temple-card.cursed { border-color: rgba(255,59,59,.5); cursor: default; }
+.temple-card.cursed .temple-icon,
+.temple-card.cursed .temple-name { color: rgba(255,120,120,.6); }
+.temple-card.cursed .temple-status { color: #ff3b3b; text-shadow: 0 0 10px rgba(255,0,0,.5); }
+
+/* the ornate frame falls away; the latest release hangs in a plain neon border */
+html.cursed .altar-frame { display: none; }
+html.cursed .altar-art {
+    inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px);
+    border: 2px solid rgba(var(--neon-rgb), .9); border-radius: 3px;
+    box-shadow: 0 0 10px rgba(var(--neon-rgb), .5), 0 0 26px rgba(var(--neon-rgb), .3);
+    pointer-events: auto; cursor: pointer;
+    transition: box-shadow .3s, transform .3s;
+}
+html.cursed .altar-art:hover {
+    box-shadow: 0 0 16px rgba(var(--neon-rgb), .8), 0 0 40px rgba(var(--neon-rgb), .45);
+    transform: scale(1.02);
+}
+
+/* LOCKED stamp on the visible faces of the sealed chest */
+.cube-lock {
+    position: absolute; inset: 0; z-index: 4; display: none;
+    align-items: center; justify-content: center;
+    font-family: var(--mono); font-weight: 700; letter-spacing: 4px; font-size: 15px;
+    color: #ff3b3b; text-shadow: 0 0 8px rgba(255,0,0,.85), 0 0 18px rgba(255,0,0,.5);
+    pointer-events: none;
+}
+html.cursed .cube-lock { display: flex; opacity: 0; transition: opacity .25s; }
+html.cursed .altar.locked-flash .cube-lock { opacity: 1; animation: lockShake .42s ease; }
+@keyframes lockShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-3px); }
+    40% { transform: translateX(3px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+}
+
+/* seal the early-access vault away entirely while cursed */
+html.cursed .pl-tab[data-pl="vault"] { display: none; }
+html.cursed #plVault { display: none; }
 
 /* ============================================================
    TERMINAL

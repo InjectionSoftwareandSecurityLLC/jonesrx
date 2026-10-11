@@ -8,8 +8,18 @@
     /* ---- config ---- */
     const ALTAR_CONFIG = {
         startOpen: false,   // altar open on load?
-        forceClosed: false  // if true, altar cannot be opened (locked shut)
+        forceClosed: false, // if true, altar cannot be opened (locked shut)
+        CURSED: true        // soft-launch: the game sleeps under a curse until it is lifted
     };
+
+    // while the curse holds, the altar frames the latest release instead of ALTER,
+    // and the art links out to its hyperfollow page
+    const FEATURED_RELEASE = {
+        art: 'img/over_u_album_art.png',
+        title: 'Over U',
+        url: 'https://distrokid.com/hyperfollow/jonesrx/over-u'
+    };
+    const ALTER_ART = 'img/alter_album_art.png';
 
     const ANGELS = {
         raphael: { theme: 'raphael', label: 'Raphael', color: '#ffd400' },
@@ -56,7 +66,17 @@
 
     /* ---- state ---- */
     let topZ = 1000;
+    let cursed = !!ALTAR_CONFIG.CURSED;
     const unlocked = new Set(loadUnlocked());
+
+    // the curse only lifts for a caller that can present the matching key
+    const SEAL_KEY = 'bce24508efdc9263b08b5f06fbfa883120a03ed8aa45efe9d86be848587ac688';
+    async function keyMatches(k) {
+        try {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('lvx::' + k));
+            return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('') === SEAL_KEY;
+        } catch (e) { return false; }
+    }
 
     /* ---- helpers ---- */
     const $  = (s, r = document) => r.querySelector(s);
@@ -87,15 +107,16 @@
         if (!boot || !log) return;
         const order = Object.keys(ANGELS);
         const openCount = order.filter(a => unlocked.has(a)).length;
+        const cursedTag = cursed ? ' {CURSED}' : '';
         let templeLines;
         if (openCount === 0) {
-            templeLines = ['[ ok ] 4 temples detected :: status SEALED'];
+            templeLines = ['[ ok ] 4 temples detected :: status SEALED' + cursedTag];
         } else if (openCount === order.length) {
             templeLines = ['[ ok ] 4 temples detected :: status OPENED'];
         } else {
             templeLines = ['[ ok ] 4 temples detected'];
             order.forEach(a => {
-                templeLines.push('        ' + (a + '        ').slice(0, 9) + ':: ' + (unlocked.has(a) ? 'OPENED' : 'SEALED'));
+                templeLines.push('        ' + (a + '        ').slice(0, 9) + ':: ' + (unlocked.has(a) ? 'OPENED' : 'SEALED' + cursedTag));
             });
         }
         const lines = [
@@ -110,9 +131,10 @@
             'welcome.'
         ];
         let i = 0;
+        const bootLine = (s) => esc(s).replace('{CURSED}', '<span class="boot-cursed">(CURSED)</span>');
         const tick = () => {
             if (i < lines.length) {
-                log.textContent += lines[i++] + '\n';
+                log.innerHTML += bootLine(lines[i++]) + '\n';
                 setTimeout(tick, 150 + Math.random() * 120);
             } else {
                 setTimeout(() => boot.classList.add('gone'), 600);
@@ -470,7 +492,7 @@
         const altar = $('#altar');
         if (!altar) return;
         const nemo = $('#altarContent');
-        let nemoTimer = null;
+        let nemoTimer = null, lockTimer = null;
         // reveal nemo only after the lid-open animation settles (~1.3s); hide instantly on close
         function revealNemo() {
             if (nemoTimer) { clearTimeout(nemoTimer); nemoTimer = null; }
@@ -481,9 +503,18 @@
                 nemo.style.opacity = '0';
             }
         }
-        if (ALTAR_CONFIG.startOpen && !ALTAR_CONFIG.forceClosed) altar.dataset.open = 'true';
+        // the sealed chest rattles and flashes LOCKED instead of opening
+        function flashLocked() {
+            altar.classList.remove('locked-flash');
+            void altar.offsetWidth;                  // restart the animation on rapid clicks
+            altar.classList.add('locked-flash');
+            if (lockTimer) clearTimeout(lockTimer);
+            lockTimer = setTimeout(() => altar.classList.remove('locked-flash'), 1800);
+        }
+        if (ALTAR_CONFIG.startOpen && !ALTAR_CONFIG.forceClosed && !cursed) altar.dataset.open = 'true';
         const toggle = () => {
             if (ALTAR_CONFIG.forceClosed) return;
+            if (cursed) { flashLocked(); return; }
             altar.dataset.open = altar.dataset.open === 'true' ? 'false' : 'true';
             revealNemo();
         };
@@ -491,7 +522,29 @@
         altar.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
         });
+        // the framed art becomes a link out to the latest release while cursed
+        const art = $('.altar-art', altar);
+        if (art) art.addEventListener('click', (e) => {
+            if (!cursed || !FEATURED_RELEASE.url) return;    // uncursed: clicks fall through to the altar
+            e.stopPropagation();
+            window.open(FEATURED_RELEASE.url, '_blank', 'noopener');
+        });
         revealNemo();
+    }
+
+    // apply (or lift) the soft-launch curse across the altar, tracks + temples
+    function applyCurse() {
+        document.documentElement.classList.toggle('cursed', cursed);
+        const altar = $('#altar');
+        if (altar && cursed) altar.dataset.open = 'false';
+        const art = $('.altar-art');
+        if (art) {
+            art.src = cursed ? FEATURED_RELEASE.art : ALTER_ART;
+            art.alt = cursed ? FEATURED_RELEASE.title + ' — latest release' : 'ALTER album art';
+            art.title = cursed && FEATURED_RELEASE.url ? 'Stream ' + FEATURED_RELEASE.title : '';
+        }
+        refreshTemples();
+        if (cursed) switchPlaylist('catalog');
     }
 
 
@@ -593,8 +646,9 @@
         }
         if (grid) $$('.temple-card', grid).forEach(c => {
             const on = unlocked.has(c.dataset.angel);
-            c.classList.toggle('breached', on);
-            $('.temple-status', c).textContent = on ? 'BREACHED' : 'SEALED';
+            c.classList.toggle('cursed', cursed);
+            c.classList.toggle('breached', !cursed && on);
+            $('.temple-status', c).textContent = cursed ? 'CURSED' : (on ? 'BREACHED' : 'SEALED');
         });
     }
 
@@ -2288,13 +2342,23 @@
     /* ============================================================
        PUBLIC API (used by terminal.js)
        ============================================================ */
-    window.ALTER = {
+    const api = {
         openApp, closeApp,
         setTheme, resetTheme, unlockAngel,
         isUnlocked: (a) => unlocked.has(String(a).toLowerCase()),
         unlockedList: () => [...unlocked],
-        angels: ANGELS
+        angels: ANGELS,
+        isCursed: () => cursed,
+        // re-sealing is free; lifting requires presenting the key
+        setCursed: (v, k) => {
+            if (v) { cursed = true; applyCurse(); return Promise.resolve(true); }
+            return keyMatches(k).then(ok => { if (ok) { cursed = false; applyCurse(); } return ok; });
+        }
     };
+    Object.freeze(api);
+    try {
+        Object.defineProperty(window, 'ALTER', { value: api, writable: false, configurable: false, enumerable: true });
+    } catch (e) { window.ALTER = api; }
 
     /* ============================================================
        INIT
@@ -2330,6 +2394,7 @@
 
         $('#themeReset')?.addEventListener('click', resetTheme);
 
+        applyCurse();
         applyMode();
         window.addEventListener('resize', applyMode);
 
