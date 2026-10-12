@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "23",
+      "plays": "29",
       "playSources": {
         "soundcloud": 2,
-        "youtube": 21
+        "youtube": 27
       },
       "local": "assets/catalog/over-u.mp3"
     },
@@ -187,9 +187,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/upside-down/1779309073?i=1779309499&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1690",
+      "plays": "1691",
       "playSources": {
-        "spotify": 1192,
+        "spotify": 1193,
         "soundcloud": 22,
         "youtube": 476
       },
@@ -209,11 +209,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/painful/1779309073?i=1779309501&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "5491",
+      "plays": "5498",
       "playSources": {
-        "spotify": 4781,
+        "spotify": 4786,
         "soundcloud": 60,
-        "youtube": 650
+        "youtube": 652
       },
       "local": "assets/catalog/painful.mp3"
     },
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,694",
-    "monthlyListeners": "71",
-    "topTrack": "Painful · 5,491",
+    "streams": "12,708",
+    "monthlyListeners": "72",
+    "topTrack": "Painful · 5,498",
     "showsPlayed": 5,
-    "followers": "4,770"
+    "followers": "4,769"
   }
 };
