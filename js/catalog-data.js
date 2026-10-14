@@ -60,9 +60,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/crash-out/1822544140?i=1822544141&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "597",
+      "plays": "598",
       "playSources": {
-        "soundcloud": 243,
+        "soundcloud": 244,
         "youtube": 354
       },
       "local": "assets/catalog/crash-out.mp3"
@@ -81,10 +81,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/give-up-go-home/1801621920?i=1801621921&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "178",
+      "plays": "179",
       "playSources": {
         "soundcloud": 14,
-        "youtube": 164
+        "youtube": 165
       },
       "local": "assets/catalog/give-up-go-home.mp3"
     },
@@ -144,9 +144,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low-feat-steelpraud/1779309073?i=1779309075&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1571",
+      "plays": "1572",
       "playSources": {
-        "spotify": 1108,
+        "spotify": 1109,
         "soundcloud": 154,
         "youtube": 309
       },
@@ -187,9 +187,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/upside-down/1779309073?i=1779309499&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1692",
+      "plays": "1695",
       "playSources": {
-        "spotify": 1194,
+        "spotify": 1197,
         "soundcloud": 22,
         "youtube": 476
       },
@@ -209,9 +209,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/painful/1779309073?i=1779309501&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "5501",
+      "plays": "5506",
       "playSources": {
-        "spotify": 4789,
+        "spotify": 4794,
         "soundcloud": 60,
         "youtube": 652
       },
@@ -273,9 +273,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low/1778561254?i=1778561255&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1216",
+      "plays": "1217",
       "playSources": {
-        "spotify": 1108,
+        "spotify": 1109,
         "soundcloud": 3,
         "youtube": 105
       },
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,719",
-    "monthlyListeners": "72",
-    "topTrack": "Painful · 5,501",
+    "streams": "12,731",
+    "monthlyListeners": "73",
+    "topTrack": "Painful · 5,506",
     "showsPlayed": 5,
-    "followers": "4,769"
+    "followers": "4,771"
   }
 };
