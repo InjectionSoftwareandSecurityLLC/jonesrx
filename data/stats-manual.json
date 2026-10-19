@@ -18,7 +18,7 @@
   },
   "totals": {
     "streams": "",
-    "monthlyListeners": "81",
+    "monthlyListeners": "94",
     "topTrack": ""
   },
   "_followers": "Social follower counts summed into the About 'followers' stat. All five are refreshed automatically by tools/fetch_plays.py (TikTok from page JSON, Instagram and Facebook from the og:description served to link-preview crawlers, YouTube via the Data API, SoundCloud from profile hydration). A failed scrape keeps the previous value rather than zeroing it; a hand-entered number here survives until the next successful scrape overwrites it.",
@@ -65,7 +65,7 @@
     },
     "drop-dead": {
       "soundcloud": 36,
-      "youtube": 141
+      "youtube": 142
     },
     "close": {
       "soundcloud": 21,
@@ -82,7 +82,7 @@
     "painful": {
       "soundcloud": 60,
       "spotify": 4794,
-      "youtube": 652
+      "youtube": 653
     },
     "two-face": {
       "soundcloud": 17,
@@ -91,7 +91,7 @@
     "upside-down": {
       "soundcloud": 22,
       "spotify": 1197,
-      "youtube": 476
+      "youtube": 477
     },
     "new-low": {
       "soundcloud": 3,
@@ -128,11 +128,11 @@
     "new-low-feat-steelpraud": {
       "soundcloud": 155,
       "spotify": 1109,
-      "youtube": 309
+      "youtube": 310
     },
     "over-u": {
       "soundcloud": 2,
-      "youtube": 39
+      "youtube": 44
     }
   }
 }
