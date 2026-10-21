@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "48",
+      "plays": "50",
       "playSources": {
         "soundcloud": 2,
-        "youtube": 46
+        "youtube": 48
       },
       "local": "assets/catalog/over-u.mp3"
     },
@@ -60,9 +60,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/crash-out/1822544140?i=1822544141&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "601",
+      "plays": "602",
       "playSources": {
-        "soundcloud": 245,
+        "soundcloud": 246,
         "youtube": 356
       },
       "local": "assets/catalog/crash-out.mp3"
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,751",
-    "monthlyListeners": "96",
+    "streams": "12,754",
+    "monthlyListeners": "101",
     "topTrack": "Painful · 5,507",
     "showsPlayed": 5,
-    "followers": "4,796"
+    "followers": "4,797"
   }
 };
