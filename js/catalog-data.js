@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "50",
+      "plays": "51",
       "playSources": {
         "soundcloud": 2,
-        "youtube": 48
+        "youtube": 49
       },
       "local": "assets/catalog/over-u.mp3"
     },
@@ -399,9 +399,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/vices/1778581995?i=1778581998&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "109",
+      "plays": "110",
       "playSources": {
-        "soundcloud": 84,
+        "soundcloud": 85,
         "youtube": 25
       },
       "local": "assets/catalog/vices.mp3"
@@ -534,8 +534,8 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,754",
-    "monthlyListeners": "101",
+    "streams": "12,756",
+    "monthlyListeners": "103",
     "topTrack": "Painful · 5,507",
     "showsPlayed": 5,
     "followers": "4,797"
