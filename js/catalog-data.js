@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "51",
+      "plays": "54",
       "playSources": {
         "soundcloud": 2,
-        "youtube": 49
+        "youtube": 52
       },
       "local": "assets/catalog/over-u.mp3"
     },
@@ -60,9 +60,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/crash-out/1822544140?i=1822544141&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "602",
+      "plays": "603",
       "playSources": {
-        "soundcloud": 246,
+        "soundcloud": 247,
         "youtube": 356
       },
       "local": "assets/catalog/crash-out.mp3"
@@ -144,10 +144,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low-feat-steelpraud/1779309073?i=1779309075&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1574",
+      "plays": "1576",
       "playSources": {
         "spotify": 1109,
-        "soundcloud": 155,
+        "soundcloud": 157,
         "youtube": 310
       },
       "local": "assets/catalog/new-low-feat-steelpraud.mp3"
@@ -399,9 +399,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/vices/1778581995?i=1778581998&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "110",
+      "plays": "111",
       "playSources": {
-        "soundcloud": 85,
+        "soundcloud": 86,
         "youtube": 25
       },
       "local": "assets/catalog/vices.mp3"
@@ -534,8 +534,8 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,756",
-    "monthlyListeners": "103",
+    "streams": "12,763",
+    "monthlyListeners": "102",
     "topTrack": "Painful · 5,507",
     "showsPlayed": 5,
     "followers": "4,797"
