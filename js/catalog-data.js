@@ -60,10 +60,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/crash-out/1822544140?i=1822544141&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "604",
+      "plays": "605",
       "playSources": {
         "soundcloud": 247,
-        "youtube": 357
+        "youtube": 358
       },
       "local": "assets/catalog/crash-out.mp3"
     },
@@ -534,8 +534,8 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,763",
-    "monthlyListeners": "103",
+    "streams": "12,764",
+    "monthlyListeners": "117",
     "topTrack": "Painful · 5,507",
     "showsPlayed": 5,
     "followers": "4,797"
