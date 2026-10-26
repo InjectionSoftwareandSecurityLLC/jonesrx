@@ -18,7 +18,7 @@
   },
   "totals": {
     "streams": "",
-    "monthlyListeners": "117",
+    "monthlyListeners": "133",
     "topTrack": ""
   },
   "_followers": "Social follower counts summed into the About 'followers' stat. All five are refreshed automatically by tools/fetch_plays.py (TikTok from page JSON, Instagram and Facebook from the og:description served to link-preview crawlers, YouTube via the Data API, SoundCloud from profile hydration). A failed scrape keeps the previous value rather than zeroing it; a hand-entered number here survives until the next successful scrape overwrites it.",
@@ -131,7 +131,7 @@
       "youtube": 310
     },
     "over-u": {
-      "soundcloud": 2,
+      "soundcloud": 3,
       "youtube": 51
     }
   }
