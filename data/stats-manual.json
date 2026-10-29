@@ -18,14 +18,14 @@
   },
   "totals": {
     "streams": "",
-    "monthlyListeners": "137",
+    "monthlyListeners": "140",
     "topTrack": ""
   },
   "_followers": "Social follower counts summed into the About 'followers' stat. All five are refreshed automatically by tools/fetch_plays.py (TikTok from page JSON, Instagram and Facebook from the og:description served to link-preview crawlers, YouTube via the Data API, SoundCloud from profile hydration). A failed scrape keeps the previous value rather than zeroing it; a hand-entered number here survives until the next successful scrape overwrites it.",
   "followers": {
     "youtube": 54,
     "soundcloud": 17,
-    "tiktok": 4042,
+    "tiktok": 4040,
     "instagram": 569,
     "facebook": 115
   },
@@ -82,7 +82,7 @@
     "painful": {
       "soundcloud": 60,
       "spotify": 4794,
-      "youtube": 653
+      "youtube": 654
     },
     "two-face": {
       "soundcloud": 17,
@@ -131,7 +131,7 @@
       "youtube": 310
     },
     "over-u": {
-      "soundcloud": 3,
+      "soundcloud": 4,
       "youtube": 51
     }
   }

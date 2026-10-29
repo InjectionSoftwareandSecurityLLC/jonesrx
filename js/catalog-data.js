@@ -18,9 +18,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "54",
+      "plays": "55",
       "playSources": {
-        "soundcloud": 3,
+        "soundcloud": 4,
         "youtube": 51
       },
       "local": "assets/catalog/over-u.mp3"
@@ -209,11 +209,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/painful/1779309073?i=1779309501&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "5507",
+      "plays": "5508",
       "playSources": {
         "spotify": 4794,
         "soundcloud": 60,
-        "youtube": 653
+        "youtube": 654
       },
       "local": "assets/catalog/painful.mp3"
     },
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,765",
-    "monthlyListeners": "137",
-    "topTrack": "Painful · 5,507",
+    "streams": "12,767",
+    "monthlyListeners": "140",
+    "topTrack": "Painful · 5,508",
     "showsPlayed": 5,
-    "followers": "4,797"
+    "followers": "4,795"
   }
 };
