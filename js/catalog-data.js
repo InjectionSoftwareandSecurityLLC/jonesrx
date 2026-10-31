@@ -81,10 +81,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/give-up-go-home/1801621920?i=1801621921&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "179",
+      "plays": "180",
       "playSources": {
         "soundcloud": 14,
-        "youtube": 165
+        "youtube": 166
       },
       "local": "assets/catalog/give-up-go-home.mp3"
     },
@@ -209,11 +209,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/painful/1779309073?i=1779309501&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "5508",
+      "plays": "5510",
       "playSources": {
         "spotify": 4794,
         "soundcloud": 60,
-        "youtube": 654
+        "youtube": 656
       },
       "local": "assets/catalog/painful.mp3"
     },
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,767",
-    "monthlyListeners": "140",
-    "topTrack": "Painful · 5,508",
+    "streams": "12,770",
+    "monthlyListeners": "147",
+    "topTrack": "Painful · 5,510",
     "showsPlayed": 5,
-    "followers": "4,797"
+    "followers": "4,795"
   }
 };
