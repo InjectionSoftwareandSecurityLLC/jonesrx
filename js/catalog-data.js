@@ -357,9 +357,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/patr%C3%B3n/1778581995?i=1778581996&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "337",
+      "plays": "338",
       "playSources": {
-        "soundcloud": 69,
+        "soundcloud": 70,
         "youtube": 268
       },
       "local": "assets/catalog/patron.mp3"
@@ -399,9 +399,9 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/vices/1778581995?i=1778581998&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "111",
+      "plays": "113",
       "playSources": {
-        "soundcloud": 86,
+        "soundcloud": 88,
         "youtube": 25
       },
       "local": "assets/catalog/vices.mp3"
@@ -534,8 +534,8 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,771",
-    "monthlyListeners": "187",
+    "streams": "12,774",
+    "monthlyListeners": "181",
     "topTrack": "Painful · 5,510",
     "showsPlayed": 5,
     "followers": "4,795"
