@@ -18,10 +18,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/over-u/6821119879?i=6821119880&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "57",
+      "plays": "58",
       "playSources": {
         "soundcloud": 4,
-        "youtube": 53
+        "youtube": 54
       },
       "local": "assets/catalog/over-u.mp3"
     },
@@ -39,10 +39,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/luv-u/1887050586?i=1887050587&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "60",
+      "plays": "61",
       "playSources": {
         "soundcloud": 23,
-        "youtube": 37
+        "youtube": 38
       },
       "local": "assets/catalog/luv-u.mp3"
     },
@@ -60,10 +60,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/crash-out/1822544140?i=1822544141&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "606",
+      "plays": "608",
       "playSources": {
-        "soundcloud": 248,
-        "youtube": 358
+        "soundcloud": 249,
+        "youtube": 359
       },
       "local": "assets/catalog/crash-out.mp3"
     },
@@ -81,10 +81,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/give-up-go-home/1801621920?i=1801621921&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "180",
+      "plays": "181",
       "playSources": {
         "soundcloud": 14,
-        "youtube": 166
+        "youtube": 167
       },
       "local": "assets/catalog/give-up-go-home.mp3"
     },
@@ -102,10 +102,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/drop-dead/1776439287?i=1776439288&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "178",
+      "plays": "179",
       "playSources": {
         "soundcloud": 36,
-        "youtube": 142
+        "youtube": 143
       },
       "local": "assets/catalog/drop-dead.mp3"
     },
@@ -123,10 +123,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/times-up-intro/1779309073?i=1779309074&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "115",
+      "plays": "116",
       "playSources": {
         "soundcloud": 39,
-        "youtube": 76
+        "youtube": 77
       },
       "local": "assets/catalog/times-up-intro.mp3"
     },
@@ -144,11 +144,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low-feat-steelpraud/1779309073?i=1779309075&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1576",
+      "plays": "1579",
       "playSources": {
         "spotify": 1109,
-        "soundcloud": 157,
-        "youtube": 310
+        "soundcloud": 158,
+        "youtube": 312
       },
       "local": "assets/catalog/new-low-feat-steelpraud.mp3"
     },
@@ -166,10 +166,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/two-face/1779309073?i=1779309078&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "252",
+      "plays": "253",
       "playSources": {
         "soundcloud": 17,
-        "youtube": 235
+        "youtube": 236
       },
       "local": "assets/catalog/two-face.mp3"
     },
@@ -187,11 +187,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/upside-down/1779309073?i=1779309499&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1696",
+      "plays": "1697",
       "playSources": {
         "spotify": 1197,
         "soundcloud": 22,
-        "youtube": 477
+        "youtube": 478
       },
       "local": "assets/catalog/upside-down.mp3"
     },
@@ -209,11 +209,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/painful/1779309073?i=1779309501&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "5510",
+      "plays": "5512",
       "playSources": {
         "spotify": 4794,
         "soundcloud": 60,
-        "youtube": 656
+        "youtube": 658
       },
       "local": "assets/catalog/painful.mp3"
     },
@@ -231,10 +231,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/atd/1779309073?i=1779309502&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "183",
+      "plays": "184",
       "playSources": {
         "soundcloud": 43,
-        "youtube": 140
+        "youtube": 141
       },
       "local": "assets/catalog/atd.mp3"
     },
@@ -252,10 +252,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/close/1779309073?i=1779309503&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "483",
+      "plays": "484",
       "playSources": {
         "soundcloud": 21,
-        "youtube": 462
+        "youtube": 463
       },
       "local": "assets/catalog/close.mp3"
     },
@@ -273,11 +273,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low/1778561254?i=1778561255&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1217",
+      "plays": "1218",
       "playSources": {
         "spotify": 1109,
         "soundcloud": 3,
-        "youtube": 105
+        "youtube": 106
       },
       "local": "assets/catalog/new-low.mp3"
     },
@@ -295,10 +295,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/awhf/1778545382?i=1778545383&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "65",
+      "plays": "66",
       "playSources": {
         "soundcloud": 6,
-        "youtube": 59
+        "youtube": 60
       },
       "local": "assets/catalog/awhf.mp3"
     },
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,776",
-    "monthlyListeners": "182",
-    "topTrack": "Painful · 5,510",
+    "streams": "12,794",
+    "monthlyListeners": "179",
+    "topTrack": "Painful · 5,512",
     "showsPlayed": 5,
-    "followers": "4,793"
+    "followers": "4,795"
   }
 };

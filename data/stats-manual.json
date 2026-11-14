@@ -18,14 +18,14 @@
   },
   "totals": {
     "streams": "",
-    "monthlyListeners": "182",
+    "monthlyListeners": "179",
     "topTrack": ""
   },
   "_followers": "Social follower counts summed into the About 'followers' stat. All five are refreshed automatically by tools/fetch_plays.py (TikTok from page JSON, Instagram and Facebook from the og:description served to link-preview crawlers, YouTube via the Data API, SoundCloud from profile hydration). A failed scrape keeps the previous value rather than zeroing it; a hand-entered number here survives until the next successful scrape overwrites it.",
   "followers": {
     "youtube": 54,
     "soundcloud": 17,
-    "tiktok": 4038,
+    "tiktok": 4040,
     "instagram": 569,
     "facebook": 115
   },
@@ -53,54 +53,54 @@
   "sources": {
     "luv-u": {
       "soundcloud": 23,
-      "youtube": 37
+      "youtube": 38
     },
     "crash-out": {
-      "soundcloud": 248,
-      "youtube": 358
+      "soundcloud": 249,
+      "youtube": 359
     },
     "give-up-go-home": {
       "soundcloud": 14,
-      "youtube": 166
+      "youtube": 167
     },
     "drop-dead": {
       "soundcloud": 36,
-      "youtube": 142
+      "youtube": 143
     },
     "close": {
       "soundcloud": 21,
-      "youtube": 462
+      "youtube": 463
     },
     "atd": {
       "soundcloud": 43,
-      "youtube": 140
+      "youtube": 141
     },
     "times-up-intro": {
       "soundcloud": 39,
-      "youtube": 76
+      "youtube": 77
     },
     "painful": {
       "soundcloud": 60,
       "spotify": 4794,
-      "youtube": 656
+      "youtube": 658
     },
     "two-face": {
       "soundcloud": 17,
-      "youtube": 235
+      "youtube": 236
     },
     "upside-down": {
       "soundcloud": 22,
       "spotify": 1197,
-      "youtube": 477
+      "youtube": 478
     },
     "new-low": {
       "soundcloud": 3,
       "spotify": 1109,
-      "youtube": 105
+      "youtube": 106
     },
     "awhf": {
       "soundcloud": 6,
-      "youtube": 59
+      "youtube": 60
     },
     "bloodline": {
       "soundcloud": 2,
@@ -126,13 +126,13 @@
       "youtube": 25
     },
     "new-low-feat-steelpraud": {
-      "soundcloud": 157,
+      "soundcloud": 158,
       "spotify": 1109,
-      "youtube": 310
+      "youtube": 312
     },
     "over-u": {
       "soundcloud": 4,
-      "youtube": 53
+      "youtube": 54
     }
   }
 }
