@@ -144,10 +144,10 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low-feat-steelpraud/1779309073?i=1779309075&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1583",
+      "plays": "1584",
       "playSources": {
         "spotify": 1109,
-        "soundcloud": 161,
+        "soundcloud": 162,
         "youtube": 313
       },
       "local": "assets/catalog/new-low-feat-steelpraud.mp3"
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,805",
-    "monthlyListeners": "140",
+    "streams": "12,806",
+    "monthlyListeners": "138",
     "topTrack": "Painful · 5,512",
     "showsPlayed": 5,
-    "followers": "4,797"
+    "followers": "4,795"
   }
 };
