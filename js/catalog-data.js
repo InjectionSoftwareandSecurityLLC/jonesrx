@@ -144,11 +144,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/new-low-feat-steelpraud/1779309073?i=1779309075&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1584",
+      "plays": "1585",
       "playSources": {
         "spotify": 1109,
         "soundcloud": 162,
-        "youtube": 313
+        "youtube": 314
       },
       "local": "assets/catalog/new-low-feat-steelpraud.mp3"
     },
@@ -187,11 +187,11 @@ window.CATALOG = {
       "appleUrl": "https://music.apple.com/us/album/upside-down/1779309073?i=1779309499&uo=4",
       "spotifyUrl": "",
       "popularity": null,
-      "plays": "1697",
+      "plays": "1698",
       "playSources": {
         "spotify": 1197,
         "soundcloud": 22,
-        "youtube": 478
+        "youtube": 479
       },
       "local": "assets/catalog/upside-down.mp3"
     },
@@ -534,10 +534,10 @@ window.CATALOG = {
     "releaseCount": 9,
     "firstYear": "2023",
     "latestYear": "2026",
-    "streams": "12,806",
-    "monthlyListeners": "138",
+    "streams": "12,808",
+    "monthlyListeners": "137",
     "topTrack": "Painful · 5,512",
-    "showsPlayed": 5,
+    "showsPlayed": 3,
     "followers": "4,795"
   }
 };

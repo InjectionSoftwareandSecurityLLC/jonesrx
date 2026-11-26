@@ -18,7 +18,7 @@
   },
   "totals": {
     "streams": "",
-    "monthlyListeners": "138",
+    "monthlyListeners": "137",
     "topTrack": ""
   },
   "_followers": "Social follower counts summed into the About 'followers' stat. All five are refreshed automatically by tools/fetch_plays.py (TikTok from page JSON, Instagram and Facebook from the og:description served to link-preview crawlers, YouTube via the Data API, SoundCloud from profile hydration). A failed scrape keeps the previous value rather than zeroing it; a hand-entered number here survives until the next successful scrape overwrites it.",
@@ -91,7 +91,7 @@
     "upside-down": {
       "soundcloud": 22,
       "spotify": 1197,
-      "youtube": 478
+      "youtube": 479
     },
     "new-low": {
       "soundcloud": 3,
@@ -128,7 +128,7 @@
     "new-low-feat-steelpraud": {
       "soundcloud": 162,
       "spotify": 1109,
-      "youtube": 313
+      "youtube": 314
     },
     "over-u": {
       "soundcloud": 4,
